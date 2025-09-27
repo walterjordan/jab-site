@@ -50,7 +50,7 @@ export default function ManyChatStyleLanding() {
               Make the most out of <span className="text-indigo-600">every conversation</span>
             </h1>
             <p className="mt-4 text-lg text-slate-700 max-w-2xl">
-              Sell more, engage better, and grow your audience with powerful automations across Instagram, WhatsApp, TikTok, and Facebook Messenger.
+              Sell faster, engage better, and grow your audience with powerful automations across Instagram, WhatsApp, TikTok, and Facebook Messenger.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a className="px-5 py-3 rounded-xl bg-indigo-600 text-white shadow" href="#signup">Chat on Facebook Messenger</a>
