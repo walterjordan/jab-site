@@ -43,10 +43,10 @@ export default function ManyChatStyleLanding() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/80 ring-1 ring-slate-200 px-3 py-1 text-xs mb-4">
               <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-              Meta Partner • WhatsApp • Instagram • Messenger • TikTok
+              Verified Meta Media Agency • WhatsApp • Instagram • Messenger • TikTok
             </div>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-              Make the most out of <span className="text-[#7FFF41]">every conversation</span>
+              Make the most out of <span className="text-[#630183]">every conversation</span>
             </h1>
             <p className="mt-4 text-lg text-slate-700 max-w-2xl">
               Sell more, engage better, and grow your audience with powerful automations across Instagram, WhatsApp, TikTok, and Messenger.
@@ -56,8 +56,8 @@ export default function ManyChatStyleLanding() {
               
             </div>
             <div className="mt-8 flex items-center gap-6 opacity-80">
-              <img alt="G2" className="h-8" src="https://dummyimage.com/100x32/eee/aaa&text=G2+4.8★" />
-              <img alt="Meta Partner" className="h-8" src="https://dummyimage.com/140x32/eee/aaa&text=Meta+Partner" />
+              <span className="px-3 py-1 rounded-full bg-white/80 ring-1 ring-slate-200 text-sm">4.8★</span>
+              <span className="px-3 py-1 rounded-full bg-white/80 ring-1 ring-slate-200 text-sm">Verified Meta Media Agency</span>
             </div>
           </div>
         </div>
@@ -200,4 +200,5 @@ export default function ManyChatStyleLanding() {
     </div>
   );
 }
+
 
