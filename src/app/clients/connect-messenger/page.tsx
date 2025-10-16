@@ -1,10 +1,8 @@
 // src/app/clients/connect-messenger/page.tsx
+'use client';
+
 import MessengerAccessWizard from "@/components/MessengerAccessWizard";
 
-export default function Page() {
-  return (
-    <main className="min-h-screen bg-gray-50">
-      <MessengerAccessWizard />
-    </main>
-  );
+export default function ConnectMessengerPage() {
+  return <MessengerAccessWizard />;
 }
