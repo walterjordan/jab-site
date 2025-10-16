@@ -24,6 +24,15 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
     "@eslint/eslintrc": "^3"
-  }
+  },
+  {
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -p $PORT"
+  },
+  "engines": { "node": ">=18 <=20" }
 }
+}
+
 
