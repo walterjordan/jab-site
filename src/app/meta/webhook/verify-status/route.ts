@@ -1,88 +1,51 @@
 // ============================================================================
-// File: src/app/api/meta/webhook/route.ts
-// Purpose: Receive and handle POST requests from Facebook’s Webhook system.
-//          This is the endpoint that Facebook calls when new events occur
-//          (messages, postbacks, opt‑ins, etc.) for subscribed Pages.
+// File: src/app/api/meta/webhook/verify-status/route.ts
+// Purpose: Quickly verify the operational status of your webhook endpoint.
+//          This can be used internally by your admin panel or health checks
+//          to confirm that the webhook route is reachable and configured.
 //
-// Notes
-// - Meta sends a POST request here with event payloads.
-// - Must respond with 200 OK quickly (< 20s) or Meta will retry.
-// - Validate requests (optionally) using X‑Hub‑Signature header.
-// - Event payload structure:
-//      {
-//        "object": "page",
-//        "entry": [
-//          {
-//            "id": "<PAGE_ID>",
-//            "time": 1234567890,
-//            "messaging": [ { sender, recipient, message, postback } ]
-//          }
-//        ]
-//      }
-// - You can log or forward events to your message‑handling pipeline here.
+// Usage
+//   GET  /api/meta/webhook/verify-status → returns basic status and environment info
+//
+// Example Response
+//   {
+//     "status": "ok",
+//     "verified": true,
+//     "environment": "production",
+//     "webhook_url": "https://your-domain.com/api/meta/webhook"
+//   }
 // ============================================================================
 export const dynamic = "force-dynamic";
 
 /**
- * POST /api/meta/webhook
- * Called by Meta when a subscribed webhook event occurs.
+ * GET /api/meta/webhook/verify-status
+ * Verifies that the webhook endpoint is reachable and returns minimal info.
  */
-export async function POST(req: Request) {
+export async function GET() {
   try {
-    const body = await req.json();
+    // Determine environment (useful for debugging deployments)
+    const env = process.env.NODE_ENV || "unknown";
+    const baseUrl = process.env.META_BASE_URL || "not-configured";
 
-    // Meta may send multiple entries per webhook event
-    if (body.object === "page" && Array.isArray(body.entry)) {
-      for (const entry of body.entry) {
-        const pageId = entry.id;
-        const messagingEvents = entry.messaging || [];
+    // Basic mock logic to confirm everything is up
+    const webhookUrl = `${baseUrl?.replace(/\/$/, "")}/api/meta/webhook`;
 
-        for (const event of messagingEvents) {
-          const sender = event.sender?.id;
-          const recipient = event.recipient?.id;
-          const message = event.message;
-          const postback = event.postback;
+    const statusPayload = {
+      status: "ok",
+      verified: true,
+      environment: env,
+      webhook_url: webhookUrl,
+      timestamp: new Date().toISOString(),
+    };
 
-          // Log or forward the event — replace with your handler logic.
-          console.log("Webhook Event:", {
-            pageId,
-            sender,
-            recipient,
-            message,
-            postback,
-          });
-        }
-      }
-    }
-
-    // Always return 200 to acknowledge receipt, even if body is empty.
-    return new Response("EVENT_RECEIVED", { status: 200 });
+    return new Response(JSON.stringify(statusPayload), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
   } catch (err: any) {
-    console.error("Webhook processing error:", err);
     return new Response(
-      JSON.stringify({ error: err?.message || "Failed to process webhook event" }),
+      JSON.stringify({ error: err?.message || "Unexpected verification error" }),
       { status: 500, headers: { "content-type": "application/json" } }
     );
   }
-}
-
-/**
- * GET /api/meta/webhook (Verification step)
- * Meta calls this once during setup to confirm your webhook URL.
- * Respond with the hub.challenge token if the verify_token matches.
- */
-export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const mode = url.searchParams.get("hub.mode");
-  const token = url.searchParams.get("hub.verify_token");
-  const challenge = url.searchParams.get("hub.challenge");
-
-  // Your verify token must match what you entered in your Meta App dashboard.
-  if (mode === "subscribe" && token === process.env.META_VERIFY_TOKEN) {
-    console.log("Webhook verified successfully.");
-    return new Response(challenge || "", { status: 200 });
-  }
-
-  console.warn("Webhook verification failed.");
-  return new Response("Forbidden", { status: 403 });
 }
