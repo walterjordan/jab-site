@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 /**
  * MessengerAccessWizard.jsx
@@ -66,8 +65,8 @@ export default function MessengerAccessWizard() {
   // Step gating
   const canNext = useMemo(() => {
     switch (step) {
-      case 0: return true; // welcome
-      case 1: return !!userToken; // logged in
+      case 0: return true;
+      case 1: return !!userToken;
       case 2: return businesses.length === 0 || !!(businessId || businessId === "");
       case 3: return !!pageId;
       case 4: return webhookSubscribed;
@@ -82,7 +81,6 @@ export default function MessengerAccessWizard() {
   const next = () => canNext && setStep((s) => Math.min(s + 1, STEPS.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
-  // Helper: generic fetch JSON
   async function j(url, init) {
     const r = await fetch(url, init);
     const d = await r.json().catch(() => ({}));
@@ -90,7 +88,6 @@ export default function MessengerAccessWizard() {
     return d;
   }
 
-  // 1) OAuth start
   const beginOAuth = () => {
     const scopes = [
       "pages_show_list",
@@ -102,7 +99,6 @@ export default function MessengerAccessWizard() {
     window.location.href = `/api/meta/oauth/start?scopes=${encodeURIComponent(scopes)}`;
   };
 
-  // On mount, ask server if a short-lived token is present (cookie set by callback)
   useEffect(() => {
     (async () => {
       try {
@@ -112,7 +108,6 @@ export default function MessengerAccessWizard() {
     })();
   }, []);
 
-  // 2) Exchange user token → long-lived
   const exchangeUserToken = async () => {
     setBusy(true); setErr("");
     try {
@@ -125,7 +120,6 @@ export default function MessengerAccessWizard() {
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   };
 
-  // 3) Load Businesses (optional)
   const loadBusinesses = async () => {
     setBusy(true); setErr("");
     try {
@@ -135,7 +129,6 @@ export default function MessengerAccessWizard() {
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   };
 
-  // 4) Load Pages (by business or personal)
   const loadPages = async () => {
     setBusy(true); setErr("");
     try {
@@ -145,7 +138,6 @@ export default function MessengerAccessWizard() {
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   };
 
-  // 5) Subscribe webhook (requires Page token)
   const subscribeWebhook = async () => {
     if (!pageId || !pageAccessToken) return;
     setBusy(true); setErr("");
@@ -159,7 +151,6 @@ export default function MessengerAccessWizard() {
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   };
 
-  // 6) Create Page token (and store masked)
   const createPageToken = async () => {
     if (!pageId) return;
     setBusy(true); setErr("");
@@ -175,7 +166,6 @@ export default function MessengerAccessWizard() {
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   };
 
-  // 7) Verify webhook
   const verifyWebhook = async () => {
     setBusy(true); setErr("");
     try {
@@ -184,7 +174,6 @@ export default function MessengerAccessWizard() {
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   };
 
-  // 8) Send test message
   const sendTest = async () => {
     if (!pageId || !psid || !pageAccessToken) return;
     setBusy(true); setErr("");
@@ -198,7 +187,6 @@ export default function MessengerAccessWizard() {
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
   };
 
-  // 9) Save connection (masked token)
   const saveConnection = async () => {
     setBusy(true); setErr("");
     try {
@@ -224,97 +212,95 @@ export default function MessengerAccessWizard() {
 
       {err && <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{err}</div>}
 
-      <AnimatePresence mode="wait">
-        <motion.div key={step} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.18 }} className="space-y-6">
-          {step === 0 && (
-            <Card title="Welcome">
-              <p className="text-gray-700">Connect your Facebook Page in a few guided steps: login → choose business/page → subscribe webhook → generate page token → verify → send test → save.</p>
-            </Card>
-          )}
+      <div className="space-y-6">
+        {step === 0 && (
+          <Card title="Welcome">
+            <p className="text-gray-700">Connect your Facebook Page in a few guided steps: login → choose business/page → subscribe webhook → generate page token → verify → send test → save.</p>
+          </Card>
+        )}
 
-          {step === 1 && (
-            <Card title="Login with Facebook">
-              <div className="flex flex-wrap items-center gap-3">
-                <button className="rounded-xl bg-indigo-600 px-4 py-2 text-white" onClick={beginOAuth}>Continue with Facebook</button>
-                <button className="rounded-xl border px-4 py-2" onClick={exchangeUserToken} disabled={!userToken || busy}>Exchange for long‑lived user token</button>
-              </div>
-              {userToken && <p className="pt-2 text-xs text-green-700">Short‑lived token detected; you can exchange it now.</p>}
-              {userTokenLL && <p className="pt-1 text-xs text-green-700">Long‑lived user token ready ✔</p>}
-            </Card>
-          )}
+        {step === 1 && (
+          <Card title="Login with Facebook">
+            <div className="flex flex-wrap items-center gap-3">
+              <button className="rounded-xl bg-indigo-600 px-4 py-2 text-white" onClick={beginOAuth}>Continue with Facebook</button>
+              <button className="rounded-xl border px-4 py-2" onClick={exchangeUserToken} disabled={!userToken || busy}>Exchange for long‑lived user token</button>
+            </div>
+            {userToken && <p className="pt-2 text-xs text-green-700">Short‑lived token detected; you can exchange it now.</p>}
+            {userTokenLL && <p className="pt-1 text-xs text-green-700">Long‑lived user token ready ✔</p>}
+          </Card>
+        )}
 
-          {step === 2 && (
-            <Card title="Choose Business (optional)">
-              <div className="flex items-center gap-2">
-                <button className="rounded-lg border px-3 py-2" onClick={loadBusinesses} disabled={busy}>Load Businesses</button>
-                <select className="min-w-[16rem] rounded-lg border px-3 py-2" value={businessId} onChange={(e) => setBusinessId(e.target.value)}>
-                  <option value="">— No Business / Personal —</option>
-                  {businesses.map((b) => <option key={b.id} value={b.id}>{b.name} ({b.id})</option>)}
-                </select>
-              </div>
-            </Card>
-          )}
+        {step === 2 && (
+          <Card title="Choose Business (optional)">
+            <div className="flex items-center gap-2">
+              <button className="rounded-lg border px-3 py-2" onClick={loadBusinesses} disabled={busy}>Load Businesses</button>
+              <select className="min-w-[16rem] rounded-lg border px-3 py-2" value={businessId} onChange={(e) => setBusinessId(e.target.value)}>
+                <option value="">— No Business / Personal —</option>
+                {businesses.map((b) => <option key={b.id} value={b.id}>{b.name} ({b.id})</option>)}
+              </select>
+            </div>
+          </Card>
+        )}
 
-          {step === 3 && (
-            <Card title="Choose Page">
-              <div className="flex items-center gap-2">
-                <button className="rounded-lg border px-3 py-2" onClick={loadPages} disabled={busy}>Load Pages</button>
-                <select className="min-w-[20rem] rounded-lg border px-3 py-2" value={pageId} onChange={(e) => {
-                  const id = e.target.value; setPageId(id);
-                  const p = pages.find((x) => x.id === id); setPageName(p?.name || "");
-                }}>
-                  <option value="">— Select a Page —</option>
-                  {pages.map((p) => <option key={p.id} value={p.id}>{p.name} ({p.id})</option>)}
-                </select>
-              </div>
-              {pageName && <p className="pt-2 text-xs text-gray-600">Selected: <b>{pageName}</b></p>}
-            </Card>
-          )}
+        {step === 3 && (
+          <Card title="Choose Page">
+            <div className="flex items-center gap-2">
+              <button className="rounded-lg border px-3 py-2" onClick={loadPages} disabled={busy}>Load Pages</button>
+              <select className="min-w-[20rem] rounded-lg border px-3 py-2" value={pageId} onChange={(e) => {
+                const id = e.target.value; setPageId(id);
+                const p = pages.find((x) => x.id === id); setPageName(p?.name || "");
+              }}>
+                <option value="">— Select a Page —</option>
+                {pages.map((p) => <option key={p.id} value={p.id}>{p.name} ({p.id})</option>)}
+              </select>
+            </div>
+            {pageName && <p className="pt-2 text-xs text-gray-600">Selected: <b>{pageName}</b></p>}
+          </Card>
+        )}
 
-          {step === 4 && (
-            <Card title="Subscribe Webhook">
-              <p className="text-gray-700">Subscribe our app to your Page webhook so we can receive Messenger events.</p>
-              <button className="mt-3 rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={subscribeWebhook} disabled={!pageId || !pageAccessToken || busy}>Subscribe</button>
-              {webhookSubscribed && <p className="pt-2 text-xs text-green-700">Webhook subscription successful ✔</p>}
-            </Card>
-          )}
+        {step === 4 && (
+          <Card title="Subscribe Webhook">
+            <p className="text-gray-700">Subscribe our app to your Page webhook so we can receive Messenger events.</p>
+            <button className="mt-3 rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={subscribeWebhook} disabled={!pageId || !pageAccessToken || busy}>Subscribe</button>
+            {webhookSubscribed && <p className="pt-2 text-xs text-green-700">Webhook subscription successful ✔</p>}
+          </Card>
+        )}
 
-          {step === 5 && (
-            <Card title="Create Page Token">
-              <p className="text-gray-700">We’ll request a Page access token and only show a masked preview here.</p>
-              <button className="mt-3 rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={createPageToken} disabled={!pageId || busy}>Create Page token</button>
-              {pageTokenMasked && <p className="pt-2 text-xs text-green-700">Token: <span className="font-mono">{pageTokenMasked}</span> ✔</p>}
-            </Card>
-          )}
+        {step === 5 && (
+          <Card title="Create Page Token">
+            <p className="text-gray-700">We’ll request a Page access token and only show a masked preview here.</p>
+            <button className="mt-3 rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={createPageToken} disabled={!pageId || busy}>Create Page token</button>
+            {pageTokenMasked && <p className="pt-2 text-xs text-green-700">Token: <span className="font-mono">{pageTokenMasked}</span> ✔</p>}
+          </Card>
+        )}
 
-          {step === 6 && (
-            <Card title="Verify Webhook">
-              <p className="text-gray-700">Click to check your webhook health. In your Meta App settings, the Webhook URL should point to <code>/api/meta/webhook</code> and use the same verify token as your env.</p>
-              <button className="mt-3 rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={verifyWebhook} disabled={busy}>Check status</button>
-              {webhookVerified && <p className="pt-2 text-xs text-green-700">Webhook verified ✔</p>}
-            </Card>
-          )}
+        {step === 6 && (
+          <Card title="Verify Webhook">
+            <p className="text-gray-700">Click to check your webhook health. In your Meta App settings, the Webhook URL should point to <code>/api/meta/webhook</code> and use the same verify token as your env.</p>
+            <button className="mt-3 rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={verifyWebhook} disabled={busy}>Check status</button>
+            {webhookVerified && <p className="pt-2 text-xs text-green-700">Webhook verified ✔</p>}
+          </Card>
+        )}
 
-          {step === 7 && (
-            <Card title="Send Test Message">
-              <div className="flex flex-col gap-3 max-w-xl">
-                <input className="rounded-lg border px-3 py-2" placeholder="Recipient PSID" value={psid} onChange={(e) => setPsid(e.target.value)} />
-                <textarea className="min-h-[80px] rounded-lg border px-3 py-2" value={testText} onChange={(e) => setTestText(e.target.value)} />
-                <button className="rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={sendTest} disabled={!pageId || !psid || !pageAccessToken || busy}>Send test</button>
-                {testSent && <p className="text-xs text-green-700">Test message sent ✔</p>}
-              </div>
-            </Card>
-          )}
+        {step === 7 && (
+          <Card title="Send Test Message">
+            <div className="flex flex-col gap-3 max-w-xl">
+              <input className="rounded-lg border px-3 py-2" placeholder="Recipient PSID" value={psid} onChange={(e) => setPsid(e.target.value)} />
+              <textarea className="min-h-[80px] rounded-lg border px-3 py-2" value={testText} onChange={(e) => setTestText(e.target.value)} />
+              <button className="rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={sendTest} disabled={!pageId || !psid || !pageAccessToken || busy}>Send test</button>
+              {testSent && <p className="text-xs text-green-700">Test message sent ✔</p>}
+            </div>
+          </Card>
+        )}
 
-          {step === 8 && (
-            <Card title="Save & Finish">
-              <p className="text-gray-700">Save the connection (masked token only). You can add more Pages later.</p>
-              <button className="mt-3 rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={saveConnection} disabled={!pageId || !pageTokenMasked || busy}>Save connection</button>
-              <p className="pt-2 text-xs text-gray-600">Page: <b>{pageName || pageId}</b> {businessId ? `(Business: ${businessId})` : ""}</p>
-            </Card>
-          )}
-        </motion.div>
-      </AnimatePresence>
+        {step === 8 && (
+          <Card title="Save & Finish">
+            <p className="text-gray-700">Save the connection (masked token only). You can add more Pages later.</p>
+            <button className="mt-3 rounded-xl bg-indigo-600 px-4 py-2 text-white disabled:opacity-50" onClick={saveConnection} disabled={!pageId || !pageTokenMasked || busy}>Save connection</button>
+            <p className="pt-2 text-xs text-gray-600">Page: <b>{pageName || pageId}</b> {businessId ? `(Business: ${businessId})` : ""}</p>
+          </Card>
+        )}
+      </div>
 
       <footer className="flex items-center justify-between pt-2">
         <button onClick={back} disabled={step === 0} className="rounded-xl border px-4 py-2 disabled:opacity-50">Back</button>
