@@ -1,5 +1,7 @@
-"use client";
-import { useEffect, useState } from "react";
+// src/components/MessengerAccessWizard.jsx
+'use client';
+
+import React, { useEffect, useMemo, useState } from 'react';
 
 function DemoCarousel() {
   const slides = [
