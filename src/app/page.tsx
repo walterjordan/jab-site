@@ -95,7 +95,7 @@ export default function ManyChatStyleLanding() {
               Make the most out of <span className="text-[#630183]">every conversation</span>
             </h1>
             <p className="mt-4 text-lg text-slate-700 max-w-2xl">
-              Sell more, engage better, and grow your audience with powerful automations across Instagram, WhatsApp, TikTok, and Messenger.
+              Sell more, engage better, and grow your audience with powerful automations across Facebook and Instagram.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a className="px-5 py-3 rounded-xl bg-[#7FFF41] text-black shadow" href="https://m.me/611741395360453" target="_blank" rel="noopener noreferrer">Chat Live on Messenger</a>
