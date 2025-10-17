@@ -1,5 +1,5 @@
 This is a Jordan and Borden [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-Subject to privacy laws of the United States. Respect and Recognize
+Subject to privacy laws of the United States. Respect and Recognize F2W in Atlanta
 
 ## Getting Started
 
