@@ -125,7 +125,7 @@ export default function ManyChatStyleLanding() {
           <p className="text-center text-slate-600 mt-3 max-w-2xl mx-auto">Comment-to-DM, keyword triggers, link-in-bio, and checkout—all from one place.</p>
           <div className="mt-10 grid md:grid-cols-3 gap-6">
             {[
-              {title: "Comment → DM", desc: "Turn comments into conversations automatically."},
+              {title: "Comments into Conversations→ DM", desc: "Turn Facebook and Instagram comments into conversations that get you leads automatically."},
               {title: "Smart Keywords", desc: "Capture intent with natural keywords and quick replies."},
               {title: "Cloud Storage", desc: "Your customer interactions are securely stored and accessible by you only."},
               {title: "Speed to Lead", desc: "AI generates timely customer responses automatically 24/7"},
