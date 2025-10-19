@@ -125,12 +125,12 @@ export default function ManyChatStyleLanding() {
           <p className="text-center text-slate-600 mt-3 max-w-2xl mx-auto">Upgrade Facebook Messenger with JAB.</p>
           <div className="mt-10 grid md:grid-cols-3 gap-6">
             {[
-              {title: "Upgrade Facebook → AI Assisted Responder", desc: "Upgrade Facebook Messenger with JAB and unlock a powerful AI Assisted Responder capable of generating leads and sending them to your phone real time via text message."},
-              {title: "Smart Keywords", desc: "Smart Keywords are used to capture intent. This technique provides a more predictiable response by letting AI decide the best pre-crafted quick replys."},
+              {title: "Upgrade Facebook → Facebook Messenger AI Assistant Agent", desc: "Upgrade Facebook Messenger with JAB and unlock a powerful Facebook Messenger AI Assistant Agent capable of generating leads and sending them to your phone real time via text message."},
+              {title: "AI Assisted Response Selector", desc: "Smart Keywords capture prospect intent from  a Facebook Ad reply. This technique provides a more predictiable response by letting AI decide the best pre-crafted response."},
               {title: "Cloud Storage", desc: "Your customer interactions are securely stored and accessible by you only."},
-              {title: "Speed to Lead", desc: "AI generates timely customer responses automatically 24/7"},
+              {title: "Speed to Lead", desc: "AI Assistant Agent & AI Assisted Response Selector generate timely customer responses automatically 24/7"},
               {title: "Payments", desc: "Collect via Stripe or native channel payments."},
-              {title: "Integrations", desc: "Connect Airtable, Make.com, Google Sheets, and more."},
+              {title: "Integrations", desc: "Connect Chat GPT Assistants to Facebook, Instagram, Google, What's App, Slack, Workday Salesforce and more."},
             ].map((f) => (
               <div key={f.title} className="rounded-2xl p-6 ring-1 ring-slate-200 bg-white/90">
                 <svg
@@ -179,9 +179,9 @@ export default function ManyChatStyleLanding() {
           <p className="text-center text-slate-600 mt-2">Simple month to month pricing.</p>
           <div className="mt-10 grid md:grid-cols-3 gap-6">
             {[
-              {name: "Solo", price: "$189", features: ["1 Social Media", "Basic automations", "Email/Chat support"]},
-              {name: "Team", price: "from $499/mo", features: ["1 Social", "Advanced automations", "Payments", "Priority support"]},
-              {name: "Business Pro", price: "Custom", features: ["2 Socials","Advanced automations", "High‑volume", "Dedicated success", "24/7 Live Contact"]},
+              {name: "Solo", price: "$189", features: ["1 Social Media", "AI Assisted Response Selector", "Advanced Automations", "Email/Chat support"]},
+              {name: "Team", price: "from $499/mo", features: ["1 Social", "Facebook Messenger AI Assistant Agent", "Advanced Custom Automations", "Payments", "Priority support"]},
+              {name: "Business Pro", price: "Custom", features: ["2 Socials", "Facebook Messenger AI Assistant Agent", "AI Assisted Response Selector", "Advanced Custom Automations", "Payments", "High‑volume", "Dedicated success", "24/7 Live Contact"]},
             ].map((t, idx) => (
               <div key={t.name} className={`rounded-2xl p-6 ring-1 ring-slate-200 bg-white/90 ${idx===1 ? 'shadow-xl scale-[1.02] border border-[#7FFF41]/40' : ''}`}>
                 <div className="text-sm font-medium text-slate-500">{t.name}</div>
