@@ -122,10 +122,10 @@ export default function ManyChatStyleLanding() {
       <section id="features" className="py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="text-3xl md:text-4xl font-semibold text-center">Automation that sells while you sleep</h2>
-          <p className="text-center text-slate-600 mt-3 max-w-2xl mx-auto">Upgrade Facebook Messenger with JAB.</p>
+          <p className="text-center text-slate-600 mt-3 max-w-2xl mx-auto">Knock out Facebook Messenger replies with JAB.</p>
           <div className="mt-10 grid md:grid-cols-3 gap-6">
             {[
-              {title: "Upgrade Facebook → Facebook Messenger AI Assistant Agent", desc: "Upgrade Facebook Messenger with JAB and unlock a powerful Facebook Messenger AI Assistant Agent capable of generating leads and sending them to your phone real time via text message."},
+              {title: "Facebook Messenger AI Assistant Agent", desc: "Upgrade Facebook Messenger with JAB and unlock a powerful Facebook Messenger AI Assistant Agent capable of generating leads and sending them to your phone real time via text message."},
               {title: "AI Assisted Response Selector", desc: "Smart Keywords capture prospect intent from  a Facebook Ad reply. This technique provides a more predictiable response by letting AI decide the best pre-crafted response."},
               {title: "Cloud Storage", desc: "Your customer interactions are securely stored and accessible by you only."},
               {title: "Speed to Lead", desc: "AI Assistant Agent & AI Assisted Response Selector generate timely customer responses automatically 24/7"},
@@ -153,13 +153,13 @@ export default function ManyChatStyleLanding() {
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="text-2xl md:text-3xl font-semibold text-center">Channels</h2>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {["Facebook Messenger", "Instagram", "WhatsApp", "TikTok"].map((c,i) => (
+            {["Facebook", "Linked In", "Instagram", "WhatsApp", "TikTok"].map((c,i) => (
               <button key={c} className={`px-4 py-2 rounded-full text-sm border ${i===0 ? 'bg-[#7FFF41] text-black border-[#010E63]' : 'bg-white border-slate-300'}`}>{c}</button>
             ))}
           </div>
           <div className="mt-8 rounded-2xl bg-white/90 ring-1 ring-slate-200 p-6 grid md:grid-cols-2 gap-6 items-center">
             <div>
-              <h3 className="font-semibold text-lg">Facebook DM Automation</h3>
+              <h3 className="font-semibold text-lg">Facebook Messenger Automation</h3>
               <p className="text-sm text-slate-600 mt-2">Reply to comments with AI, capture phone numbers, follow up with links, and receive text messages when there is a Hot Lead.</p>
               <ul className="mt-4 space-y-2 text-sm text-slate-700 list-disc ml-5">
                 <li>Auto‑reply to Facebook Ad</li>
@@ -179,9 +179,9 @@ export default function ManyChatStyleLanding() {
           <p className="text-center text-slate-600 mt-2">Simple month to month pricing.</p>
           <div className="mt-10 grid md:grid-cols-3 gap-6">
             {[
-              {name: "Solo", price: "$189", features: ["1 Social Media", "AI Assisted Response Selector", "Advanced Automations", "Email/Chat support"]},
-              {name: "Team", price: "from $499/mo", features: ["1 Social", "Facebook Messenger AI Assistant Agent", "Advanced Custom Automations", "Payments", "Priority support"]},
-              {name: "Business Pro", price: "Custom", features: ["2 Socials", "Facebook Messenger AI Assistant Agent", "AI Assisted Response Selector", "Advanced Custom Automations", "Payments", "High‑volume", "Dedicated success", "24/7 Live Contact"]},
+              {name: "Left Jab", price: "$199", features: ["1 Social Media", "AI Assisted Response Selector", "Advanced Automations", "Email/Chat support"]},
+              {name: "Upper Cut", price: "from $499/mo", features: ["1 Social", "Facebook Messenger AI Assistant Agent", "AI Assisted Response Selector", "Advanced Custom Automations", "Payments", "Priority support"]},
+              {name: "Hay Maker", price: "from $999/mo", features: ["2 Socials", "Facebook & Instagram Messenger AI Assistant Agent", "AI Assisted Response Selector", "Advanced Custom Automations", "Payments", "High‑volume", "Dedicated success", "24/7 Live Contact"]},
             ].map((t, idx) => (
               <div key={t.name} className={`rounded-2xl p-6 ring-1 ring-slate-200 bg-white/90 ${idx===1 ? 'shadow-xl scale-[1.02] border border-[#7FFF41]/40' : ''}`}>
                 <div className="text-sm font-medium text-slate-500">{t.name}</div>
