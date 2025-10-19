@@ -122,11 +122,11 @@ export default function ManyChatStyleLanding() {
       <section id="features" className="py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-4">
           <h2 className="text-3xl md:text-4xl font-semibold text-center">Automation that sells while you sleep</h2>
-          <p className="text-center text-slate-600 mt-3 max-w-2xl mx-auto">Comment-to-DM, keyword triggers, link-in-bio, and checkout—all from one place.</p>
+          <p className="text-center text-slate-600 mt-3 max-w-2xl mx-auto">Upgrade Facebook Messenger with JAB.</p>
           <div className="mt-10 grid md:grid-cols-3 gap-6">
             {[
-              {title: "Comments into Conversations→ DM", desc: "Turn Facebook and Instagram comments into conversations that get you leads automatically."},
-              {title: "Smart Keywords", desc: "Capture intent with natural keywords and quick replies."},
+              {title: "Upgrade Facebook → AI Assisted Responder", desc: "Upgrade Facebook Messenger with JAB and unlock a powerful AI Assisted Responder capable of generating leads and sending them to your phone real time via text message."},
+              {title: "Smart Keywords", desc: "Smart Keywords are used to capture intent. This technique provides a more predictiable response by letting AI decide the best pre-crafted quick replys."},
               {title: "Cloud Storage", desc: "Your customer interactions are securely stored and accessible by you only."},
               {title: "Speed to Lead", desc: "AI generates timely customer responses automatically 24/7"},
               {title: "Payments", desc: "Collect via Stripe or native channel payments."},
