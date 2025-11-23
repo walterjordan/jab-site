@@ -124,9 +124,7 @@ export default function ManyChatStyleLanding() {
       <header className="sticky top-0 z-40 border-b border-white/5 bg-slate-950/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#7fff41] text-xs font-black text-slate-900 shadow-lg shadow-[#7fff41]/40">
-              JAB
-            </div>
+            <img src="/jab-logo.png" alt="JAB logo" className="h-9 w-9 rounded-md shadow-sm invert" />
             <div>
               <p className="text-sm font-semibold tracking-tight">
                 Jordan &amp; Borden
