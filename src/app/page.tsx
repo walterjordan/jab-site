@@ -6,7 +6,7 @@ const MESSENGER_URL = "https://m.me/611741395360453";
 // Put your real Video Builder URL in NEXT_PUBLIC_JAB_VIDEO_BUILDER_URL
 const JAB_VIDEO_BUILDER_URL =
   process.env.NEXT_PUBLIC_JAB_VIDEO_BUILDER_URL ||
-  "https://jab-ad-creatorv1.jordanborden.com/-video-builder";
+  "https://jab-ad-creatorv1.jordanborden.com/";
 
 const navItems = [
   { href: "#features", label: "Features" },
