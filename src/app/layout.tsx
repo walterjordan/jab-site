@@ -1,47 +1,47 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://jab-mobile-199373649190.us-east1.run.app"),
-  title: {
-    default: "Facebook Automation — JAB",
-    template: "%s — JAB",
-  },
+  title: "Jordan & Borden | Facebook Automation & AI Consulting",
   description:
-    "Sell more with AI-powered Facebook & Messenger automation by Jordan & Borden.",
-  icons: {
-    icon: [
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon.ico" }, // fallback for older browsers
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
-  },
-  themeColor: "#010E63",
+    "Jordan & Borden helps growth-minded brands build Meta Messenger & Instagram automations that sell, support, and scale using AI.",
+  metadataBase: new URL("https://jordanborden.com"),
   openGraph: {
-    title: "Facebook Automation — JAB",
-    description: "AI assistant that captures leads and replies 24/7 on Messenger.",
-    url: "/",
-    siteName: "JAB",
-    images: [{ url: "/jab-logo.png", width: 512, height: 512, alt: "JAB" }],
+    title: "Jordan & Borden Automation Consulting",
+    description:
+      "Automation that makes every Facebook & Instagram conversation count.",
+    url: "https://jordanborden.com",
+    siteName: "Jordan & Borden",
     type: "website",
   },
-  twitter: {
-    card: "summary",
-    title: "Facebook Automation — JAB",
-    description: "AI assistant that captures leads and replies 24/7 on Messenger.",
-    images: ["/jab-logo.png"],
+  icons: {
+    icon: "/favicon.ico",
   },
-  applicationName: "JAB",
-  creator: "Jordan & Borden",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
-
