@@ -31,7 +31,7 @@ steps:
       - '--region=$_DEPLOY_REGION'
       - '--platform=managed'
       - '--allow-unauthenticated'
-      - '--labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$TRIGGER_ID'
+      - '--labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID'
       # Non-secret runtime variables from Airtable/Google configuration
       - '--set-env-vars'
       - 'AIRTABLE_BASE_ID=appeJqZ5yjyPmh1MC,AIRTABLE_PARTICIPANTS_TABLE=Participants,AIRTABLE_SESSIONS_TABLE=Live Sessions,AIRTABLE_CHALLENGES_TABLE=Challenges,GOOGLE_CALENDAR_ID=c_0cdca889ecc9974ca3f729265f27a3f951ff54e5844877d38681fe529e5e356b@group.calendar.google.com,GOOGLE_CLIENT_EMAIL=199373649190-compute@developer.gserviceaccount.com'
