@@ -4,6 +4,15 @@ import { useEffect, useState } from "react";
 
 import RegistrationModal from "./RegistrationModal";
 
+type CalendarEvent = {
+  id: string;
+  title: string;
+  start: string;
+  end: string;
+  link: string;
+  description?: string;
+};
+
 export default function UpcomingSessions() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
