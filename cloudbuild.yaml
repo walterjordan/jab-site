@@ -6,7 +6,6 @@ steps:
       - 'build'
       - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
       - '--builder=gcr.io/buildpacks/builder:latest'
-      - '--network=cloud-build'
       # Build-time environment variables (Required for Next.js NEXT_PUBLIC_* vars)
       - '--env=NEXT_PUBLIC_MESSENGER_URL=$_NEXT_PUBLIC_MESSENGER_URL'
       - '--env=NEXT_PUBLIC_GA4=$_NEXT_PUBLIC_GA4'
