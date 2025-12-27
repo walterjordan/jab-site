@@ -2,10 +2,15 @@ import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 import Airtable from 'airtable';
 
-// Configure Airtable
-const airtableBase = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
-  process.env.AIRTABLE_BASE_ID!
-);
+// Configure Airtable Lazily
+const getAirtableBase = () => {
+  if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+    throw new Error("Missing Airtable configuration");
+  }
+  return new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    process.env.AIRTABLE_BASE_ID
+  );
+};
 const PARTICIPANTS_TABLE = process.env.AIRTABLE_PARTICIPANTS_TABLE || 'Participants';
 
 // Helper to format private key
@@ -37,6 +42,7 @@ export async function POST(req: Request) {
     // 1. SYNC WITH AIRTABLE (Participants Table)
     let airtableRecordId;
     try {
+      const airtableBase = getAirtableBase();
       // Check if participant exists
       const records = await airtableBase(PARTICIPANTS_TABLE)
         .select({
