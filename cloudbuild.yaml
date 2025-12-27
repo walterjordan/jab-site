@@ -51,4 +51,4 @@ substitutions:
   _NEXT_PUBLIC_ADS_ID: AW-XXXXXXX
 
 options:
-  logging: CLOUD_LOGGING
+  logging: CLOUD_LOGGING_ONLY
