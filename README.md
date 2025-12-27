@@ -53,6 +53,7 @@ The project uses **Google Cloud Build** for continuous deployment:
 2.  **Build**: Uses Google Cloud Buildpacks to create a container image.
 3.  **Secrets**: Injects `AIRTABLE_API_KEY` and `GOOGLE_PRIVATE_KEY` from Google Secret Manager.
 4.  **Deploy**: Deploys the service to **Cloud Run** (`us-east1`) with public access.
+    *   *Note:* Ensure the Cloud Run Service Account has the **Secret Manager Secret Accessor** role.
 
 ## Project Structure
 
