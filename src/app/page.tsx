@@ -1,5 +1,6 @@
-import GoogleCalendar from "@/components/booking/GoogleCalendar";
 "use client";
+
+import UpcomingSessions from "@/components/booking/UpcomingSessions";
 
 const MESSENGER_URL = "https://m.me/611741395360453";
 
@@ -107,7 +108,7 @@ function classNames(...classes: (string | false | null | undefined)[]) {
 
 export default function ManyChatStyleLanding() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-slate-950 text-slate-50">
+    <div className="relative w-full">
       {/* Top gradient background */}
       <div
         aria-hidden
@@ -122,18 +123,18 @@ export default function ManyChatStyleLanding() {
 
       {/* NAVBAR */}
       <header className="sticky top-0 z-40 border-b border-white/5 bg-slate-950/80 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 md:py-4">
           <div className="flex items-center gap-3">
             <img src="/jab-logo.png" alt="JAB logo" className="h-9 w-9 rounded-md shadow-sm invert" />
             <div>
               <p className="text-sm font-semibold tracking-tight">
                 Jordan &amp; Borden
               </p>
-              <p className="text-xs text-slate-400">Automation Consulting</p>
+              <p className="text-sm text-slate-400">Automation Consulting</p>
             </div>
           </div>
 
-          <nav className="hidden items-center gap-8 text-sm text-slate-200 md:flex">
+          <nav className="hidden items-center gap-8 text-base text-slate-200 md:flex">
             {navItems.map((item) => (
               <a
                 key={item.href}
@@ -150,7 +151,7 @@ export default function ManyChatStyleLanding() {
               href={MESSENGER_URL}
               target="_blank"
               rel="noreferrer"
-              className="hidden rounded-full border border-[#7fff41]/60 px-4 py-2 text-xs font-medium text-[#7fff41] hover:bg-[#7fff41]/10 md:inline-block"
+              className="hidden rounded-full border border-[#7fff41]/60 px-4 py-2 text-sm font-medium text-[#7fff41] hover:bg-[#7fff41]/10 md:inline-block"
             >
               Chat live on Messenger
             </a>
@@ -161,124 +162,95 @@ export default function ManyChatStyleLanding() {
       <main>
         {/* HERO */}
         <section id="cta" className="relative border-b border-white/5">
-          <div className="mx-auto flex max-w-7xl flex-col gap-12 px-4 py-12 md:flex-row md:items-center md:py-20">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-slate-900/70 px-3 py-1 text-[11px] ring-1 ring-white/10">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#7fff41]" />
-                <span className="font-medium text-slate-200">
-                  Verified Meta Media Agency · WhatsApp · Instagram · Messenger
-                </span>
-              </div>
-
-              <h1 className="mt-5 text-3xl font-semibold leading-tight tracking-tight text-slate-50 sm:text-4xl md:text-5xl">
-                Make the most out of{" "}
-                <span className="bg-gradient-to-r from-[#7fff41] via-white to-[#ff00ff] bg-clip-text text-transparent">
-                  every conversation
-                </span>
-              </h1>
-
-              <p className="mt-4 text-base text-slate-200/80 sm:text-lg">
-                Jordan &amp; Borden designs high-performing Messenger and Instagram
-                automations that feel human, respond instantly, and plug directly
-                into your sales process.
-              </p>
-
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <a
-                  href={MESSENGER_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-full bg-[#7fff41] px-6 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-[#7fff41]/40 transition hover:translate-y-[1px] hover:bg-[#a4ff82]"
-                >
-                  Chat live on Messenger
-                </a>
-                <a
-                  href="#pricing"
-                  className="inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-3 text-sm font-medium text-slate-100 hover:border-[#7fff41]/60 hover:text-[#7fff41]"
-                >
-                  Book a strategy session
-                </a>
-              </div>
-
-              <div className="mt-6 flex flex-wrap gap-6 text-xs text-slate-300/80">
-                <div>
-                  <p className="font-semibold text-slate-100">
-                    40+ campaigns automated
-                  </p>
-                  <p>From local service brands to multi-location franchises.</p>
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-100">
-                    &lt; 30s average response
-                  </p>
-                  <p>Keep leads warm while your team focuses on closers.</p>
-                </div>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3 text-[11px] text-slate-300/70">
-                {audiencePills.map((pill) => (
-                  <span
-                    key={pill}
-                    className="rounded-full border border-white/15 bg-white/5 px-3 py-1"
-                  >
-                    {pill}
-                  </span>
-                ))}
-              </div>
+          <div className="mx-auto flex max-w-7xl xl:max-w-(--breakpoint-2xl) flex-col gap-12 px-6 py-12 md:flex-row md:items-center md:py-20">
+            <div className="flex-1">
+              <img
+                src="/New AI Mastermind SS.png"
+                alt="AI Mastermind Screenshot"
+                className="w-full h-auto rounded-lg shadow-2xl shadow-[#7fff41]/20 border border-white/10"
+              />
             </div>
 
-            {/* Right side mock panel */}
-            <div className="w-full max-w-md shrink-0 self-stretch rounded-3xl border border-white/10 bg-slate-900/80 p-4 shadow-2xl shadow-black/40 backdrop-blur md:w-5/12">
-              <div className="flex items-center justify-between text-xs text-slate-300">
-                <span className="inline-flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                  Live automations
-                </span>
-                <span>Messenger · Instagram</span>
-              </div>
-              <div className="mt-4 space-y-3 text-xs">
-                <div className="rounded-2xl bg-slate-800/80 p-3">
-                  <p className="text-[11px] text-slate-400">
-                    Lead from Facebook Ads
-                  </p>
-                  <p className="mt-1 text-sm font-medium text-slate-50">
-                    “Hey JAB, I&apos;m ready to paint my house next month…”
-                  </p>
-                  <p className="mt-2 text-[11px] text-[#7fff41]">
-                    Bot · “Got it Walter. What&apos;s your ZIP code so we can
-                    match you to the right crew?”
-                  </p>
-                </div>
-                <div className="rounded-2xl bg-slate-800/80 p-3">
-                  <p className="text-[11px] text-slate-400">Instagram DMs</p>
-                  <p className="mt-1 text-sm font-medium text-slate-50">
-                    “Can you do exteriors + cabinets?”
-                  </p>
-                  <p className="mt-2 text-[11px] text-[#7fff41]">
-                    Flow · Sends services menu, qualifies budget, and routes to
-                    your team when they say “ready”.
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 rounded-2xl border border-dashed border-white/15 p-3 text-[11px] text-slate-300">
-                <p className="font-medium text-slate-100">What we deliver</p>
-                <p className="mt-1">
-                  Strategy, build, tech stack wiring, and the playbook your team
-                  can keep iterating on.
-                </p>
-              </div>
-            </div>
+            {/* Right side mock panel - Upcoming Sessions */}
+            <UpcomingSessions />
           </div>
         </section>
 
         {/* FEATURES + JAB VIDEO BUILDER CTA */}
         <section id="features" className="border-b border-white/5 py-12 md:py-16">
-          <div className="mx-auto max-w-7xl px-4">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="mb-16 flex flex-col items-start gap-6 md:flex-row md:items-center">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 rounded-full bg-slate-900/70 px-3 py-1 text-xs ring-1 ring-white/10">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#7fff41]" />
+                  <span className="font-medium text-slate-200">
+                    Verified Meta Media Agency · WhatsApp · Instagram · Messenger
+                  </span>
+                </div>
+
+                <h1 className="mt-5 text-3xl font-semibold leading-tight tracking-tight text-slate-50 sm:text-4xl md:text-5xl">
+                  Make the most out of{" "}
+                  <span className="bg-gradient-to-r from-[#7fff41] via-white to-[#ff00ff] bg-clip-text text-transparent">
+                    every conversation
+                  </span>
+                </h1>
+
+                <p className="mt-4 text-lg text-slate-200/80 sm:text-xl">
+                  Jordan &amp; Borden designs high-performing Messenger and Instagram
+                  automations that feel human, respond instantly, and plug directly
+                  into your sales process.
+                </p>
+
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <a
+                    href={MESSENGER_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-full bg-[#7fff41] px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-[#7fff41]/40 transition hover:translate-y-[1px] hover:bg-[#a4ff82]"
+                  >
+                    Chat live on Messenger
+                  </a>
+                  <a
+                    href="#pricing"
+                    className="inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-3 text-base font-medium text-slate-100 hover:border-[#7fff41]/60 hover:text-[#7fff41]"
+                  >
+                    Book a strategy session
+                  </a>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-6 text-sm text-slate-300/80">
+                  <div>
+                    <p className="font-semibold text-slate-100">
+                      40+ campaigns automated
+                    </p>
+                    <p>From local service brands to multi-location franchises.</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-100">
+                      &lt; 30s average response
+                    </p>
+                    <p>Keep leads warm while your team focuses on closers.</p>
+                  </div>
+                </div>
+
+                <div className="mt-8 flex flex-wrap gap-3 text-xs text-slate-300/70">
+                  {audiencePills.map((pill) => (
+                    <span
+                      key={pill}
+                      className="rounded-full border border-white/15 bg-white/5 px-3 py-1"
+                    >
+                      {pill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             <div className="max-w-2xl text-center md:mx-auto">
               <h2 className="text-2xl font-semibold text-slate-50 sm:text-3xl">
                 Automation that sells while you sleep
               </h2>
-              <p className="mt-3 text-sm text-slate-300 sm:text-base">
+              <p className="mt-3 text-base text-slate-300 sm:text-lg">
                 We combine Meta automation, AI, and smart routing so every
                 click, comment, and DM has a clear next step.
               </p>
@@ -293,22 +265,22 @@ export default function ManyChatStyleLanding() {
                   <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#630183]/40 text-xs text-[#7fff41]">
                     ✶
                   </div>
-                  <h3 className="text-sm font-semibold text-slate-50">
+                  <h3 className="text-base font-semibold text-slate-50">
                     {f.title}
                   </h3>
-                  <p className="mt-2 text-xs text-slate-300">{f.desc}</p>
+                  <p className="mt-2 text-sm text-slate-300">{f.desc}</p>
                 </article>
               ))}
 
               {/* JAB Video Builder card */}
               <article className="group rounded-2xl border border-[#7fff41]/40 bg-gradient-to-br from-[#010e63] via-[#630183] to-slate-900 p-5 text-left shadow-lg shadow-[#7fff41]/25 md:col-span-3 lg:col-span-1">
-                <p className="inline-flex items-center rounded-full bg-black/40 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-[#7fff41]">
+                <p className="inline-flex items-center rounded-full bg-black/40 px-2 py-1 text-xs font-medium uppercase tracking-wide text-[#7fff41]">
                   {videoBuilderCard.badge}
                 </p>
-                <h3 className="mt-3 text-base font-semibold text-white">
+                <h3 className="mt-3 text-lg font-semibold text-white">
                   {videoBuilderCard.title}
                 </h3>
-                <p className="mt-2 text-xs text-slate-100/90">
+                <p className="mt-2 text-sm text-slate-100/90">
                   {videoBuilderCard.desc}
                 </p>
                 <button
@@ -317,7 +289,7 @@ export default function ManyChatStyleLanding() {
                   className="mt-4 inline-flex items-center justify-center rounded-full bg-black/80 px-4 py-2 text-xs font-semibold text-[#7fff41] ring-1 ring-[#7fff41]/60 transition hover:bg-black hover:ring-[#7fff41]"
                 >
                   {videoBuilderCard.ctaLabel}
-                  <span className="ml-2 text-[10px]">↗</span>
+                  <span className="ml-2 text-xs">↗</span>
                 </button>
               </article>
             </div>
@@ -326,20 +298,20 @@ export default function ManyChatStyleLanding() {
 
         {/* CHANNELS */}
         <section id="channels" className="border-b border-white/5 py-12 md:py-16">
-          <div className="mx-auto max-w-7xl px-4">
+          <div className="mx-auto max-w-6xl px-6">
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
               <div>
                 <h2 className="text-2xl font-semibold text-slate-50 sm:text-3xl">
                   One brain across every Meta channel
                 </h2>
-                <p className="mt-2 max-w-xl text-sm text-slate-300 sm:text-base">
+                <p className="mt-2 max-w-xl text-base text-slate-300 sm:text-lg">
                   We keep your automations consistent, so your brand feels like
                   the same smart assistant whether someone clicks an ad,
                   comments on a post, or slides into the DMs.
                 </p>
               </div>
 
-              <div className="flex flex-wrap justify-center gap-2 text-xs">
+              <div className="flex flex-wrap justify-center gap-2 text-sm">
                 {["Instagram", "WhatsApp", "Messenger", "TikTok"].map((channel) => (
                   <span
                     key={channel}
@@ -353,29 +325,29 @@ export default function ManyChatStyleLanding() {
 
             <div className="mt-8 grid gap-5 md:grid-cols-3">
               <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-sm text-slate-200">
-                <h3 className="text-sm font-semibold text-white">
+                <h3 className="text-base font-semibold text-white">
                   Lead capture &amp; nurture
                 </h3>
-                <p className="mt-2 text-xs text-slate-300">
+                <p className="mt-2 text-sm text-slate-300">
                   Click-to-Messenger and IG DM flows that capture details,
                   qualify interest, and queue your team for high-intent
                   conversations.
                 </p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-sm text-slate-200">
-                <h3 className="text-sm font-semibold text-white">
+                <h3 className="text-base font-semibold text-white">
                   Customer support automations
                 </h3>
-                <p className="mt-2 text-xs text-slate-300">
+                <p className="mt-2 text-sm text-slate-300">
                   Smart menus, order lookups, and FAQ flows that reduce
                   repetitive tickets while handing real issues to humans fast.
                 </p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-sm text-slate-200">
-                <h3 className="text-sm font-semibold text-white">
+                <h3 className="text-base font-semibold text-white">
                   Post-purchase &amp; referrals
                 </h3>
-                <p className="mt-2 text-xs text-slate-300">
+                <p className="mt-2 text-sm text-slate-300">
                   Follow-ups, review requests, and referral prompts that happen
                   automatically but still feel personal.
                 </p>
@@ -386,12 +358,12 @@ export default function ManyChatStyleLanding() {
 
         {/* PRICING */}
         <section id="pricing" className="border-b border-white/5 py-12 md:py-16">
-          <div className="mx-auto max-w-7xl px-4">
+          <div className="mx-auto max-w-6xl px-6">
             <div className="max-w-2xl text-center md:mx-auto">
               <h2 className="text-2xl font-semibold text-slate-50 sm:text-3xl">
                 Pick how you want to work with us
               </h2>
-              <p className="mt-3 text-sm text-slate-300 sm:text-base">
+              <p className="mt-3 text-base text-slate-300 sm:text-lg">
                 Whether you&apos;re just getting started or rolling out across
                 multiple locations, there&apos;s a path that fits.
               </p>
@@ -402,29 +374,29 @@ export default function ManyChatStyleLanding() {
                 <article
                   key={tier.name}
                   className={classNames(
-                    "flex flex-col rounded-3xl border bg-slate-900/70 p-6 text-left text-sm shadow-sm",
+                    "flex flex-col rounded-3xl border bg-slate-900/70 p-6 text-left text-base shadow-sm",
                     tier.featured
                       ? "border-[#7fff41]/60 shadow-[#7fff41]/25"
                       : "border-white/10"
                   )}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-base font-semibold text-white">
+                    <h3 className="text-lg font-semibold text-white">
                       {tier.name}
                     </h3>
                     {tier.featured && (
-                      <span className="rounded-full bg-[#7fff41]/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-[#7fff41]">
+                      <span className="rounded-full bg-[#7fff41]/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-[#7fff41]">
                         Most popular
                       </span>
                     )}
                   </div>
-                  <p className="mt-2 text-xs text-slate-300">
+                  <p className="mt-2 text-sm text-slate-300">
                     {tier.highlight}
                   </p>
-                  <p className="mt-4 text-lg font-semibold text-white">
+                  <p className="mt-4 text-xl font-semibold text-white">
                     {tier.price}
                   </p>
-                  <ul className="mt-4 space-y-2 text-xs text-slate-300">
+                  <ul className="mt-4 space-y-2 text-sm text-slate-300">
                     {tier.bullets.map((bullet) => (
                       <li key={bullet} className="flex gap-2">
                         <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-[#7fff41]" />
@@ -438,7 +410,7 @@ export default function ManyChatStyleLanding() {
                       target="_blank"
                       rel="noreferrer"
                       className={classNames(
-                        "inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold transition",
+                        "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition",
                         tier.featured
                           ? "bg-[#7fff41] text-slate-900 shadow-lg shadow-[#7fff41]/40 hover:bg-[#a4ff82]"
                           : "border border-white/20 text-slate-100 hover:border-[#7fff41]/60 hover:text-[#7fff41]"
@@ -455,12 +427,12 @@ export default function ManyChatStyleLanding() {
 
         {/* FAQ */}
         <section id="faq" className="py-12 md:py-16">
-          <div className="mx-auto max-w-5xl px-4">
+          <div className="mx-auto max-w-6xl px-6">
             <div className="max-w-xl">
               <h2 className="text-2xl font-semibold text-slate-50 sm:text-3xl">
                 Answers before you even DM us
               </h2>
-              <p className="mt-3 text-sm text-slate-300 sm:text-base">
+              <p className="mt-3 text-base text-slate-300 sm:text-lg">
                 If you don&apos;t see your situation here, send a quick message
                 in Messenger and we&apos;ll point you in the right direction.
               </p>
@@ -470,10 +442,10 @@ export default function ManyChatStyleLanding() {
               {faqs.map((item) => (
                 <div
                   key={item.q}
-                  className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-sm"
+                  className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-base"
                 >
                   <dt className="font-semibold text-slate-50">{item.q}</dt>
-                  <dd className="mt-2 text-xs text-slate-300">{item.a}</dd>
+                  <dd className="mt-2 text-sm text-slate-300">{item.a}</dd>
                 </div>
               ))}
             </dl>
@@ -481,8 +453,8 @@ export default function ManyChatStyleLanding() {
         </section>
       </main>
 
-      <footer className="border-t border-white/10 py-6 text-xs text-slate-400">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 sm:flex-row">
+      <footer className="border-t border-white/10 py-6 text-sm text-slate-400">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 sm:flex-row">
           <p>
             © {new Date().getFullYear()} Jordan &amp; Borden Automation
             Consulting. All rights reserved.
