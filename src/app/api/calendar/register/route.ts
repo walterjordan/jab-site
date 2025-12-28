@@ -12,6 +12,7 @@ const getAirtableBase = () => {
   );
 };
 const PARTICIPANTS_TABLE = process.env.AIRTABLE_PARTICIPANTS_TABLE || 'Participants';
+const REGISTRATIONS_TABLE = process.env.AIRTABLE_REGISTRATIONS_TABLE || 'Registrations';
 
 // Helper to format private key
 const getPrivateKey = () => process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
@@ -91,6 +92,18 @@ export async function POST(req: Request) {
         airtableRecordId = newRecord.id;
         console.log(`Created record: ${airtableRecordId}`);
       }
+
+      // 1.5 CREATE REGISTRATION RECORD (Junction Table)
+      if (airtableRecordId) {
+        console.log(`Creating Registration record for Participant ${airtableRecordId} and Event ${eventId}`);
+        await airtableBase(REGISTRATIONS_TABLE).create({
+          'Participant': [airtableRecordId], // Link field requires an array of IDs
+          'Event ID': eventId,
+          'Status': 'Pending' // Default status
+        });
+        console.log('Registration record created successfully.');
+      }
+
     } catch (airtableError: any) {
       console.error('Airtable Sync Error Full Details:', JSON.stringify(airtableError, null, 2));
       console.error('Airtable Error Message:', airtableError.message);
