@@ -74,44 +74,66 @@ export async function POST(req: Request) {
       }
     } catch (airtableError) {
       console.error('Airtable Sync Error:', airtableError);
-      // We continue even if Airtable fails, to ensure Calendar invite sends
     }
 
-    // 2. GOOGLE CALENDAR INVITE
-    const jwtClient = new google.auth.JWT({
-      email: clientEmail,
-      key: privateKey,
-      scopes: ['https://www.googleapis.com/auth/calendar'],
-      subject: 'walterjordan@f2wconsulting.com'
-    });
+    // 2. TRIGGER MAKE.COM WEBHOOK (Optional enrichment/automation)
+    if (process.env.MAKE_WEBHOOK_URL && airtableRecordId) {
+      try {
+        await fetch(process.env.MAKE_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            airtableRecordId,
+            email,
+            eventId,
+            status: 'Registered',
+            source: 'jab-site-registration'
+          }),
+        });
+      } catch (webhookError) {
+        console.error('Make Webhook Error:', webhookError);
+      }
+    }
 
-    const calendar = google.calendar({ version: 'v3', auth: jwtClient });
+    // 3. GOOGLE CALENDAR INVITE
+    try {
+      const jwtClient = new google.auth.JWT({
+        email: clientEmail,
+        key: privateKey,
+        scopes: ['https://www.googleapis.com/auth/calendar'],
+        subject: 'walterjordan@f2wconsulting.com'
+      });
 
-    // Fetch the event to get current attendees
-    const event = await calendar.events.get({
-      calendarId,
-      eventId,
-    });
+      const calendar = google.calendar({ version: 'v3', auth: jwtClient });
 
-    const currentAttendees = event.data.attendees || [];
-    
-    // Check if already attending
-    const isAlreadyAttending = currentAttendees.some(a => a.email === email);
-
-    if (!isAlreadyAttending) {
-      const updatedAttendees = [
-        ...currentAttendees,
-        { email, displayName: name || email },
-      ];
-
-      await calendar.events.patch({
+      // Fetch the event to get current attendees
+      const event = await calendar.events.get({
         calendarId,
         eventId,
-        requestBody: {
-          attendees: updatedAttendees,
-        },
-        sendUpdates: 'all', // This triggers the email invite
       });
+
+      const currentAttendees = event.data.attendees || [];
+      
+      // Check if already attending
+      const isAlreadyAttending = currentAttendees.some(a => a.email === email);
+
+      if (!isAlreadyAttending) {
+        const updatedAttendees = [
+          ...currentAttendees,
+          { email, displayName: name || email },
+        ];
+
+        await calendar.events.patch({
+          calendarId,
+          eventId,
+          requestBody: {
+            attendees: updatedAttendees,
+          },
+          sendUpdates: 'all', // This triggers the email invite
+        });
+      }
+    } catch (calError: any) {
+      console.error('Google Calendar Error:', calError);
     }
 
     return NextResponse.json({ 
