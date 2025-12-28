@@ -1,2 +1,4 @@
-node_modules
-.next\n.env.local\n.vscode
+node_modules/
+.next/
+.env.local
+.vscode/
