@@ -73,11 +73,20 @@ export async function POST(req: Request) {
       } else {
         // Create new participant
         console.log('Creating new record...');
+        
+        // Generate custom ID and Date
+        const timestamp = Date.now();
+        const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
+        const participantId = `P-${timestamp}-${randomStr}`;
+        const joinDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
         const newRecord = await airtableBase(PARTICIPANTS_TABLE).create({
           'Email': email,
           'Phone': phone || '',
-          'Full Name': name || email.split('@')[0], // Fallback name
+          'Full Name': name || email.split('@')[0],
           'Status': 'Registered',
+          'Participant ID': participantId,
+          'Join Date': joinDate,
         });
         airtableRecordId = newRecord.id;
         console.log(`Created record: ${airtableRecordId}`);
