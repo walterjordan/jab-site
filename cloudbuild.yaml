@@ -36,7 +36,7 @@ steps:
       - 'AIRTABLE_BASE_ID=appeJqZ5yjyPmh1MC,AIRTABLE_PARTICIPANTS_TABLE=Participants,AIRTABLE_SESSIONS_TABLE=Live Sessions,AIRTABLE_CHALLENGES_TABLE=Challenges,GOOGLE_CALENDAR_ID=c_0cdca889ecc9974ca3f729265f27a3f951ff54e5844877d38681fe529e5e356b@group.calendar.google.com,GOOGLE_CLIENT_EMAIL=199373649190-compute@developer.gserviceaccount.com'
       # Secrets from Secret Manager
       - '--set-secrets'
-      - 'AIRTABLE_API_KEY=AIRTABLE_API_K:latest,GOOGLE_PRIVATE_KEY=GOOGLE_PRIVATE_KEY:latest'
+      - 'AIRTABLE_API_KEY=AIRTABLE_API_K:latest,GOOGLE_PRIVATE_KEY=GOOGLE_PRIVATE_KEY:latest,MAKE_Mastermind_Registration_webhook_URL=_Registration_webhook_URL:latest'
     id: Deploy
 
 images:

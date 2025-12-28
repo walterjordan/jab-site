@@ -77,9 +77,9 @@ export async function POST(req: Request) {
     }
 
     // 2. TRIGGER MAKE.COM WEBHOOK (Optional enrichment/automation)
-    if (process.env.MAKE_WEBHOOK_URL && airtableRecordId) {
+    if (process.env.MAKE_Mastermind_Registration_webhook_URL && airtableRecordId) {
       try {
-        await fetch(process.env.MAKE_WEBHOOK_URL, {
+        await fetch(process.env.MAKE_Mastermind_Registration_webhook_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
