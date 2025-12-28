@@ -42,14 +42,21 @@ export async function POST(req: Request) {
     // 1. SYNC WITH AIRTABLE (Participants Table)
     let airtableRecordId;
     try {
+      console.log('Starting Airtable Sync...');
+      console.log(`Config: Base=${process.env.AIRTABLE_BASE_ID ? 'Set' : 'Missing'}, Key=${process.env.AIRTABLE_API_KEY ? 'Set' : 'Missing'}`);
+      
       const airtableBase = getAirtableBase();
       // Check if participant exists
+      console.log(`Searching for email: ${email} in table: ${PARTICIPANTS_TABLE}`);
+      
       const records = await airtableBase(PARTICIPANTS_TABLE)
         .select({
           filterByFormula: `{Email} = '${email}'`,
           maxRecords: 1,
         })
         .firstPage();
+
+      console.log(`Found ${records.length} existing records.`);
 
       if (records.length > 0) {
         // Update existing participant
@@ -60,10 +67,12 @@ export async function POST(req: Request) {
         
         // Only update if we have new info
         if (Object.keys(updateFields).length > 0) {
+           console.log(`Updating record ${airtableRecordId} with fields:`, Object.keys(updateFields));
            await airtableBase(PARTICIPANTS_TABLE).update(airtableRecordId, updateFields);
         }
       } else {
         // Create new participant
+        console.log('Creating new record...');
         const newRecord = await airtableBase(PARTICIPANTS_TABLE).create({
           'Email': email,
           'Phone': phone || '',
@@ -71,9 +80,11 @@ export async function POST(req: Request) {
           'Status': 'Registered',
         });
         airtableRecordId = newRecord.id;
+        console.log(`Created record: ${airtableRecordId}`);
       }
-    } catch (airtableError) {
-      console.error('Airtable Sync Error:', airtableError);
+    } catch (airtableError: any) {
+      console.error('Airtable Sync Error Full Details:', JSON.stringify(airtableError, null, 2));
+      console.error('Airtable Error Message:', airtableError.message);
     }
 
     // 2. TRIGGER MAKE.COM WEBHOOK (Optional enrichment/automation)
