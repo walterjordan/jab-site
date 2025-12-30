@@ -113,7 +113,7 @@ export async function POST(req: Request) {
         // but let's try to link the session if possible to enable the "Program Track" lookup later.
 
         // Lookup Session ID (Optional improvement)
-        let sessionId = [];
+        let sessionId: string[] = [];
         try {
              const sessionRecords = await airtableBase(process.env.AIRTABLE_SESSIONS_TABLE || 'Live Sessions')
                 .select({
