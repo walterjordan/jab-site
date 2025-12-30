@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 import Airtable from 'airtable';
+import crypto from 'crypto';
 
 // Configure Airtable Lazily
 const getAirtableBase = () => {
@@ -40,87 +41,128 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1. SYNC WITH AIRTABLE (Participants Table)
-    let airtableRecordId;
+    // 1. UPSERT REGISTRATION RECORD (Registrations Table)
+    let airtableRegistrationId;
+    let confirmUrl;
+    let confirmToken;
+    let programTrack;
+
     try {
-      console.log('Starting Airtable Sync...');
-      console.log(`Config: Base=${process.env.AIRTABLE_BASE_ID ? 'Set' : 'Missing'}, Key=${process.env.AIRTABLE_API_KEY ? 'Set' : 'Missing'}`);
+      console.log('Starting Airtable Sync (Registrations)...');
       
       const airtableBase = getAirtableBase();
-      // Check if participant exists
-      console.log(`Searching for email: ${email} in table: ${PARTICIPANTS_TABLE}`);
       
-      const records = await airtableBase(PARTICIPANTS_TABLE)
+      // Escape values for formula
+      const escapedEmail = email.replace(/'/g, "\\'");
+      const escapedEventId = eventId.replace(/'/g, "\\'");
+      
+      console.log(`Searching for existing registration: Email='${email}', Event='${eventId}'`);
+      
+      const records = await airtableBase(REGISTRATIONS_TABLE)
         .select({
-          filterByFormula: `{Email} = '${email}'`,
+          filterByFormula: `AND({Registrant Email} = '${escapedEmail}', {Event ID} = '${escapedEventId}')`,
           maxRecords: 1,
         })
         .firstPage();
 
-      console.log(`Found ${records.length} existing records.`);
+      // Generate Confirmation Token & URL (Always fresh or persistent)
+      // Note: In a real app, you might want to preserve the old token if it exists, 
+      // but regenerating ensures the user always gets a working link if they re-register.
+      confirmToken = crypto.randomUUID();
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://jordanborden.com'; 
+      confirmUrl = `${baseUrl}/confirm?token=${confirmToken}`;
+
+      const commonFields = {
+          'Registrant Email': email,
+          'Registrant Name': name || email.split('@')[0],
+          'Registrant Phone': phone || '',
+          'Confirm Token': confirmToken,
+          'Confirm URL': confirmUrl,
+          'Event ID': eventId, // Text field backup
+      };
 
       if (records.length > 0) {
-        // Update existing participant
-        airtableRecordId = records[0].id;
-        const updateFields: any = {};
-        if (phone) updateFields['Phone'] = phone;
-        if (name) updateFields['Full Name'] = name;
+        // Update existing registration
+        const record = records[0];
+        airtableRegistrationId = record.id;
+        console.log(`Found existing registration ${airtableRegistrationId}. Updating...`);
         
-        // Only update if we have new info
-        if (Object.keys(updateFields).length > 0) {
-           console.log(`Updating record ${airtableRecordId} with fields:`, Object.keys(updateFields));
-           await airtableBase(PARTICIPANTS_TABLE).update(airtableRecordId, updateFields);
-        }
+        // Only reset Status to Pending if it was Canceled or Declined? 
+        // For now, let's leave Status alone if it's already there, unless we want to re-trigger the flow.
+        // Let's assume re-registering means they want to restart -> Pending.
+        
+        await airtableBase(REGISTRATIONS_TABLE).update(airtableRegistrationId, {
+            ...commonFields,
+            'Status': 'Pending', 
+            'Email: Ack Sent': false, // Reset triggers
+            'Email: Welcome Sent': false,
+        });
+
       } else {
-        // Create new participant
-        console.log('Creating new record...');
+        // Create new registration
+        console.log('Creating new registration record...');
         
-        // Generate custom ID and Date
-        const timestamp = Date.now();
-        const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
-        const participantId = `P-${timestamp}-${randomStr}`;
-        const joinDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        // We need to link to the Session based on Event ID. 
+        // This usually requires a separate lookup of the Sessions table by Event ID 
+        // OR we just rely on the Make automation to link it later. 
+        // However, the prompt implies we rely on "Event ID" text field or we assume the frontend passed the ID?
+        // Let's stick to saving the text "Event ID" for now as per schema 
+        // (The schema has a text field "Event ID"). 
+        // Ideally, we would find the "Live Session" record ID to link to the "Session" field.
+        // For this refactor, we will focus on the text fields as requested, 
+        // but let's try to link the session if possible to enable the "Program Track" lookup later.
 
-        const newRecord = await airtableBase(PARTICIPANTS_TABLE).create({
-          'Email': email,
-          'Phone': phone || '',
-          'Full Name': name || email.split('@')[0],
-          'Status': 'Registered',
-          'Participant ID': participantId,
-          'Join Date': joinDate,
-        });
-        airtableRecordId = newRecord.id;
-        console.log(`Created record: ${airtableRecordId}`);
-      }
+        // Lookup Session ID (Optional improvement)
+        let sessionId = [];
+        try {
+             const sessionRecords = await airtableBase(process.env.AIRTABLE_SESSIONS_TABLE || 'Live Sessions')
+                .select({
+                    filterByFormula: `{Google Event ID} = '${escapedEventId}'`,
+                    maxRecords: 1
+                }).firstPage();
+             if (sessionRecords.length > 0) {
+                 sessionId = [sessionRecords[0].id];
+             }
+        } catch (err) {
+            console.warn("Could not link to Live Session:", err);
+        }
 
-      // 1.5 CREATE REGISTRATION RECORD (Junction Table)
-      if (airtableRecordId) {
-        console.log(`Creating Registration record for Participant ${airtableRecordId} and Event ${eventId}`);
-        await airtableBase(REGISTRATIONS_TABLE).create({
-          'Participant': [airtableRecordId], // Link field requires an array of IDs
-          'Event ID': eventId,
-          'Status': 'Pending' // Default status
-        });
-        console.log('Registration record created successfully.');
+        const createFields: any = {
+          ...commonFields,
+          'Status': 'Pending',
+          'Email: Ack Sent': false,
+          'Email: Welcome Sent': false,
+        };
+        
+        if (sessionId.length > 0) {
+            createFields['Session'] = sessionId;
+        }
+
+        const newRecord = await airtableBase(REGISTRATIONS_TABLE).create(createFields);
+        airtableRegistrationId = newRecord.id;
+        console.log(`Created registration: ${airtableRegistrationId}`);
       }
 
     } catch (airtableError: any) {
       console.error('Airtable Sync Error Full Details:', JSON.stringify(airtableError, null, 2));
       console.error('Airtable Error Message:', airtableError.message);
+      // We don't block the response here, but we should probably alert
     }
 
-    // 2. TRIGGER MAKE.COM WEBHOOK (Optional enrichment/automation)
-    if (process.env.MAKE_Mastermind_Registration_webhook_URL && airtableRecordId) {
+    // 2. TRIGGER MAKE.COM WEBHOOK (Now sending Registration ID)
+    if (process.env.MAKE_Mastermind_Registration_webhook_URL && airtableRegistrationId) {
       try {
         await fetch(process.env.MAKE_Mastermind_Registration_webhook_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            airtableRecordId,
+            airtableRegistrationId, // Renamed for clarity
             email,
             eventId,
-            status: 'Registered',
-            source: 'jab-site-registration'
+            status: 'Pending',
+            source: 'jab-site-registration',
+            confirmToken,
+            confirmUrl
           }),
         });
       } catch (webhookError) {
@@ -169,10 +211,13 @@ export async function POST(req: Request) {
       console.error('Google Calendar Error:', calError);
     }
 
+    // Sanity check for debugging
+    console.log(`[Registration Complete] Returning ID: ${airtableRegistrationId}`);
+
     return NextResponse.json({ 
       success: true, 
       message: 'Registration successful',
-      airtableId: airtableRecordId 
+      airtableId: airtableRegistrationId 
     });
 
   } catch (error: any) {
