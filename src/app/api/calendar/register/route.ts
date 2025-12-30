@@ -138,8 +138,10 @@ export async function POST(req: Request) {
             createFields['Session'] = sessionId;
         }
 
-        const newRecord = await airtableBase(REGISTRATIONS_TABLE).create(createFields);
-        airtableRegistrationId = newRecord.id;
+        const createdRecords = await airtableBase(REGISTRATIONS_TABLE).create([
+          { fields: createFields }
+        ]);
+        airtableRegistrationId = createdRecords[0].id;
         console.log(`Created registration: ${airtableRegistrationId}`);
       }
 
