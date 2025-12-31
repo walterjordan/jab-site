@@ -38,11 +38,12 @@ async function syncSessions() {
         throw new Error("Missing Google Credentials (CLIENT_EMAIL or PRIVATE_KEY)");
     }
 
-    const jwtClient = new google.auth.JWT({
-      email: clientEmail,
-      key: privateKey,
-      scopes: ['https://www.googleapis.com/auth/calendar.events.readonly'],
-    });
+    const jwtClient = new google.auth.JWT(
+      clientEmail,
+      null,
+      privateKey,
+      ['https://www.googleapis.com/auth/calendar.events.readonly']
+    );
 
     const calendar = google.calendar({ version: 'v3', auth: jwtClient });
     
