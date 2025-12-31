@@ -15,9 +15,12 @@
 ## Airtable API Usage
 - **Authentication**: Uses `AIRTABLE_API_KEY` (Personal Access Token).
 - **Table Schema**:
-    - `Participants`: Contains `Status` and communication checkbox checkpoints (`Email: Ack Sent`, etc.).
-    - `Live Sessions`: Source of truth for session-specific agenda/details.
-- **Record Operations**: Always initialize communication checkboxes to `false` upon participant creation to ensure clean state machine entry.
+    - `Registrations`: Primary ledger for event signups. Keyed by `Registrant Email` + `Event ID`.
+    - `Participants`: ONLY for Full-day track attendees requiring companion app access (`aimastermind.jordanborden.com`).
+    - `Live Sessions`: Source of truth for session-specific agenda/details and `Program Track` definition.
+- **Workflow Logic**: 
+    - Registration API upserts to `Registrations`.
+    - Confirmation page (`/confirm`) updates `Registrations` and conditionally creates/updates `Participants` for 'Full-day' tracks.
 - **Instruction**: Stick to Record operations (CRUD). For schema changes, instruct the user to do it manually in the UI.
 
 ## Tech Stack & Standards
@@ -34,10 +37,10 @@
 
 ## Configuration & Environment Variables
 **Build-Time (Public):**
-- `NEXT_PUBLIC_MESSENGER_URL`, `NEXT_PUBLIC_GA4`, `NEXT_PUBLIC_ADS_ID`
+- `NEXT_PUBLIC_MESSENGER_URL`, `NEXT_PUBLIC_GA4`, `NEXT_PUBLIC_ADS_ID`, `NEXT_PUBLIC_BASE_URL`
 
 **Runtime (Server-Side):**
-- `AIRTABLE_BASE_ID`, `AIRTABLE_PARTICIPANTS_TABLE`, `GOOGLE_CALENDAR_ID`, `GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY` (Secret), `AIRTABLE_API_KEY` (Secret), `MAKE_Mastermind_Registration_webhook_URL` (Secret)
+- `AIRTABLE_BASE_ID`, `AIRTABLE_PARTICIPANTS_TABLE`, `AIRTABLE_REGISTRATIONS_TABLE`, `AIRTABLE_SESSIONS_TABLE`, `GOOGLE_CALENDAR_ID`, `GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY`, `AIRTABLE_API_KEY`, `MAKE_Mastermind_Registration_webhook_URL`
 
 ## Integrations
 - **Google Calendar**: Uses `googleapis` with Service Account.

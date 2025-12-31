@@ -1,84 +1,70 @@
 # Participant Communication Flow & State Machine
 
 ## Current Program Status (Synopsis)
-**Completed (Stage 1):**
-- **Next.js Integration**: The registration API (`src/app/api/calendar/register/route.ts`) creates a new participant record and triggers the Make.com webhook.
-- **Data Model**: The `Participants` table in Airtable includes all necessary Checkpoint fields (`Email: Ack Sent`, `Email: Welcome Sent`, etc.), initialized to `false`.
-- **Make.com Scenario 1 (Ack)**: A scenario is live that:
-    1.  Receives the Webhook.
-    2.  Fetches the specific Participant Record (Source of Truth).
-    3.  Sends a "Registration Received" email.
-    4.  Updates the Airtable record, setting `Email: Ack Sent` to `True`.
+**Completed (Stage 1 & Registration Refactor):**
+- **Architecture Shift**: The system now centers on the `Registrations` table for signups. The `Participants` table is reserved specifically for Full-day companion app users.
+- **Registration API**: `src/app/api/calendar/register/route.ts` successfully upserts to `Registrations`, generates secure `Confirm Tokens`, and triggers the Make.com webhook with a consistent payload.
+- **Confirmation Endpoint**: `/confirm?token=...` is implemented and deployed. It:
+    1.  Validates tokens against the `Registrations` table.
+    2.  Sets `Status` to `Confirmed`.
+    3.  **Conditional Access**: If the linked session is "Full-day", it automatically creates/updates a record in the `Participants` table with `Access Level: Modules 1–2`.
+- **Build Quality**: Verified local production build and successful Cloud Run deployment.
 
 **In Progress:**
-- We are now moving to **Stage 2** and **Stage 3**, which transition from "Push" (Webhook) to "Pull" (Airtable View Queues) logic for robust state management.
+- Moving to **Stage 2 (Welcome)** and **Stage 3 (Reminders)** using Airtable View Queues.
 
 ---
 
 ## 1. Data Model (Airtable)
 
-### Table: Participants
-*   **Status** (Single Select): `Registered` (Default), `Confirmed`, `Waitlist`, `Cancelled`.
-*   **Checkbox Checkpoints** (Used for Idempotency/Tracking):
-    *   `Email: Ack Sent`: Checked after Registration Acknowledgement email.
-    *   `Email: Welcome Sent`: Checked after "Confirmed" Welcome email.
-    *   `Email: 24h Reminder Sent`: Checked after 24-hour reminder.
-    *   `Email: 1h Reminder Sent`: Checked after 1-hour "Starting Soon" email.
-*   **Confirmation Fields**:
-    *   `Confirm Token` (Single Line Text): Generated secure token.
-    *   `Confirm URL` (URL): The full link sent to the user.
-    *   `Confirmed At` (Date/Time): Timestamp of click.
-    *   `Confirmed Via` (Single Select): `Link`, `Manual`, etc.
+### Table: Registrations (Primary Ledger)
+*   **Status** (Single Select): `Pending` (Default), `Confirmed`, `Canceled`, `Declined`.
+*   **Fields**: `Registrant Email`, `Registrant Name`, `Registrant Phone`, `Event ID`.
+*   **Confirmation Fields**: `Confirm Token`, `Confirm URL`, `Confirmed At`, `Confirmed Via`.
+*   **Checkpoints**: `Email: Ack Sent`, `Email: Welcome Sent`.
+*   **Linked Fields**: `Session` (links to `Live Sessions`).
 
-### Table: Sessions (Live Sessions)
-*   **Fields to fetch for dynamic emails**:
-    *   `Session Title`: Used in subject lines.
-    *   `Description`: The primary agenda/content.
-    *   `Session Date` & `Start Time`: To calculate reminder triggers.
-    *   `Meeting Link`: URL for the session.
+### Table: Participants (Companion App Access)
+*   **Trigger**: Created/Updated upon Registration confirmation if Program Track is "Full-day".
+*   **Fields**: `Email`, `Access Level` (`Modules 1–2`), `Status` (`Active`).
+
+### Table: Live Sessions (Source of Truth)
+*   **Fields**: `Google Event ID`, `Program Track` (`Free 90-min` vs `Full-day`), `Meeting Link`, `Description` (Agenda).
 
 ---
 
-## 2. Implementation Strategy (Option C: Hybrid)
+## 2. Implementation Strategy (Hybrid)
 
-### Stage 2: The "Confirmed" Welcome (Make.com Scenario 2)
-*   **Goal**: Send detailed session info ONLY when status is "Confirmed" (Manual or Auto).
-*   **Trigger**: Airtable View Queue `[QUEUE] Needs Welcome Email`.
+### Stage 1: The "Instant" Acknowledgement (Live)
+*   **Trigger**: Webhook from registration API.
+*   **Action**: Make.com sends "Confirm Your Seat" email containing the `{{confirmUrl}}`.
+*   **Update**: Sets `Registrations.Email: Ack Sent = true`.
+
+### Stage 2: The "Confirmed" Welcome (Next Step)
+*   **Goal**: Send detailed session info/access details after the user clicks confirm.
+*   **Trigger**: Airtable View Queue `[QUEUE] Confirmed -> Needs Welcome`.
     *   *Filter*: `Status = "Confirmed"` AND `Email: Welcome Sent` is unchecked.
 *   **Action Logic**:
-    1.  **Watch Records**: Detects the new record in the view.
-    2.  **Get Linked Record**: Fetch details (Agenda, Meeting Link) from the linked `Live Sessions` record.
-    3.  **Email**: Send "Welcome to the Mastermind" email with session-specific details.
-    4.  **Update Record**: Set `Email: Welcome Sent` = `True`. (Removes record from view).
+    1.  Fetch session details (Meeting Link, Agenda) from `Live Sessions`.
+    2.  Send "Welcome" email.
+    3.  Set `Registrations.Email: Welcome Sent = true`.
 
-### Stage 3: The Scheduled Reminders (Make.com Scenario 3)
-*   **Goal**: Send timed reminders 24h and 1h before the event.
-*   **Trigger**: Scheduled Polling (e.g., every 15-60 mins) of specific Airtable views.
-*   **View 24h Queue Filter**: 
-    `AND(Status="Confirmed", {Email: 24h Reminder Sent}=0, DATETIME_DIFF({Session Date}, NOW(), 'hours') <= 24, DATETIME_DIFF({Session Date}, NOW(), 'hours') > 0)`
-*   **View 1h Queue Filter**: 
-    `AND(Status="Confirmed", {Email: 1h Reminder Sent}=0, DATETIME_DIFF({Session Date}, NOW(), 'minutes') <= 60, DATETIME_DIFF({Session Date}, NOW(), 'minutes') > 0)`
-*   **Action Logic**:
-    1.  **Watch Records**: Detects participants in the time window.
-    2.  **Email**: Send the respective reminder.
-    3.  **Update Record**: Check the corresponding box (`Email: 24h Reminder Sent` or `Email: 1h Reminder Sent`).
+### Stage 3: The Scheduled Reminders
+*   **Goal**: Send timed reminders based on `Live Sessions.Session Date`.
+*   **View Filters**: Logic based on `DATETIME_DIFF` between current time and session start.
 
 ---
 
 ## 3. Configuration & Secrets
-*   **Airtable Base ID**: `appeJqZ5yjyPmh1MC`
-*   **Participants Table**: `Participants` (tblb1l01AGfIZwWnC)
-*   **Live Sessions Table**: `Live Sessions` (tbln5StU4nrOoRUfT)
-*   **Webhook**: `MAKE_Mastermind_Registration_webhook_URL` (stored in `.env.local`).
+*   **Base ID**: `appeJqZ5yjyPmh1MC`
+*   **Registrations Table**: `tblF6gLxCuiNF7uni`
+*   **Next.js Base URL**: `NEXT_PUBLIC_BASE_URL` (used for generating confirmation links).
 
 ---
 
-## 4. Pending Tasks
-- [ ] **Airtable**: Create View `[QUEUE] Needs Welcome Email`.
-- [ ] **Airtable**: Create View `[QUEUE] 24h Reminder` (with Formula Filter).
-- [ ] **Airtable**: Create View `[QUEUE] 1h Reminder` (with Formula Filter).
-- [ ] **Make.com**: Build Scenario for Stage 2 (Welcome Email).
-- [ ] **Make.com**: Build Scenario for Stage 3 (Reminders).
-
-## 5. Endpoints
-- **Confirmation Page**: `/confirm?token=...` (implemented). Sets Status to Confirmed.
+## 4. Path Forward / Pending Tasks
+- [ ] **Airtable**: Finalize `[QUEUE]` views for Welcome and Reminder stages.
+- [ ] **Make.com**: Build Scenario for Stage 2 (Welcome Email) triggered by the `Confirmed` view.
+- [ ] **Make.com**: Build Scenario for Stage 3 (Reminders) using scheduled polling of time-based views.
+- [ ] **Validation**: Verify that `Participants` records created during confirmation correctly sync with `aimastermind.jordanborden.com`.
+- [ ] **RSVP Sync**: (Optional) Implement the read-only Google Calendar RSVP status sync to Airtable.
