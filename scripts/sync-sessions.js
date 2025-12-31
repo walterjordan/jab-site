@@ -17,9 +17,26 @@ const base = new Airtable({ apiKey: API_KEY }).base(BASE_ID);
 
 async function syncSessions() {
     console.log('Starting Google Calendar to Airtable Sync...');
+    
+    // Debug environment variables (masking values)
+    console.log('Environment Check:');
+    console.log('  AIRTABLE_API_KEY:', !!API_KEY ? 'Set' : 'Missing');
+    console.log('  AIRTABLE_BASE_ID:', !!BASE_ID ? 'Set' : 'Missing');
+    console.log('  GOOGLE_CALENDAR_ID:', !!CALENDAR_ID ? 'Set' : 'Missing');
+    console.log('  GOOGLE_CLIENT_EMAIL:', !!process.env.GOOGLE_CLIENT_EMAIL ? 'Set' : 'Missing');
+    console.log('  GOOGLE_PRIVATE_KEY:', !!process.env.GOOGLE_PRIVATE_KEY ? 'Set' : 'Missing');
 
     const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\n/g, '\n');
+    let privateKey = process.env.GOOGLE_PRIVATE_KEY;
+
+    if (privateKey) {
+        // Replace literal \n with actual newlines if present (fixes GitHub Secrets issue)
+        privateKey = privateKey.replace(/\\n/g, '\n');
+    }
+
+    if (!clientEmail || !privateKey) {
+        throw new Error("Missing Google Credentials (CLIENT_EMAIL or PRIVATE_KEY)");
+    }
 
     const jwtClient = new google.auth.JWT({
       email: clientEmail,
