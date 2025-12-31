@@ -83,6 +83,7 @@ async function syncSessions() {
       singleEvents: true,
       orderBy: 'startTime',
       q: 'AI Mastermind',
+      conferenceDataVersion: 1 // Request full conference data (Meet links)
     });
 
     const events = response.data.items || [];
