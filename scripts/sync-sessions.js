@@ -99,6 +99,8 @@ async function syncSessions() {
         const programTrack = summary.toLowerCase().includes('free') ? 'Free 90-min' : 'Full-day';
 
         console.log(`Processing: ${summary} (${start})`);
+        console.log(`   > Google Link Data: Hangout=${event.hangoutLink}, Location=${event.location}`);
+        console.log(`   > Resolved Link: ${meetingLink}`);
 
         // Check if record exists in Airtable
         const existing = await base(SESSIONS_TABLE).select({
