@@ -29,11 +29,32 @@ async function syncSessions() {
     const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
     let privateKey = process.env.GOOGLE_PRIVATE_KEY;
 
-    if (privateKey) {
-        // Replace literal \n with actual newlines if present (fixes GitHub Secrets issue)
+    if (!privateKey) {
+        throw new Error("Missing Google Credentials: GOOGLE_PRIVATE_KEY is undefined");
+    }
+
+    console.log(`Raw Private Key Length: ${privateKey.length}`);
+
+    // Robust handling for various input formats (JSON vs String, Escaped Newlines)
+    if (privateKey.trim().startsWith('{')) {
+        try {
+            const keyJson = JSON.parse(privateKey);
+            privateKey = keyJson.private_key;
+            console.log("Parsed Private Key from JSON object.");
+        } catch (e) {
+            console.warn("Key looked like JSON but failed to parse, treating as string.");
+        }
+    }
+    
+    // Ensure we have the raw string key with correct newlines
+    if (typeof privateKey === 'string') {
+        // Replace literal "\n" characters (common in CI/CD secrets) with actual newlines
         privateKey = privateKey.replace(/\\n/g, '\n');
     }
 
+    // Safety Check: Log the start of the key to verify format (without leaking the secret)
+    console.log(`Processed Key Start: ${privateKey.substring(0, 25)}...`);
+    
     if (!clientEmail || !privateKey) {
         throw new Error("Missing Google Credentials (CLIENT_EMAIL or PRIVATE_KEY)");
     }
