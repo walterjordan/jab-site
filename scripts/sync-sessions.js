@@ -48,6 +48,8 @@ async function syncSessions() {
     
     // Ensure we have the raw string key with correct newlines
     if (typeof privateKey === 'string') {
+        // Remove surrounding quotes if they were accidentally included in the GitHub Secret
+        privateKey = privateKey.trim().replace(/^"|"$/g, '');
         // Replace literal "\n" characters (common in CI/CD secrets) with actual newlines
         privateKey = privateKey.replace(/\\n/g, '\n');
     }
@@ -59,12 +61,11 @@ async function syncSessions() {
         throw new Error("Missing Google Credentials (CLIENT_EMAIL or PRIVATE_KEY)");
     }
 
-    const jwtClient = new google.auth.JWT(
-      clientEmail,
-      null,
-      privateKey,
-      ['https://www.googleapis.com/auth/calendar.events.readonly']
-    );
+    const jwtClient = new google.auth.JWT({
+      email: clientEmail,
+      key: privateKey,
+      scopes: ['https://www.googleapis.com/auth/calendar.events.readonly']
+    });
 
     // Explicitly authorize to fail fast if creds are wrong
     await jwtClient.authorize();
