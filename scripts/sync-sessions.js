@@ -45,6 +45,10 @@ async function syncSessions() {
       ['https://www.googleapis.com/auth/calendar.events.readonly']
     );
 
+    // Explicitly authorize to fail fast if creds are wrong
+    await jwtClient.authorize();
+    console.log('Successfully authorized Google Client');
+
     const calendar = google.calendar({ version: 'v3', auth: jwtClient });
     
     // Fetch events from the last 30 days to 90 days in the future
