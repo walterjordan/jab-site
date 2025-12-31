@@ -43,5 +43,25 @@
 - `AIRTABLE_BASE_ID`, `AIRTABLE_PARTICIPANTS_TABLE`, `AIRTABLE_REGISTRATIONS_TABLE`, `AIRTABLE_SESSIONS_TABLE`, `GOOGLE_CALENDAR_ID`, `GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY`, `AIRTABLE_API_KEY`, `MAKE_Mastermind_Registration_webhook_URL`
 
 ## Integrations
-- **Google Calendar**: Uses `googleapis` with Service Account.
-- **Meta/Facebook**: OAuth/Webhook logic in `src/app/api/meta/...`.
+
+### Google Calendar & Session Sync
+- **Service Account**: Uses `googleapis` with a Service Account for authentication.
+- **Automated Sync**: A GitHub Action (`.github/workflows/sync-sessions.yml`) runs hourly to synchronize Google Calendar events into the Airtable `Live Sessions` table.
+- **Source of Truth**: 
+    - **Google Calendar**: Exclusive source for `Session Date`, `Start Time`, `End Time`, and `Meeting Link`.
+    - **Airtable**: Source for `Session ID` (manual), `Description` (manual/AI), and `Program Track` (derived from title).
+- **Matching Logic**: Uses `Google Event ID` as the unique identifier to prevent duplicates.
+- **Critical Config**: Requests must use `conferenceDataVersion: 1` to successfully retrieve Google Meet (`hangoutLink`) data.
+
+## Automation & GitHub Actions
+- **Workflow**: `.github/workflows/sync-sessions.yml`
+- **Script**: `scripts/sync-sessions.js`
+- **Secrets**: Requires `AIRTABLE_API_KEY`, `AIRTABLE_BASE_ID`, `GOOGLE_CALENDAR_ID`, `GOOGLE_CLIENT_EMAIL`, and `GOOGLE_PRIVATE_KEY` to be configured in GitHub Repository Secrets.
+- **Newline Handling**: `GOOGLE_PRIVATE_KEY` in GitHub Secrets must have literal `\n` characters preserved; the sync script includes robust parsing to handle CI/CD string mangling.
+
+## Maintenance & Utility Scripts
+The `scripts/` directory contains tools for operations and debugging:
+- `verify-airtable-schema.js`: Validates that required tables, fields, and queue views exist in the live Airtable base.
+- `sync-sessions.js`: The core logic for pulling Calendar events into Airtable.
+- `inspect-sessions.js`: Dumps raw record data to the console for debugging record linkage and sync status.
+- `debug-calendar-event.js`: Interrogates the Google Calendar API for a specific date range to verify field availability (e.g., Meet links).
