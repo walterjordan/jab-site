@@ -109,8 +109,9 @@ async function syncSessions() {
             maxRecords: 1
         }).firstPage();
 
-        const startTime = new Date(start).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
-        const endTime = new Date(event.end.dateTime || event.end.date).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+        // Use full ISO strings for Airtable Date/Time fields to avoid parsing errors
+        const startTime = start; 
+        const endTime = event.end.dateTime || event.end.date;
 
         // Fields to use when CREATING a new record
         const createFields = {
