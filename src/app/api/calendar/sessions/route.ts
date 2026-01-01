@@ -1,69 +1,57 @@
-import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
+import Airtable from 'airtable';
 
 // Force dynamic to ensure we get fresh data on every request
 export const dynamic = 'force-dynamic';
 
+const getAirtableBase = () => {
+  if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+    throw new Error("Missing Airtable configuration");
+  }
+  return new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
+    process.env.AIRTABLE_BASE_ID
+  );
+};
+
+const SESSIONS_TABLE = process.env.AIRTABLE_SESSIONS_TABLE || 'Live Sessions';
+
 export async function GET() {
   try {
-    const calendarId = process.env.GOOGLE_CALENDAR_ID;
-    const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'); // Handle newlines in env vars
+    const base = getAirtableBase();
+    
+    // Fetch upcoming sessions from Airtable
+    // Assuming 'Session Status' = 'Upcoming' or filter by date
+    // For now, let's fetch all and filter in memory or rely on a view if one exists.
+    // Better: Sort by Date.
+    const records = await base(SESSIONS_TABLE).select({
+      sort: [{ field: 'Session Date', direction: 'asc' }],
+      filterByFormula: "OR({Session Status} = 'Upcoming', {Session Status} = 'Scheduled')" 
+    }).all();
 
-    if (!calendarId || !clientEmail || !privateKey) {
-      console.error('Missing Google Calendar credentials');
-      return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      );
-    }
+    const events = records.map((record) => {
+      const fields = record.fields;
+      
+      // Extract Cover Image URL if present
+      const coverImages = fields['Cover Image'] as any[];
+      const coverImage = coverImages && coverImages.length > 0 ? coverImages[0].url : null;
 
-    const jwtClient = new google.auth.JWT({
-      email: clientEmail,
-      key: privateKey,
-      scopes: ['https://www.googleapis.com/auth/calendar.events.readonly'],
+      return {
+        id: record.id,
+        title: fields['Session Title'] || 'Untitled Session',
+        start: fields['Start Time'] || fields['Session Date'], // Fallback to date if time missing
+        end: fields['End Time'],
+        link: fields['Meeting Link'],
+        description: fields['Description'],
+        coverImage: coverImage,
+        programTrack: fields['Program Track']
+      };
     });
 
-    const calendar = google.calendar({ version: 'v3', auth: jwtClient });
-
-    const now = new Date().toISOString();
-
-    const response = await calendar.events.list({
-      calendarId,
-      timeMin: now,
-      maxResults: 20, // Increased to fetch more events
-      singleEvents: true,
-      orderBy: 'startTime',
-      // q: '90 Minute AI Mastermind', // Removed filter to allow Paint & Sip events
-    });
-
-    const events = response.data.items || [];
-
-    // Map and format the events
-    const formattedEvents = events
-      // .slice(0, 3) // Removed slice to allow filtering on frontend
-      .map((event) => {
-        const start = event.start?.dateTime || event.start?.date;
-        const end = event.end?.dateTime || event.end?.date;
-
-        if (!start) return null;
-
-        return {
-          id: event.id,
-          title: event.summary || 'AI Mastermind Session',
-          start,
-          end,
-          link: event.htmlLink, // or custom booking link if description contains one
-          description: event.description,
-        };
-      })
-      .filter(Boolean);
-
-    return NextResponse.json({ events: formattedEvents });
+    return NextResponse.json({ events });
   } catch (error) {
-    console.error('Error fetching calendar events:', error);
+    console.error('Error fetching Airtable sessions:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch events' },
+      { error: 'Failed to fetch sessions' },
       { status: 500 }
     );
   }
