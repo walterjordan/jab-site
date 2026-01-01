@@ -366,27 +366,47 @@ export default function UpcomingSessions({
 
 
 
-                {/* If images exist, show them (Flyer Mode) */}
+                                {/* If images exist, show them (Flyer Mode) */}
 
-                {hasImages && (
 
-                  <div className={`grid gap-3 mb-4 ${dayEvents.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
 
-                    {dayEvents.map(event => (
+                                {hasImages && (
 
-                      event.coverImage ? (
 
-                        <div key={event.id} className="relative aspect-[3/4] overflow-hidden rounded-lg border border-white/10">
 
-                          <img 
+                                  <div className={`grid gap-3 mb-4 ${dayEvents.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
 
-                            src={event.coverImage} 
 
-                            alt={event.title} 
 
-                            className="absolute inset-0 h-full w-full object-cover"
+                                    {dayEvents.map(event => (
 
-                          />
+
+
+                                      event.coverImage ? (
+
+
+
+                                        <div key={event.id} className="relative aspect-[2/3] overflow-hidden rounded-lg border border-white/10">
+
+
+
+                                          <img 
+
+
+
+                                            src={event.coverImage} 
+
+
+
+                                            alt={event.title} 
+
+
+
+                                            className="absolute inset-0 h-full w-full object-cover"
+
+
+
+                                          />
 
                           <button
 
