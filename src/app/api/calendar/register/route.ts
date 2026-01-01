@@ -67,15 +67,17 @@ export async function POST(req: Request) {
     try {
       console.log('Starting Airtable Sync (Registrations)...');
       
-      // Escape values for formula
+      // Determine which ID to use for the 'Event ID' field and duplicate check
+      // User prefers Google Event ID in the Registrations table if available.
+      const idToRegister = googleEventId || eventId;
+      const escapedIdToRegister = idToRegister.replace(/'/g, "\\'");
       const escapedEmail = email.replace(/'/g, "\\'");
-      const escapedEventId = eventId.replace(/'/g, "\\'");
-      
-      console.log(`Searching for existing registration: Email='${email}', Event='${eventId}'`);
+
+      console.log(`Searching for existing registration: Email='${email}', Event='${idToRegister}'`);
       
       const records = await airtableBase(REGISTRATIONS_TABLE)
         .select({
-          filterByFormula: `AND({Registrant Email} = '${escapedEmail}', {Event ID} = '${escapedEventId}')`,
+          filterByFormula: `AND({Registrant Email} = '${escapedEmail}', {Event ID} = '${escapedIdToRegister}')`,
           maxRecords: 1,
         })
         .firstPage();
@@ -91,7 +93,7 @@ export async function POST(req: Request) {
           'Registrant Phone': phone || '',
           'Confirm Token': confirmToken,
           'Confirm URL': confirmUrl,
-          'Event ID': eventId, // Text field backup
+          'Event ID': idToRegister, // Save Google ID if available, else Record ID
       };
 
       // Link to Session if found
