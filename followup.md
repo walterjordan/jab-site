@@ -1,35 +1,26 @@
 # Participant Communication Flow & State Machine
 
 ## Current Program Status (Synopsis)
-**Completed (Stage 1 & Registration Refactor):**
-- **Architecture Shift**: The system now centers on the `Registrations` table for signups. The `Participants` table is reserved specifically for Full-day companion app users.
-- **Registration API**: `src/app/api/calendar/register/route.ts` successfully upserts to `Registrations`, generates secure `Confirm Tokens`, and triggers the Make.com webhook with a consistent payload.
-- **Confirmation Endpoint**: `/confirm?token=...` is implemented and deployed. It:
-    1.  Validates tokens against the `Registrations` table.
-    2.  Sets `Status` to `Confirmed`.
-    3.  **Conditional Access**: If the linked session is "Full-day", it automatically creates/updates a record in the `Participants` table with `Access Level: Modules 1–2`.
-- **Build Quality**: Verified local production build and successful Cloud Run deployment.
+**Completed (Architectural Consolidation & Multi-Event Support):**
+- **Architecture Shift**: The frontend is now fully **Airtable-driven**. The site queries Airtable `Live Sessions` as the primary source, allowing for rich content management (flyers, descriptions) without code changes.
+- **Automated Sync**: Implemented a GitHub Action (`sync-sessions.yml`) that hourly synchronizes Google Calendar events (Source of Truth for Dates/Times/Links) into Airtable.
+- **Safety Logic**: The sync script includes "Safety Logic" to protect manual edits in Airtable (like custom descriptions) while keeping logistical data (times/links) updated.
+- **Multi-Event UI**: Refactored the Hero section to display side-by-side lists for "AI Mastermind" and "Paint & Sip" events.
+- **Flyer Mode**: Implemented a dynamic "Flyer Mode" that renders sessions with `Cover Image` attachments as vertical, un-cropped cards (`object-contain`).
+- **Dev Pipeline**: Set up a `development` branch with auto-deploy to a dedicated Cloud Run service (`jab-site-dev`) for safe testing of UI and logic changes.
+- **Registration Refactor**: API successfully upserts to `Registrations` and triggers Make.com webhooks.
 
 **In Progress:**
 - Moving to **Stage 2 (Welcome)** and **Stage 3 (Reminders)** using Airtable View Queues.
+- Finalizing the automated "Social Networking" track logic for Paint & Sip events.
 
 ---
 
 ## 1. Data Model (Airtable)
 
-### Table: Registrations (Primary Ledger)
-*   **Status** (Single Select): `Pending` (Default), `Confirmed`, `Canceled`, `Declined`.
-*   **Fields**: `Registrant Email`, `Registrant Name`, `Registrant Phone`, `Event ID`.
-*   **Confirmation Fields**: `Confirm Token`, `Confirm URL`, `Confirmed At`, `Confirmed Via`.
-*   **Checkpoints**: `Email: Ack Sent`, `Email: Welcome Sent`.
-*   **Linked Fields**: `Session` (links to `Live Sessions`).
-
-### Table: Participants (Companion App Access)
-*   **Trigger**: Created/Updated upon Registration confirmation if Program Track is "Full-day".
-*   **Fields**: `Email`, `Access Level` (`Modules 1–2`), `Status` (`Active`).
-
 ### Table: Live Sessions (Source of Truth)
-*   **Fields**: `Google Event ID`, `Program Track` (`Free 90-min` vs `Full-day`), `Meeting Link`, `Description` (Agenda).
+*   **Fields**: `Google Event ID` (Unique ID), `Session Title`, `Program Track` (`Free 90-min` vs `Full-day` vs `Social Networking`), `Session Date`, `Start Time` (ISO), `End Time` (ISO), `Meeting Link`, `Description` (Agenda), `Cover Image` (Flyers).
+*   **Sync Rule**: Logistical fields updated hourly from Calendar; Description/Title set only on initial creation.
 
 ---
 
@@ -68,3 +59,4 @@
 - [ ] **Make.com**: Build Scenario for Stage 3 (Reminders) using scheduled polling of time-based views.
 - [ ] **Validation**: Verify that `Participants` records created during confirmation correctly sync with `aimastermind.jordanborden.com`.
 - [ ] **RSVP Sync**: (Optional) Implement the read-only Google Calendar RSVP status sync to Airtable.
+- [ ] **Operational Manual**: Ensure the user knows how to use the `/scripts` directory for local diagnostics.

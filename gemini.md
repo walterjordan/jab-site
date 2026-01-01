@@ -30,28 +30,34 @@
 - **Node Version**: Engines set to `>=18 <=20`.
 
 ## Deployment & Infrastructure
-- **Platform**: Google Cloud Run (Service: `jab-site`, Region: `us-east1`).
-- **Build System**: Google Cloud Buildpacks via `cloudbuild.yaml`. **No Dockerfile.**
+- **Platform**: Google Cloud Run (Region: `us-east1`).
+- **Production**: Service `jab-site` (branch: `main`). Build via `cloudbuild.yaml`.
+- **Development**: Service `jab-site-dev` (branch: `development`). Build via `cloudbuild-dev.yaml`.
+- **Build System**: Google Cloud Buildpacks. **No Dockerfile.**
 - **Project ID**: `f2w-consulting` (199373649190).
-- **Secrets**: Production secrets in GCP Secret Manager; local dev in `.env.local`.
+- **Secrets**: Production/Dev secrets in GCP Secret Manager; local dev in `.env.local`.
 
-## Configuration & Environment Variables
-**Build-Time (Public):**
-- `NEXT_PUBLIC_MESSENGER_URL`, `NEXT_PUBLIC_GA4`, `NEXT_PUBLIC_ADS_ID`, `NEXT_PUBLIC_BASE_URL`
-
-**Runtime (Server-Side):**
-- `AIRTABLE_BASE_ID`, `AIRTABLE_PARTICIPANTS_TABLE`, `AIRTABLE_REGISTRATIONS_TABLE`, `AIRTABLE_SESSIONS_TABLE`, `GOOGLE_CALENDAR_ID`, `GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY`, `AIRTABLE_API_KEY`, `MAKE_Mastermind_Registration_webhook_URL`
+## Frontend & Event Logic
+- **Hero Section**: Displays a 2-column grid of session lists centered on the page (AI Masterminds and Paint & Sip).
+- **Session Display (`UpcomingSessions.tsx`)**:
+    - **Airtable Driven**: Fetches from `/api/calendar/sessions`, which queries the Airtable `Live Sessions` table.
+    - **Keyword Filtering**: Components accept a `filterKeyword` prop to isolate event types (e.g., "Mastermind" vs "Paint").
+    - **Flyer Mode**: If a session has a `Cover Image` in Airtable, it renders as a vertical card with the image (`aspect-[2/3]`, `object-contain`).
+    - **Ungrouped Slots**: Every time slot/event is displayed as an individual card with its own "Reserve" button to maintain uniformity and ease of booking.
+    - **UI Protection**: Reservation buttons are positioned *below* images to ensure no part of the flyer is obscured.
 
 ## Integrations
 
 ### Google Calendar & Session Sync
 - **Service Account**: Uses `googleapis` with a Service Account for authentication.
-- **Automated Sync**: A GitHub Action (`.github/workflows/sync-sessions.yml`) runs hourly to synchronize Google Calendar events into the Airtable `Live Sessions` table.
+- **Domain-Wide Delegation**: Impersonates `walterjordan@f2wconsulting.com` for write operations (e.g., creating events).
+- **Automated Sync**: A GitHub Action (`.github/workflows/sync-sessions.yml`) runs hourly to synchronize Google Calendar events into Airtable.
 - **Source of Truth**: 
     - **Google Calendar**: Exclusive source for `Session Date`, `Start Time`, `End Time`, and `Meeting Link`.
-    - **Airtable**: Source for `Session ID` (manual), `Description` (manual/AI), and `Program Track` (derived from title).
-- **Matching Logic**: Uses `Google Event ID` as the unique identifier to prevent duplicates.
-- **Critical Config**: Requests must use `conferenceDataVersion: 1` to successfully retrieve Google Meet (`hangoutLink`) data.
+    - **Airtable**: Source for `Session ID` (manual), `Description` (manual/AI), `Cover Image` (manual), and `Program Track`.
+- **Matching Logic**: Uses `Google Event ID` as the unique identifier.
+- **Safety Logic**: The sync script **only** updates description/title on *initial creation* to protect manual edits made in Airtable.
+- **Critical Config**: Requests must use `conferenceDataVersion: 1` to retrieve Google Meet links.
 
 ## Automation & GitHub Actions
 - **Workflow**: `.github/workflows/sync-sessions.yml`
@@ -61,7 +67,10 @@
 
 ## Maintenance & Utility Scripts
 The `scripts/` directory contains tools for operations and debugging:
-- `verify-airtable-schema.js`: Validates that required tables, fields, and queue views exist in the live Airtable base.
-- `sync-sessions.js`: The core logic for pulling Calendar events into Airtable.
-- `inspect-sessions.js`: Dumps raw record data to the console for debugging record linkage and sync status.
-- `debug-calendar-event.js`: Interrogates the Google Calendar API for a specific date range to verify field availability (e.g., Meet links).
+- `verify-airtable-schema.js`: Validates that required tables, fields, and queue views exist in Airtable.
+- `sync-sessions.js`: Core logic for pulling Calendar events into Airtable.
+- `inspect-sessions.js`: Dumps raw record data to the console for debugging linkage.
+- `debug-calendar-event.js`: Interrogates Google Calendar API for specific date ranges (verifies Meet links).
+- `create-paint-events.js`: Automation to create "Paint & Sip" events in Google Calendar via impersonation.
+- `check-airtable-times.js`: Diagnostic script to verify Date/Time field formatting in Airtable.
+- `test-airtable-write.js`: Force-writes data to specific Airtable fields to test permissions.

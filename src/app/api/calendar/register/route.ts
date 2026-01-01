@@ -14,6 +14,7 @@ const getAirtableBase = () => {
 };
 const PARTICIPANTS_TABLE = process.env.AIRTABLE_PARTICIPANTS_TABLE || 'Participants';
 const REGISTRATIONS_TABLE = process.env.AIRTABLE_REGISTRATIONS_TABLE || 'Registrations';
+const SESSIONS_TABLE = process.env.AIRTABLE_SESSIONS_TABLE || 'Live Sessions';
 
 // Helper to format private key
 const getPrivateKey = () => process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
@@ -41,16 +42,30 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1. UPSERT REGISTRATION RECORD (Registrations Table)
+    const airtableBase = getAirtableBase();
     let airtableRegistrationId;
     let confirmUrl;
     let confirmToken;
-    let programTrack;
+    let googleEventId;
+    let sessionIdArray: string[] = [];
 
+    // 0. FETCH SESSION DETAILS (Retrieve Google Event ID)
+    try {
+        console.log(`Fetching session details for Airtable Record: ${eventId}`);
+        const sessionRecord = await airtableBase(SESSIONS_TABLE).find(eventId);
+        if (sessionRecord) {
+            googleEventId = sessionRecord.get('Google Event ID') as string;
+            sessionIdArray = [sessionRecord.id];
+            console.log(`Found Session. Google Event ID: ${googleEventId}`);
+        }
+    } catch (sessionError) {
+        console.warn(`Could not find session with ID ${eventId}:`, sessionError);
+        // We continue, but calendar invite might fail if googleEventId is missing
+    }
+
+    // 1. UPSERT REGISTRATION RECORD (Registrations Table)
     try {
       console.log('Starting Airtable Sync (Registrations)...');
-      
-      const airtableBase = getAirtableBase();
       
       // Escape values for formula
       const escapedEmail = email.replace(/'/g, "\\'");
@@ -66,13 +81,11 @@ export async function POST(req: Request) {
         .firstPage();
 
       // Generate Confirmation Token & URL (Always fresh or persistent)
-      // Note: In a real app, you might want to preserve the old token if it exists, 
-      // but regenerating ensures the user always gets a working link if they re-register.
       confirmToken = crypto.randomUUID();
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://jordanborden.com'; 
       confirmUrl = `${baseUrl}/confirm?token=${confirmToken}`;
 
-      const commonFields = {
+      const commonFields: any = {
           'Registrant Email': email,
           'Registrant Name': name || email.split('@')[0],
           'Registrant Phone': phone || '',
@@ -81,15 +94,16 @@ export async function POST(req: Request) {
           'Event ID': eventId, // Text field backup
       };
 
+      // Link to Session if found
+      if (sessionIdArray.length > 0) {
+          commonFields['Session'] = sessionIdArray;
+      }
+
       if (records.length > 0) {
         // Update existing registration
         const record = records[0];
         airtableRegistrationId = record.id;
         console.log(`Found existing registration ${airtableRegistrationId}. Updating...`);
-        
-        // Only reset Status to Pending if it was Canceled or Declined? 
-        // For now, let's leave Status alone if it's already there, unless we want to re-trigger the flow.
-        // Let's assume re-registering means they want to restart -> Pending.
         
         await airtableBase(REGISTRATIONS_TABLE).update(airtableRegistrationId, {
             ...commonFields,
@@ -102,41 +116,12 @@ export async function POST(req: Request) {
         // Create new registration
         console.log('Creating new registration record...');
         
-        // We need to link to the Session based on Event ID. 
-        // This usually requires a separate lookup of the Sessions table by Event ID 
-        // OR we just rely on the Make automation to link it later. 
-        // However, the prompt implies we rely on "Event ID" text field or we assume the frontend passed the ID?
-        // Let's stick to saving the text "Event ID" for now as per schema 
-        // (The schema has a text field "Event ID"). 
-        // Ideally, we would find the "Live Session" record ID to link to the "Session" field.
-        // For this refactor, we will focus on the text fields as requested, 
-        // but let's try to link the session if possible to enable the "Program Track" lookup later.
-
-        // Lookup Session ID (Optional improvement)
-        let sessionId: string[] = [];
-        try {
-             const sessionRecords = await airtableBase(process.env.AIRTABLE_SESSIONS_TABLE || 'Live Sessions')
-                .select({
-                    filterByFormula: `{Google Event ID} = '${escapedEventId}'`,
-                    maxRecords: 1
-                }).firstPage();
-             if (sessionRecords.length > 0) {
-                 sessionId = [sessionRecords[0].id];
-             }
-        } catch (err) {
-            console.warn("Could not link to Live Session:", err);
-        }
-
         const createFields: any = {
           ...commonFields,
           'Status': 'Pending',
           'Email: Ack Sent': false,
           'Email: Welcome Sent': false,
         };
-        
-        if (sessionId.length > 0) {
-            createFields['Session'] = sessionId;
-        }
 
         const createdRecords = await airtableBase(REGISTRATIONS_TABLE).create([
           { fields: createFields }
@@ -148,7 +133,6 @@ export async function POST(req: Request) {
     } catch (airtableError: any) {
       console.error('Airtable Sync Error Full Details:', JSON.stringify(airtableError, null, 2));
       console.error('Airtable Error Message:', airtableError.message);
-      // We don't block the response here, but we should probably alert
     }
 
     // 2. TRIGGER MAKE.COM WEBHOOK (Now sending Registration ID)
@@ -158,9 +142,10 @@ export async function POST(req: Request) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            airtableRegistrationId, // Renamed for clarity
+            airtableRegistrationId,
             email,
             eventId,
+            googleEventId, // Added for convenience in Make
             status: 'Pending',
             source: 'jab-site-registration',
             confirmToken,
@@ -173,44 +158,53 @@ export async function POST(req: Request) {
     }
 
     // 3. GOOGLE CALENDAR INVITE
-    try {
-      const jwtClient = new google.auth.JWT({
-        email: clientEmail,
-        key: privateKey,
-        scopes: ['https://www.googleapis.com/auth/calendar'],
-        subject: 'walterjordan@f2wconsulting.com'
-      });
+    // Only attempt if we found a valid Google Event ID
+    if (googleEventId) {
+        try {
+            console.log(`Attempting Google Calendar Invite for Event: ${googleEventId}`);
+            const jwtClient = new google.auth.JWT({
+                email: clientEmail,
+                key: privateKey,
+                scopes: ['https://www.googleapis.com/auth/calendar'],
+                subject: 'walterjordan@f2wconsulting.com'
+            });
 
-      const calendar = google.calendar({ version: 'v3', auth: jwtClient });
+            const calendar = google.calendar({ version: 'v3', auth: jwtClient });
 
-      // Fetch the event to get current attendees
-      const event = await calendar.events.get({
-        calendarId,
-        eventId,
-      });
+            // Fetch the event to get current attendees
+            const event = await calendar.events.get({
+                calendarId,
+                eventId: googleEventId,
+            });
 
-      const currentAttendees = event.data.attendees || [];
-      
-      // Check if already attending
-      const isAlreadyAttending = currentAttendees.some(a => a.email === email);
+            const currentAttendees = event.data.attendees || [];
+            
+            // Check if already attending
+            const isAlreadyAttending = currentAttendees.some(a => a.email === email);
 
-      if (!isAlreadyAttending) {
-        const updatedAttendees = [
-          ...currentAttendees,
-          { email, displayName: name || email },
-        ];
+            if (!isAlreadyAttending) {
+                const updatedAttendees = [
+                ...currentAttendees,
+                { email, displayName: name || email },
+                ];
 
-        await calendar.events.patch({
-          calendarId,
-          eventId,
-          requestBody: {
-            attendees: updatedAttendees,
-          },
-          sendUpdates: 'all', // This triggers the email invite
-        });
-      }
-    } catch (calError: any) {
-      console.error('Google Calendar Error:', calError);
+                await calendar.events.patch({
+                    calendarId,
+                    eventId: googleEventId,
+                    requestBody: {
+                        attendees: updatedAttendees,
+                    },
+                    sendUpdates: 'all', // This triggers the email invite
+                });
+                console.log(`Google Calendar invite sent to ${email}`);
+            } else {
+                console.log(`User ${email} is already on the invite.`);
+            }
+        } catch (calError: any) {
+            console.error('Google Calendar Error:', calError);
+        }
+    } else {
+        console.warn('Skipping Google Calendar invite: No Google Event ID found for this session.');
     }
 
     // Sanity check for debugging
