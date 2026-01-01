@@ -172,7 +172,16 @@ export default function ManyChatStyleLanding() {
             </div>
 
             {/* Right side mock panel - Upcoming Sessions */}
-            <UpcomingSessions />
+            <div className="flex flex-col gap-6 w-full md:w-5/12 lg:w-4/12">
+              <UpcomingSessions 
+                title="AI Mastermind Workshops" 
+                filterKeyword="Mastermind" 
+              />
+              <UpcomingSessions 
+                title="Paint & Sip Networking" 
+                filterKeyword="Paint" 
+              />
+            </div>
           </div>
         </section>
 

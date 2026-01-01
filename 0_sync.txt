@@ -1,0 +1,194 @@
+﻿2026-01-01T00:32:26.3870132Z Current runner version: '2.330.0'
+2026-01-01T00:32:26.3893777Z ##[group]Runner Image Provisioner
+2026-01-01T00:32:26.3894752Z Hosted Compute Agent
+2026-01-01T00:32:26.3895266Z Version: 20251211.462
+2026-01-01T00:32:26.3895848Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+2026-01-01T00:32:26.3896465Z Build Date: 2025-12-11T16:28:49Z
+2026-01-01T00:32:26.3897041Z Worker ID: {d4c296f0-8ebb-4f44-b67e-28125c6cd74e}
+2026-01-01T00:32:26.3897658Z ##[endgroup]
+2026-01-01T00:32:26.3898124Z ##[group]Operating System
+2026-01-01T00:32:26.3898613Z Ubuntu
+2026-01-01T00:32:26.3899078Z 24.04.3
+2026-01-01T00:32:26.3899526Z LTS
+2026-01-01T00:32:26.3899958Z ##[endgroup]
+2026-01-01T00:32:26.3900421Z ##[group]Runner Image
+2026-01-01T00:32:26.3900983Z Image: ubuntu-24.04
+2026-01-01T00:32:26.3901484Z Version: 20251215.174.1
+2026-01-01T00:32:26.3902407Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+2026-01-01T00:32:26.3903895Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+2026-01-01T00:32:26.3904952Z ##[endgroup]
+2026-01-01T00:32:26.3906031Z ##[group]GITHUB_TOKEN Permissions
+2026-01-01T00:32:26.3908242Z Contents: read
+2026-01-01T00:32:26.3908798Z Metadata: read
+2026-01-01T00:32:26.3909296Z Packages: read
+2026-01-01T00:32:26.3909765Z ##[endgroup]
+2026-01-01T00:32:26.3912164Z Secret source: Actions
+2026-01-01T00:32:26.3913036Z Prepare workflow directory
+2026-01-01T00:32:26.4231701Z Prepare all required actions
+2026-01-01T00:32:26.4272910Z Getting action download info
+2026-01-01T00:32:26.7347438Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-01-01T00:32:26.8069265Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-01-01T00:32:27.0276549Z Complete job name: sync
+2026-01-01T00:32:27.0894176Z ##[group]Run actions/checkout@v4
+2026-01-01T00:32:27.0895109Z with:
+2026-01-01T00:32:27.0895685Z   repository: walterjordan/jab-site
+2026-01-01T00:32:27.0896503Z   token: ***
+2026-01-01T00:32:27.0896987Z   ssh-strict: true
+2026-01-01T00:32:27.0897484Z   ssh-user: git
+2026-01-01T00:32:27.0897967Z   persist-credentials: true
+2026-01-01T00:32:27.0898503Z   clean: true
+2026-01-01T00:32:27.0898973Z   sparse-checkout-cone-mode: true
+2026-01-01T00:32:27.0899489Z   fetch-depth: 1
+2026-01-01T00:32:27.0899995Z   fetch-tags: false
+2026-01-01T00:32:27.0900418Z   show-progress: true
+2026-01-01T00:32:27.0900865Z   lfs: false
+2026-01-01T00:32:27.0901325Z   submodules: false
+2026-01-01T00:32:27.0901997Z   set-safe-directory: true
+2026-01-01T00:32:27.0902773Z ##[endgroup]
+2026-01-01T00:32:27.1942923Z Syncing repository: walterjordan/jab-site
+2026-01-01T00:32:27.1945062Z ##[group]Getting Git version info
+2026-01-01T00:32:27.1945816Z Working directory is '/home/runner/work/jab-site/jab-site'
+2026-01-01T00:32:27.1947179Z [command]/usr/bin/git version
+2026-01-01T00:32:27.2003630Z git version 2.52.0
+2026-01-01T00:32:27.2026826Z ##[endgroup]
+2026-01-01T00:32:27.2040754Z Temporarily overriding HOME='/home/runner/work/_temp/09bd520a-996d-44d7-a939-f3a3b5c7c589' before making global git config changes
+2026-01-01T00:32:27.2042071Z Adding repository directory to the temporary git global config as a safe directory
+2026-01-01T00:32:27.2056683Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jab-site/jab-site
+2026-01-01T00:32:27.2091613Z Deleting the contents of '/home/runner/work/jab-site/jab-site'
+2026-01-01T00:32:27.2095068Z ##[group]Initializing the repository
+2026-01-01T00:32:27.2098977Z [command]/usr/bin/git init /home/runner/work/jab-site/jab-site
+2026-01-01T00:32:27.2194409Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-01-01T00:32:27.2195450Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-01-01T00:32:27.2196616Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-01-01T00:32:27.2197729Z hint: call:
+2026-01-01T00:32:27.2198367Z hint:
+2026-01-01T00:32:27.2198996Z hint: 	git config --global init.defaultBranch <name>
+2026-01-01T00:32:27.2199608Z hint:
+2026-01-01T00:32:27.2200184Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-01-01T00:32:27.2201113Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-01-01T00:32:27.2201817Z hint:
+2026-01-01T00:32:27.2202372Z hint: 	git branch -m <name>
+2026-01-01T00:32:27.2202906Z hint:
+2026-01-01T00:32:27.2203528Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-01-01T00:32:27.2204819Z Initialized empty Git repository in /home/runner/work/jab-site/jab-site/.git/
+2026-01-01T00:32:27.2209581Z [command]/usr/bin/git remote add origin https://github.com/walterjordan/jab-site
+2026-01-01T00:32:27.2240301Z ##[endgroup]
+2026-01-01T00:32:27.2241228Z ##[group]Disabling automatic garbage collection
+2026-01-01T00:32:27.2244260Z [command]/usr/bin/git config --local gc.auto 0
+2026-01-01T00:32:27.2268697Z ##[endgroup]
+2026-01-01T00:32:27.2380676Z ##[group]Setting up auth
+2026-01-01T00:32:27.2381799Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-01-01T00:32:27.2384003Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-01-01T00:32:27.2607756Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-01-01T00:32:27.2633153Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-01-01T00:32:27.2809724Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-01-01T00:32:27.2835615Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-01-01T00:32:27.3023247Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-01-01T00:32:27.3052274Z ##[endgroup]
+2026-01-01T00:32:27.3052987Z ##[group]Fetching the repository
+2026-01-01T00:32:27.3060905Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +738c3218df8bdb0e3bdc4c0ea14e55bf857c74d3:refs/remotes/origin/main
+2026-01-01T00:32:27.7860065Z From https://github.com/walterjordan/jab-site
+2026-01-01T00:32:27.7860874Z  * [new ref]         738c3218df8bdb0e3bdc4c0ea14e55bf857c74d3 -> origin/main
+2026-01-01T00:32:27.7888067Z ##[endgroup]
+2026-01-01T00:32:27.7889238Z ##[group]Determining the checkout info
+2026-01-01T00:32:27.7890486Z ##[endgroup]
+2026-01-01T00:32:27.7894776Z [command]/usr/bin/git sparse-checkout disable
+2026-01-01T00:32:27.7984596Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-01-01T00:32:27.7986355Z ##[group]Checking out the ref
+2026-01-01T00:32:27.7987162Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-01-01T00:32:27.8212925Z Switched to a new branch 'main'
+2026-01-01T00:32:27.8215281Z branch 'main' set up to track 'origin/main'.
+2026-01-01T00:32:27.8221050Z ##[endgroup]
+2026-01-01T00:32:27.8260599Z [command]/usr/bin/git log -1 --format=%H
+2026-01-01T00:32:27.8282269Z 738c3218df8bdb0e3bdc4c0ea14e55bf857c74d3
+2026-01-01T00:32:27.8569945Z ##[group]Run actions/setup-node@v4
+2026-01-01T00:32:27.8571005Z with:
+2026-01-01T00:32:27.8571746Z   node-version: 20
+2026-01-01T00:32:27.8572543Z   cache: npm
+2026-01-01T00:32:27.8573294Z   always-auth: false
+2026-01-01T00:32:27.8574283Z   check-latest: false
+2026-01-01T00:32:27.8575460Z   token: ***
+2026-01-01T00:32:27.8576236Z ##[endgroup]
+2026-01-01T00:32:28.0266734Z Found in cache @ /opt/hostedtoolcache/node/20.19.6/x64
+2026-01-01T00:32:28.0271898Z ##[group]Environment details
+2026-01-01T00:32:28.3451788Z node: v20.19.6
+2026-01-01T00:32:28.3452471Z npm: 10.8.2
+2026-01-01T00:32:28.3453200Z yarn: 1.22.22
+2026-01-01T00:32:28.3454448Z ##[endgroup]
+2026-01-01T00:32:28.3474697Z [command]/opt/hostedtoolcache/node/20.19.6/x64/bin/npm config get cache
+2026-01-01T00:32:28.4537457Z /home/runner/.npm
+2026-01-01T00:32:28.6468438Z Cache hit for: node-cache-Linux-x64-npm-8e2ed512d550bb833413ec9de3f611ea0ccb15c0cc1b96e52585744a296de54c
+2026-01-01T00:32:29.7595822Z Received 134217728 of 191662665 (70.0%), 127.9 MBs/sec
+2026-01-01T00:32:29.9988391Z Received 191662665 of 191662665 (100.0%), 147.3 MBs/sec
+2026-01-01T00:32:29.9989197Z Cache Size: ~183 MB (191662665 B)
+2026-01-01T00:32:30.0021213Z [command]/usr/bin/tar -xf /home/runner/work/_temp/2364d70c-3ac6-4776-ad0b-5a0b0e4cd0a4/cache.tzst -P -C /home/runner/work/jab-site/jab-site --use-compress-program unzstd
+2026-01-01T00:32:30.2232703Z Cache restored successfully
+2026-01-01T00:32:30.2479065Z Cache restored from key: node-cache-Linux-x64-npm-8e2ed512d550bb833413ec9de3f611ea0ccb15c0cc1b96e52585744a296de54c
+2026-01-01T00:32:30.2617767Z ##[group]Run npm ci
+2026-01-01T00:32:30.2618111Z [36;1mnpm ci[0m
+2026-01-01T00:32:30.2650260Z shell: /usr/bin/bash -e {0}
+2026-01-01T00:32:30.2650543Z ##[endgroup]
+2026-01-01T00:32:35.1797246Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2026-01-01T00:32:39.0466101Z 
+2026-01-01T00:32:39.0467080Z added 411 packages, and audited 412 packages in 9s
+2026-01-01T00:32:39.0467414Z 
+2026-01-01T00:32:39.0467595Z 159 packages are looking for funding
+2026-01-01T00:32:39.0467928Z   run `npm fund` for details
+2026-01-01T00:32:39.0985528Z 
+2026-01-01T00:32:39.0986383Z 3 vulnerabilities (1 moderate, 1 high, 1 critical)
+2026-01-01T00:32:39.0986891Z 
+2026-01-01T00:32:39.0987268Z To address issues that do not require attention, run:
+2026-01-01T00:32:39.0987870Z   npm audit fix
+2026-01-01T00:32:39.0988099Z 
+2026-01-01T00:32:39.0988304Z To address all issues, run:
+2026-01-01T00:32:39.0988735Z   npm audit fix --force
+2026-01-01T00:32:39.0988983Z 
+2026-01-01T00:32:39.0989293Z Run `npm audit` for details.
+2026-01-01T00:32:39.1446988Z ##[group]Run node scripts/sync-sessions.js
+2026-01-01T00:32:39.1447361Z [36;1mnode scripts/sync-sessions.js[0m
+2026-01-01T00:32:39.1468457Z shell: /usr/bin/bash -e {0}
+2026-01-01T00:32:39.1468726Z env:
+2026-01-01T00:32:39.1469324Z   AIRTABLE_API_KEY: ***
+2026-01-01T00:32:39.1469585Z   AIRTABLE_BASE_ID: ***
+2026-01-01T00:32:39.1469819Z   AIRTABLE_SESSIONS_TABLE: Live Sessions
+2026-01-01T00:32:39.1470316Z   GOOGLE_CALENDAR_ID: ***
+2026-01-01T00:32:39.1470667Z   GOOGLE_CLIENT_EMAIL: ***
+2026-01-01T00:32:39.1477546Z   GOOGLE_PRIVATE_KEY: ***
+2026-01-01T00:32:39.1477766Z ##[endgroup]
+2026-01-01T00:32:39.7771916Z Starting Google Calendar to Airtable Sync...
+2026-01-01T00:32:39.7775714Z Environment Check:
+2026-01-01T00:32:39.7776279Z   AIRTABLE_API_KEY: Set
+2026-01-01T00:32:39.7776826Z   AIRTABLE_BASE_ID: Set
+2026-01-01T00:32:39.7777349Z   GOOGLE_CALENDAR_ID: Set
+2026-01-01T00:32:39.7777839Z   GOOGLE_CLIENT_EMAIL: Set
+2026-01-01T00:32:39.7778335Z   GOOGLE_PRIVATE_KEY: Set
+2026-01-01T00:32:39.7779027Z Raw Private Key Length: 1730
+2026-01-01T00:32:39.7779741Z Processed Key Start: -----BEGIN PRIVATE KEY---...
+2026-01-01T00:32:39.9778889Z Successfully authorized Google Client
+2026-01-01T00:32:39.9784387Z Fetching events from Google Calendar (***)...
+2026-01-01T00:32:40.3611257Z Found 4 matching events.
+2026-01-01T00:32:40.3612103Z Processing: 90 Minute AI Mastermind (2026-01-11T23:00:00Z)
+2026-01-01T00:32:40.3612998Z    > Google Link Data: Hangout=https://meet.google.com/nck-pvwk-ynm, Location=undefined
+2026-01-01T00:32:40.3613808Z    > Resolved Link: https://meet.google.com/nck-pvwk-ynm
+2026-01-01T00:32:42.3285338Z   Updating existing record recpNyrk2X2B5Hcsn...
+2026-01-01T00:32:42.8964914Z Sync Failed: AirtableError {
+2026-01-01T00:32:42.8965440Z   error: 'INVALID_VALUE_FOR_COLUMN',
+2026-01-01T00:32:42.8965901Z   message: 'Cannot parse date value "23:00" for field Start Time',
+2026-01-01T00:32:42.8966364Z   statusCode: 422
+2026-01-01T00:32:42.8966766Z }
+2026-01-01T00:32:42.9048459Z ##[error]Process completed with exit code 1.
+2026-01-01T00:32:42.9149682Z Post job cleanup.
+2026-01-01T00:32:43.0040711Z [command]/usr/bin/git version
+2026-01-01T00:32:43.0073811Z git version 2.52.0
+2026-01-01T00:32:43.0113017Z Temporarily overriding HOME='/home/runner/work/_temp/b10ea02a-9694-4d44-ba8a-2fd08941339c' before making global git config changes
+2026-01-01T00:32:43.0114601Z Adding repository directory to the temporary git global config as a safe directory
+2026-01-01T00:32:43.0119667Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/jab-site/jab-site
+2026-01-01T00:32:43.0160462Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-01-01T00:32:43.0191206Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-01-01T00:32:43.0376071Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-01-01T00:32:43.0394394Z http.https://github.com/.extraheader
+2026-01-01T00:32:43.0405366Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-01-01T00:32:43.0429796Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-01-01T00:32:43.0608159Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-01-01T00:32:43.0636752Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-01-01T00:32:43.0911378Z Cleaning up orphan processes

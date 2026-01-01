@@ -31,17 +31,17 @@ export async function GET() {
     const response = await calendar.events.list({
       calendarId,
       timeMin: now,
-      maxResults: 10,
+      maxResults: 20, // Increased to fetch more events
       singleEvents: true,
       orderBy: 'startTime',
-      q: '90 Minute AI Mastermind',
+      // q: '90 Minute AI Mastermind', // Removed filter to allow Paint & Sip events
     });
 
     const events = response.data.items || [];
 
     // Map and format the events
     const formattedEvents = events
-      .slice(0, 3) // Limit to 3 closest events
+      // .slice(0, 3) // Removed slice to allow filtering on frontend
       .map((event) => {
         const start = event.start?.dateTime || event.start?.date;
         const end = event.end?.dateTime || event.end?.date;

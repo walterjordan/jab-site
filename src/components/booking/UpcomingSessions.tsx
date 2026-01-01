@@ -13,7 +13,15 @@ type CalendarEvent = {
   description?: string;
 };
 
-export default function UpcomingSessions() {
+interface Props {
+  title?: string;
+  filterKeyword?: string;
+}
+
+export default function UpcomingSessions({ 
+  title = "Upcoming Masterminds", 
+  filterKeyword = "Mastermind" 
+}: Props) {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -39,6 +47,11 @@ export default function UpcomingSessions() {
 
     fetchSessions();
   }, []);
+
+  // Filter events based on keyword (case-insensitive)
+  const filteredEvents = events.filter(e => 
+    e.title.toLowerCase().includes(filterKeyword.toLowerCase())
+  ).slice(0, 3); // Limit to 3 per section
 
   const handleReserveClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
@@ -99,7 +112,7 @@ export default function UpcomingSessions() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          <span className="font-medium text-slate-100">Upcoming Masterminds</span>
+          <span className="font-medium text-slate-100">{title}</span>
         </span>
         <span className="text-xs text-slate-500 font-mono">EST (New York)</span>
       </div>
@@ -119,13 +132,13 @@ export default function UpcomingSessions() {
               </div>
             ))}
           </>
-        ) : events.length === 0 ? (
+        ) : filteredEvents.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 text-center px-4">
-             <p className="text-slate-400 mb-4">No public sessions scheduled right now.</p>
+             <p className="text-slate-400 mb-4">No sessions scheduled.</p>
              <a href="#contact" className="text-[#7fff41] text-sm font-medium hover:underline">Join the waitlist</a>
           </div>
         ) : (
-          events.map((event) => (
+          filteredEvents.map((event) => (
             <div
               key={event.id}
               className="group relative rounded-2xl border border-white/5 bg-slate-800/40 hover:bg-slate-800/60 transition p-4"
