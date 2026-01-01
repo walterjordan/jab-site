@@ -4,7 +4,7 @@ steps:
     entrypoint: 'pack'
     args:
       - 'build'
-      - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+      - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
       - '--builder=gcr.io/buildpacks/builder:latest'
       # Build-time environment variables (Required for Next.js NEXT_PUBLIC_* vars)
       - '--env=NEXT_PUBLIC_MESSENGER_URL=$_NEXT_PUBLIC_MESSENGER_URL'
@@ -16,7 +16,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+      - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
     id: Push
 
   # Step 3: Deploy to Cloud Run (DEV Service)
@@ -26,7 +26,7 @@ steps:
       - 'run'
       - 'deploy'
       - '$_SERVICE_NAME'
-      - '--image=$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+      - '--image=$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
       - '--region=$_DEPLOY_REGION'
       - '--platform=managed'
       - '--allow-unauthenticated'
@@ -34,21 +34,23 @@ steps:
       # Non-secret runtime variables from Airtable/Google configuration
       - '--set-env-vars'
       - 'AIRTABLE_BASE_ID=appeJqZ5yjyPmh1MC,AIRTABLE_PARTICIPANTS_TABLE=Participants,GOOGLE_CALENDAR_ID=c_0cdca889ecc9974ca3f729265f27a3f951ff54e5844877d38681fe529e5e356b@group.calendar.google.com,GOOGLE_CLIENT_EMAIL=199373649190-compute@developer.gserviceaccount.com'
-      # Secrets from Secret Manager (Reusing prod secrets is fine for this dev test unless user specified otherwise)
+      # Secrets from Secret Manager
       - '--set-secrets'
       - 'AIRTABLE_API_KEY=AIRTABLE_API_K:latest,GOOGLE_PRIVATE_KEY=GOOGLE_PRIVATE_KEY:latest,MAKE_Mastermind_Registration_webhook_URL=_Registration_webhook_URL:latest'
     id: Deploy
 
 images:
-  - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
+  - '$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
 
 substitutions:
   _DEPLOY_REGION: us-east1
   _AR_HOSTNAME: us-east1-docker.pkg.dev
+  _AR_PROJECT_ID: f2w-consulting
+  _AR_REPOSITORY: cloud-run-source-deploy
+  _SERVICE_NAME: jab-site-dev
   _NEXT_PUBLIC_MESSENGER_URL: https://m.me/611741395360453
   _NEXT_PUBLIC_GA4: G-XXXXXXX
   _NEXT_PUBLIC_ADS_ID: AW-XXXXXXX
-  _SERVICE_NAME: jab-site-dev # Changed service name
 
 options:
   logging: CLOUD_LOGGING_ONLY
