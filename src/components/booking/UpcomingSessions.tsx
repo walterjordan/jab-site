@@ -366,69 +366,99 @@ export default function UpcomingSessions({
 
 
 
-                                {/* If images exist, show them (Flyer Mode) */}
+                                                {/* If images exist, show them (Flyer Mode) */}
 
 
 
-                                {hasImages && (
+                                                {hasImages && (
 
 
 
-                                  <div className={`grid gap-3 mb-4 ${dayEvents.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                                                  <div className={`grid gap-4 mb-4 ${dayEvents.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
 
 
 
-                                    {dayEvents.map(event => (
+                                                    {dayEvents.map(event => (
 
 
 
-                                      event.coverImage ? (
+                                                      event.coverImage ? (
 
 
 
-                                        <div key={event.id} className="relative aspect-[2/3] overflow-hidden rounded-lg border border-white/10">
+                                                        <div key={event.id} className="flex flex-col gap-2">
 
 
 
-                                          <img 
+                                                          <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/10 bg-slate-950">
 
 
 
-                                            src={event.coverImage} 
+                                                            <img 
 
 
 
-                                            alt={event.title} 
+                                                              src={event.coverImage} 
 
 
 
-                                            className="absolute inset-0 h-full w-full object-cover"
+                                                              alt={event.title} 
 
 
 
-                                          />
+                                                              className="absolute inset-0 h-full w-full object-contain"
 
-                          <button
 
-                            onClick={() => handleReserveClick(event)}
 
-                            className="absolute bottom-0 w-full bg-black/70 backdrop-blur py-2 text-xs font-semibold text-[#7fff41] hover:bg-[#7fff41] hover:text-black transition"
+                                                            />
 
-                          >
 
-                            {formatTime(event.start)}
 
-                          </button>
+                                                          </div>
 
-                        </div>
 
-                      ) : null
 
-                    ))}
+                                                          <button
 
-                  </div>
 
-                )}
+
+                                                            onClick={() => handleReserveClick(event)}
+
+
+
+                                                            className="w-full bg-[#7fff41]/10 border border-[#7fff41]/20 py-2.5 rounded-lg text-xs font-bold text-[#7fff41] hover:bg-[#7fff41] hover:text-black transition uppercase tracking-wider"
+
+
+
+                                                          >
+
+
+
+                                                            Reserve {formatTime(event.start)}
+
+
+
+                                                          </button>
+
+
+
+                                                        </div>
+
+
+
+                                                      ) : null
+
+
+
+                                                    ))}
+
+
+
+                                                  </div>
+
+
+
+                                                )}
 
 
 
