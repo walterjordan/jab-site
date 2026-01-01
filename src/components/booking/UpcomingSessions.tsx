@@ -214,35 +214,43 @@ export default function UpcomingSessions({
 
 
 
-    return (
+      return (
 
 
 
-      <>
+        <>
 
 
 
-      <div className="w-full shrink-0 self-stretch rounded-3xl border border-white/10 bg-slate-900/80 p-5 shadow-2xl shadow-black/40 backdrop-blur flex flex-col">
+        <div className="w-full shrink-0 self-stretch rounded-3xl border border-white/10 bg-slate-950/80 p-5 shadow-2xl shadow-black/40 backdrop-blur flex flex-col">
 
 
 
-        <div className="flex items-center justify-between text-sm text-slate-300 mb-6 px-1">
+          <div className="flex items-center justify-between text-sm text-slate-300 mb-6 px-1">
 
 
 
-          <span className="inline-flex items-center gap-2">
+            <span className="inline-flex items-center gap-2">
 
 
 
-            <span className="relative flex h-2 w-2">
+              <span className="relative flex h-2 w-2">
 
 
 
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
 
 
 
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+
+
+
+              </span>
+
+
+
+              <span className="font-medium text-slate-100 uppercase tracking-wider">{title}</span>
 
 
 
@@ -250,265 +258,319 @@ export default function UpcomingSessions({
 
 
 
-            <span className="font-medium text-slate-100 uppercase tracking-wider">{title}</span>
+            <span className="text-xs text-slate-500 font-mono">EST (NYC)</span>
 
 
-
-          </span>
-
-
-
-          <span className="text-xs text-slate-500 font-mono">EST (NYC)</span>
-
-
-
-        </div>
-
-
-
-  
-
-
-
-        <div className="flex-1 space-y-6">
-
-
-
-          {loading ? (
-
-
-
-            // Skeleton Loader
-
-
-
-            <>
-
-
-
-              {[1, 2].map((i) => (
-
-
-
-                <div key={i} className="animate-pulse rounded-2xl bg-slate-800/50 p-4 border border-white/5">
-
-
-
-                  <div className="h-4 w-24 bg-slate-700 rounded mb-4"></div>
-
-
-
-                  <div className="h-40 w-full bg-slate-700 rounded-lg"></div>
-
-
-
-                </div>
-
-
-
-              ))}
-
-
-
-            </>
-
-
-
-          ) : sortedDates.length === 0 ? (
-
-          <div className="flex flex-col items-center justify-center h-48 text-center px-4">
-
-             <p className="text-slate-400 mb-4">No sessions scheduled.</p>
-
-             <a href="#contact" className="text-[#7fff41] text-sm font-medium hover:underline">Join the waitlist</a>
 
           </div>
 
-        ) : (
 
-          sortedDates.slice(0, 3).map((dateKey) => {
 
-            const dayEvents = groupedEvents[dateKey];
+    
 
-            const firstEvent = dayEvents[0];
 
-            const hasImages = dayEvents.some(e => e.coverImage);
 
+          <div className="flex-1 space-y-6">
 
 
-            return (
 
-              <div key={dateKey} className="group relative rounded-2xl border border-white/5 bg-slate-800/40 p-4 hover:bg-slate-800/60 transition">
+            {loading ? (
 
-                
 
-                {/* Header for the Day */}
 
-                <div className="flex justify-between items-center mb-3">
+              // Skeleton Loader
 
-                   <span className="text-sm font-bold uppercase tracking-wider text-[#7fff41]">
 
-                      {formatDate(firstEvent.start)}
 
-                   </span>
+              <>
 
-                   {dayEvents.length > 1 && (
 
-                     <span className="text-xs text-slate-400 bg-slate-900/50 px-2 py-1 rounded-full">
 
-                       {dayEvents.length} Slots
+                {[1, 2].map((i) => (
 
-                     </span>
 
-                   )}
 
-                </div>
+                  <div key={i} className="animate-pulse rounded-2xl bg-slate-800/50 p-4 border border-white/5">
 
 
 
-                                                {/* If images exist, show them (Flyer Mode) */}
+                    <div className="h-4 w-24 bg-slate-700 rounded mb-4"></div>
 
 
 
-                                                {hasImages && (
+                    <div className="h-40 w-full bg-slate-700 rounded-lg"></div>
 
 
-
-                                                  <div className={`grid gap-4 mb-4 ${dayEvents.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
-
-
-
-                                                    {dayEvents.map(event => (
-
-
-
-                                                      event.coverImage ? (
-
-
-
-                                                        <div key={event.id} className="flex flex-col gap-2">
-
-
-
-                                                          <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/10 bg-slate-950">
-
-
-
-                                                            <img 
-
-
-
-                                                              src={event.coverImage} 
-
-
-
-                                                              alt={event.title} 
-
-
-
-                                                              className="absolute inset-0 h-full w-full object-contain"
-
-
-
-                                                            />
-
-
-
-                                                          </div>
-
-
-
-                                                          <button
-
-
-
-                                                            onClick={() => handleReserveClick(event)}
-
-
-
-                                                            className="w-full bg-[#7fff41]/10 border border-[#7fff41]/20 py-2.5 rounded-lg text-xs font-bold text-[#7fff41] hover:bg-[#7fff41] hover:text-black transition uppercase tracking-wider"
-
-
-
-                                                          >
-
-
-
-                                                            Reserve {formatTime(event.start)}
-
-
-
-                                                          </button>
-
-
-
-                                                        </div>
-
-
-
-                                                      ) : null
-
-
-
-                                                    ))}
-
-
-
-                                                  </div>
-
-
-
-                                                )}
-
-
-
-                {/* List View (Fallback or for non-image events) */}
-
-                {!hasImages && dayEvents.map(event => (
-
-                  <div key={event.id} className="mb-3 last:mb-0 border-b border-white/5 last:border-0 pb-3 last:pb-0">
-
-                    <h4 className="text-base font-semibold text-slate-100 leading-snug">
-
-                      {event.title}
-
-                    </h4>
-
-                    <div className="flex justify-between items-center mt-2">
-
-                      <span className="text-xs text-slate-400">
-
-                        {formatTime(event.start)} - {formatTime(event.end)}
-
-                      </span>
-
-                      <button
-
-                        onClick={() => handleReserveClick(event)}
-
-                        className="text-xs bg-[#7fff41]/10 border border-[#7fff41]/20 px-3 py-1.5 rounded text-[#7fff41] hover:bg-[#7fff41] hover:text-slate-900 transition"
-
-                      >
-
-                        Reserve
-
-                      </button>
-
-                    </div>
 
                   </div>
 
+
+
                 ))}
+
+
+
+              </>
+
+
+
+            ) : filteredEvents.length === 0 ? (
+
+
+
+              <div className="flex flex-col items-center justify-center h-48 text-center px-4">
+
+
+
+                 <p className="text-slate-400 mb-4">No sessions scheduled.</p>
+
+
+
+                 <a href="#contact" className="text-[#7fff41] text-sm font-medium hover:underline">Join the waitlist</a>
+
+
 
               </div>
 
-            );
 
-          })
 
-        )}
+            ) : (
 
-      </div>
+
+
+              filteredEvents.slice(0, 4).map((event) => {
+
+
+
+                const hasImage = !!event.coverImage;
+
+
+
+    
+
+
+
+                return (
+
+
+
+                  <div key={event.id} className="group relative rounded-2xl border border-white/5 bg-slate-800/40 p-4 hover:bg-slate-800/60 transition flex flex-col">
+
+
+
+                    
+
+
+
+                    {/* Header for the Slot */}
+
+
+
+                    <div className="flex justify-between items-center mb-3">
+
+
+
+                       <span className="text-sm font-bold uppercase tracking-wider text-[#7fff41]">
+
+
+
+                          {formatDate(event.start)}
+
+
+
+                       </span>
+
+
+
+                       <span className="text-xs text-slate-400 bg-slate-900/50 px-2 py-1 rounded-full">
+
+
+
+                         {formatTime(event.start)}
+
+
+
+                       </span>
+
+
+
+                    </div>
+
+
+
+    
+
+
+
+                    {/* If image exists, show it (Flyer Mode) */}
+
+
+
+                    {hasImage && (
+
+
+
+                      <div className="flex flex-col gap-3 mb-1">
+
+
+
+                        <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/10 bg-slate-950">
+
+
+
+                          <img 
+
+
+
+                            src={event.coverImage!} 
+
+
+
+                            alt={event.title} 
+
+
+
+                            className="absolute inset-0 h-full w-full object-contain"
+
+
+
+                          />
+
+
+
+                        </div>
+
+
+
+                        <button
+
+
+
+                          onClick={() => handleReserveClick(event)}
+
+
+
+                          className="w-full bg-[#7fff41]/10 border border-[#7fff41]/20 py-2.5 rounded-lg text-xs font-bold text-[#7fff41] hover:bg-[#7fff41] hover:text-black transition uppercase tracking-wider"
+
+
+
+                        >
+
+
+
+                          Reserve {formatTime(event.start)} Slot
+
+
+
+                        </button>
+
+
+
+                      </div>
+
+
+
+                    )}
+
+
+
+    
+
+
+
+                    {/* List View (Fallback for non-image events) */}
+
+
+
+                    {!hasImage && (
+
+
+
+                      <div className="flex flex-col">
+
+
+
+                        <h4 className="text-base font-semibold text-slate-100 leading-snug">
+
+
+
+                          {event.title}
+
+
+
+                        </h4>
+
+
+
+                        <div className="flex justify-between items-center mt-3">
+
+
+
+                          <span className="text-xs text-slate-400">
+
+
+
+                            {formatTime(event.start)} - {formatTime(event.end)}
+
+
+
+                          </span>
+
+
+
+                          <button
+
+
+
+                            onClick={() => handleReserveClick(event)}
+
+
+
+                            className="text-xs bg-[#7fff41]/10 border border-[#7fff41]/20 px-3 py-1.5 rounded text-[#7fff41] hover:bg-[#7fff41] hover:text-slate-900 transition"
+
+
+
+                          >
+
+
+
+                            Reserve Seat
+
+
+
+                          </button>
+
+
+
+                        </div>
+
+
+
+                      </div>
+
+
+
+                    )}
+
+
+
+                  </div>
+
+
+
+                );
+
+
+
+              })
+
+
+
+            )}
+
+
+
+          </div>
 
 
 

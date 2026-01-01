@@ -82,7 +82,7 @@ async function syncSessions() {
       timeMin: timeMin,
       singleEvents: true,
       orderBy: 'startTime',
-      q: 'AI Mastermind',
+      // q: 'AI Mastermind', // Removed filter to sync all events
       conferenceDataVersion: 1 // Request full conference data (Meet links)
     });
 
@@ -97,7 +97,7 @@ async function syncSessions() {
         const meetingLink = event.hangoutLink || event.location || '';
         
         // Determine Program Track based on title
-        const programTrack = summary.toLowerCase().includes('free') ? 'Free 90-min' : 'Full-day';
+        const programTrack = summary.toLowerCase().includes('full-day') ? 'Full-day' : 'Free 90-min';
 
         console.log(`Processing: ${summary} (${start})`);
         console.log(`   > Google Link Data: Hangout=${event.hangoutLink}, Location=${event.location}`);
