@@ -214,57 +214,107 @@ export default function UpcomingSessions({
 
 
 
-  return (
+    return (
 
-    <>
 
-    <div className="w-full max-w-md shrink-0 self-stretch rounded-3xl border border-white/10 bg-slate-900/80 p-4 shadow-2xl shadow-black/40 backdrop-blur md:w-5/12 flex flex-col">
 
-      <div className="flex items-center justify-between text-sm text-slate-300 mb-4 px-2">
+      <>
 
-        <span className="inline-flex items-center gap-2">
 
-          <span className="relative flex h-2 w-2">
 
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+      <div className="w-full shrink-0 self-stretch rounded-3xl border border-white/10 bg-slate-900/80 p-5 shadow-2xl shadow-black/40 backdrop-blur flex flex-col">
 
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+
+
+        <div className="flex items-center justify-between text-sm text-slate-300 mb-6 px-1">
+
+
+
+          <span className="inline-flex items-center gap-2">
+
+
+
+            <span className="relative flex h-2 w-2">
+
+
+
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+
+
+
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+
+
+
+            </span>
+
+
+
+            <span className="font-medium text-slate-100 uppercase tracking-wider">{title}</span>
+
+
 
           </span>
 
-          <span className="font-medium text-slate-100">{title}</span>
 
-        </span>
 
-        <span className="text-xs text-slate-500 font-mono">EST (NYC)</span>
-
-      </div>
+          <span className="text-xs text-slate-500 font-mono">EST (NYC)</span>
 
 
 
-      <div className="flex-1 space-y-4">
+        </div>
 
-        {loading ? (
 
-          // Skeleton Loader
 
-          <>
+  
 
-            {[1, 2].map((i) => (
 
-              <div key={i} className="animate-pulse rounded-2xl bg-slate-800/50 p-4 border border-white/5">
 
-                <div className="h-4 w-24 bg-slate-700 rounded mb-2"></div>
+        <div className="flex-1 space-y-6">
 
-                <div className="h-24 w-full bg-slate-700 rounded-lg"></div>
 
-              </div>
 
-            ))}
+          {loading ? (
 
-          </>
 
-        ) : sortedDates.length === 0 ? (
+
+            // Skeleton Loader
+
+
+
+            <>
+
+
+
+              {[1, 2].map((i) => (
+
+
+
+                <div key={i} className="animate-pulse rounded-2xl bg-slate-800/50 p-4 border border-white/5">
+
+
+
+                  <div className="h-4 w-24 bg-slate-700 rounded mb-4"></div>
+
+
+
+                  <div className="h-40 w-full bg-slate-700 rounded-lg"></div>
+
+
+
+                </div>
+
+
+
+              ))}
+
+
+
+            </>
+
+
+
+          ) : sortedDates.length === 0 ? (
 
           <div className="flex flex-col items-center justify-center h-48 text-center px-4">
 

@@ -160,26 +160,24 @@ export default function ManyChatStyleLanding() {
       </header>
 
       <main>
-        {/* HERO */}
+        {/* HERO - Upcoming Events */}
         <section id="cta" className="relative border-b border-white/5">
-          <div className="mx-auto flex max-w-7xl xl:max-w-(--breakpoint-2xl) flex-col gap-12 px-6 py-12 md:flex-row md:items-center md:py-20">
-            <div className="flex-1">
-              <img
-                src="/New AI Mastermind SS.png"
-                alt="AI Mastermind Screenshot"
-                className="w-full h-auto rounded-lg shadow-2xl shadow-[#7fff41]/20 border border-white/10"
-              />
+          <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-12 md:py-20">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-white mb-3">Upcoming Live Events</h2>
+              <p className="text-lg text-slate-300 max-w-2xl mx-auto">
+                Join our hands-on workshops and social networking sessions to master AI and automation.
+              </p>
             </div>
 
-            {/* Right side mock panel - Upcoming Sessions */}
-            <div className="flex flex-col gap-6 w-full md:w-5/12 lg:w-4/12">
-              <UpcomingSessions 
-                title="AI Mastermind Workshops" 
-                filterKeyword="Mastermind" 
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
               <UpcomingSessions 
                 title="Paint & Sip Networking" 
                 filterKeyword="Paint" 
+              />
+              <UpcomingSessions 
+                title="AI Mastermind Workshops" 
+                filterKeyword="Mastermind" 
               />
             </div>
           </div>
