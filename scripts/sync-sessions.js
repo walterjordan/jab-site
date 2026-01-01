@@ -112,7 +112,8 @@ async function syncSessions() {
         const startTime = new Date(start).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
         const endTime = new Date(event.end.dateTime || event.end.date).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
-        const fields = {
+        // Fields to use when CREATING a new record
+        const createFields = {
             'Session Title': summary,
             'Google Event ID': eventId,
             'Description': description,
@@ -124,12 +125,24 @@ async function syncSessions() {
             'Session Status': 'Upcoming'
         };
 
+        // Fields to use when UPDATING an existing record (Safety Logic)
+        // We EXCLUDE Session Title and Description to protect manual edits in Airtable
+        const updateFields = {
+            'Google Event ID': eventId,
+            'Session Date': start.split('T')[0],
+            'Start Time': startTime,
+            'End Time': endTime,
+            'Meeting Link': meetingLink,
+            'Program Track': programTrack,
+            'Session Status': 'Upcoming'
+        };
+
         if (existing.length > 0) {
             console.log(`  Updating existing record ${existing[0].id}...`);
-            await base(SESSIONS_TABLE).update(existing[0].id, fields);
+            await base(SESSIONS_TABLE).update(existing[0].id, updateFields);
         } else {
             console.log(`  Creating new record...`);
-            await base(SESSIONS_TABLE).create([{ fields }]);
+            await base(SESSIONS_TABLE).create([{ fields: createFields }]);
         }
     }
 
