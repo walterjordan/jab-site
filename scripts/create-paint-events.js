@@ -24,32 +24,32 @@ async function createPaintAndSipEvents() {
             summary: 'Paint & Sip: Slot 1 (Social Networking)',
             description: 'A fun social networking event to promote our AI Mastermind workshops. Drinks, painting, and automation talk!',
             start: {
-                dateTime: '2026-01-16T19:00:00Z', // Friday Jan 16, 7PM UTC
+                dateTime: '2026-01-17T19:00:00Z', // Saturday Jan 17, 7PM UTC
                 timeZone: 'UTC',
             },
             end: {
-                dateTime: '2026-01-16T21:00:00Z',
+                dateTime: '2026-01-17T21:00:00Z',
                 timeZone: 'UTC',
             },
             location: 'https://meet.google.com/hiz-wejz-kch', // Using your existing Meet link as placeholder
             conferenceData: {
-                createRequest: { requestId: "paint-sip-1" }
+                createRequest: { requestId: "paint-sip-jan17" }
             }
         },
         {
             summary: 'Paint & Sip: Slot 2 (Social Networking)',
             description: 'Round two! Networking and creativity combined with business automation insights.',
             start: {
-                dateTime: '2026-01-23T19:00:00Z', // Friday Jan 23, 7PM UTC
+                dateTime: '2026-01-24T19:00:00Z', // Saturday Jan 24, 7PM UTC
                 timeZone: 'UTC',
             },
             end: {
-                dateTime: '2026-01-23T21:00:00Z',
+                dateTime: '2026-01-24T21:00:00Z',
                 timeZone: 'UTC',
             },
             location: 'https://meet.google.com/hiz-wejz-kch',
             conferenceData: {
-                createRequest: { requestId: "paint-sip-2" }
+                createRequest: { requestId: "paint-sip-jan24" }
             }
         }
     ];

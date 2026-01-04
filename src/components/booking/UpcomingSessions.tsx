@@ -64,7 +64,7 @@ export default function UpcomingSessions({
 
       try {
 
-        const res = await fetch("/api/calendar/sessions");
+        const res = await fetch("/api/calendar/sessions?type=upcoming");
 
         if (!res.ok) throw new Error("Failed to fetch");
 

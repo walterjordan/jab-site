@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import Airtable from 'airtable';
 
 // Force dynamic to ensure we get fresh data on every request
@@ -15,18 +15,19 @@ const getAirtableBase = () => {
 
 const SESSIONS_TABLE = process.env.AIRTABLE_SESSIONS_TABLE || 'Live Sessions';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const base = getAirtableBase();
+    const searchParams = request.nextUrl.searchParams;
+    const type = searchParams.get('type') || 'upcoming'; // 'upcoming' | 'past'
     
-    // Fetch upcoming sessions from Airtable
-    // Assuming 'Session Status' = 'Upcoming' or filter by date
-    // For now, let's fetch all and filter in memory or rely on a view if one exists.
-    // Better: Sort by Date.
+    // Fetch all sessions, sorted by date.
+    // We filter in-memory to ensure precise date comparison vs. current time
     const records = await base(SESSIONS_TABLE).select({
-      sort: [{ field: 'Session Date', direction: 'asc' }],
-      filterByFormula: "OR({Session Status} = 'Upcoming', {Session Status} = 'Scheduled')" 
+      sort: [{ field: 'Session Date', direction: type === 'past' ? 'desc' : 'asc' }],
     }).all();
+
+    const now = new Date();
 
     const events = records.map((record) => {
       const fields = record.fields;
@@ -37,6 +38,7 @@ export async function GET() {
 
       return {
         id: record.id,
+        googleEventId: fields['Google Event ID'],
         title: fields['Session Title'] || 'Untitled Session',
         start: fields['Start Time'] || fields['Session Date'], // Fallback to date if time missing
         end: fields['End Time'],
@@ -45,6 +47,16 @@ export async function GET() {
         coverImage: coverImage,
         programTrack: fields['Program Track']
       };
+    }).filter(event => {
+       // Determine if event is in the future or past
+       // Use End Time if available, otherwise Start Time
+       const eventTime = event.end ? new Date(event.end) : new Date(event.start as string);
+       
+       if (type === 'past') {
+         return eventTime < now;
+       } else {
+         return eventTime >= now;
+       }
     });
 
     return NextResponse.json({ events });

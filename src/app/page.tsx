@@ -1,6 +1,7 @@
 "use client";
 
 import UpcomingSessions from "@/components/booking/UpcomingSessions";
+import PastSessions from "@/components/booking/PastSessions";
 
 const MESSENGER_URL = "https://m.me/611741395360453";
 
@@ -180,6 +181,9 @@ export default function ManyChatStyleLanding() {
                 filterKeyword="Mastermind" 
               />
             </div>
+
+            {/* Past Events Recap (Dynamic) */}
+            <PastSessions />
           </div>
         </section>
 
