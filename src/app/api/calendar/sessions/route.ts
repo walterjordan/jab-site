@@ -15,6 +15,17 @@ const getAirtableBase = () => {
 
 const SESSIONS_TABLE = process.env.AIRTABLE_SESSIONS_TABLE || 'Live Sessions';
 
+// Helper to safely convert Airtable field values to Date
+function toDate(value: unknown): Date | null {
+  if (!value) return null;
+  if (value instanceof Date) return value;
+  if (typeof value === 'string' || typeof value === 'number') {
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  return null;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const base = getAirtableBase();
@@ -50,8 +61,12 @@ export async function GET(request: NextRequest) {
     }).filter(event => {
        // Determine if event is in the future or past
        // Use End Time if available, otherwise Start Time
-       const eventTime = event.end ? new Date(event.end) : new Date(event.start as string);
+       const endTime = toDate(event.end);
+       const startTime = toDate(event.start);
+       const eventTime = endTime || startTime;
        
+       if (!eventTime) return false; // Skip invalid dates
+
        if (type === 'past') {
          return eventTime < now;
        } else {
