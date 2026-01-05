@@ -26,7 +26,7 @@ const featureCards = [
   },
   {
     title: "Self-Service Client Arrival Kiosk",
-    desc: "Clients check themselves in on an iPad, updating your Airtable schedule in real-time so practitioners see who has arrived without checking the lobby.",
+    desc: "Clients check themselves in on an iPad, updating your schedule in real-time so practitioners see who has arrived without checking the lobby.",
   },
   {
     title: "Lead capture that actually converts",
