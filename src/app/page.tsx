@@ -2,6 +2,7 @@
 
 import UpcomingSessions from "@/components/booking/UpcomingSessions";
 import PastSessions from "@/components/booking/PastSessions";
+import DemoInteractive from "@/components/landing/DemoInteractive";
 
 const MESSENGER_URL = "https://m.me/611741395360453";
 
@@ -307,65 +308,8 @@ export default function ManyChatStyleLanding() {
           </div>
         </section>
 
-        {/* CHANNELS */}
-        <section id="channels" className="border-b border-white/5 py-12 md:py-16">
-          <div className="mx-auto max-w-6xl px-6">
-            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <div>
-                <h2 className="text-2xl font-semibold text-slate-50 sm:text-3xl">
-                  One brain across every Meta channel
-                </h2>
-                <p className="mt-2 max-w-xl text-base text-slate-300 sm:text-lg">
-                  We keep your automations consistent, so your brand feels like
-                  the same smart assistant whether someone clicks an ad,
-                  comments on a post, or slides into the DMs.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-2 text-sm">
-                {["Instagram", "WhatsApp", "Messenger", "TikTok"].map((channel) => (
-                  <span
-                    key={channel}
-                    className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-slate-100"
-                  >
-                    {channel}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-sm text-slate-200">
-                <h3 className="text-base font-semibold text-white">
-                  Lead capture &amp; nurture
-                </h3>
-                <p className="mt-2 text-sm text-slate-300">
-                  Click-to-Messenger and IG DM flows that capture details,
-                  qualify interest, and queue your team for high-intent
-                  conversations.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-sm text-slate-200">
-                <h3 className="text-base font-semibold text-white">
-                  Customer support automations
-                </h3>
-                <p className="mt-2 text-sm text-slate-300">
-                  Smart menus, order lookups, and FAQ flows that reduce
-                  repetitive tickets while handing real issues to humans fast.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-sm text-slate-200">
-                <h3 className="text-base font-semibold text-white">
-                  Post-purchase &amp; referrals
-                </h3>
-                <p className="mt-2 text-sm text-slate-300">
-                  Follow-ups, review requests, and referral prompts that happen
-                  automatically but still feel personal.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* INTERACTIVE DEMO */}
+        <DemoInteractive />
 
         {/* PRICING */}
         <section id="pricing" className="border-b border-white/5 py-12 md:py-16">
