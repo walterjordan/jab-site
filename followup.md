@@ -62,3 +62,9 @@
 - [ ] **Analytics**: Monitor the performance of the new "$100 Same-Day Website" offer.
 - [ ] **Content**: Consider adding video support to the Recap Gallery in the future.
 - [ ] **Operational Manual**: Ensure the user knows how to use the `/scripts` directory for troubleshooting.
+
+### Strategic Improvements (Backlog)
+1.  **Monetize "$100 Website"**: Create a dedicated Airtable/Typeform intake form for the $100 offer to capture commitment immediately (Business Name, Colors, Logo) rather than sending to generic chat.
+2.  **Demo Conversion**: Add a dynamic CTA inside the "System Thinks" demo (e.g., "Want this logic?") or a "Copy Prompt" feature to turn the toy into a lead magnet.
+3.  **SEO Service Pages**: Break out `/services/websites` and `/services/automation` into dedicated pages to target specific keywords and run focused ads.
+4.  **Technical Polish**: Refactor the Event Recap gallery to use `next/image` and potentially a caching layer for Google Drive images to improve LCP/FCP and mobile performance.
