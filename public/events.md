@@ -6,6 +6,24 @@ This folder contains subfolders for each event, named by their Airtable Event ID
 ### Past Event Galleries
 *   **Paint & Sip (Jan 2026):** [Public Gallery](https://drive.google.com/drive/folders/13IWLZXq6ezK9ZkIdnKeCaa46EdPmipMz?usp=sharing)
 
+### Service Account Access
+For the website to dynamically retrieve flyers and photos from Google Drive, the specific event folder **MUST** be shared with the project's Service Account.
+
+*   **Service Account Email:** `199373649190-compute@developer.gserviceaccount.com`
+*   **Permission Level:** "Viewer" is sufficient for display, but "Editor" may be needed for certain management scripts.
+
+### Global Event Rules & Logic
+
+#### 1. Title Normalization (Grouping)
+To keep the "Past Events" section clean, the system automatically groups multiple time slots or sessions of the same event into a single recap card.
+*   **The Rule:** Any title containing "Slot X" or ": Slot X" (case-insensitive) will have that suffix removed for display and grouping. 
+*   **Example:** "90 Minute AI Mastermind Workshop: Slot 1" and "90 Minute AI Mastermind Workshop: Slot 2" will both appear as "90 Minute AI Mastermind Workshop".
+*   **Logic Location:** `src/components/booking/PastSessions.tsx` in the `normalizeTitle` function.
+
+#### 2. Automatic Expiry
+Events are moved from "Upcoming" to "Past" based on their `End Time` (falling back to `Start Time` if missing) in Airtable compared to the visitor's current time.
+*   **Logic Location:** `src/app/api/calendar/sessions/route.ts`
+
 ### Post-Event Checklist
 At the conclusion of an event, the following variables/locations should be updated:
 1.  **Google Drive:** Ensure a `public` folder exists within the event folder and is set to "Anyone with the link can view".

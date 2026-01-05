@@ -30,6 +30,8 @@ interface Props {
 
   filterKeyword?: string;
 
+  featuredLayout?: boolean;
+
 }
 
 
@@ -38,7 +40,9 @@ export default function UpcomingSessions({
 
   title = "Upcoming Masterminds",
 
-  filterKeyword = "Mastermind"
+  filterKeyword = "Mastermind",
+
+  featuredLayout = false
 
 }: Props) {
 
@@ -102,27 +106,11 @@ export default function UpcomingSessions({
 
   );
 
+  
 
+  // Sort by date just in case API didn't
 
-  // Group events by Date (YYYY-MM-DD)
-
-  const groupedEvents = filteredEvents.reduce((acc, event) => {
-
-    const dateKey = event.start.split('T')[0];
-
-    if (!acc[dateKey]) acc[dateKey] = [];
-
-    acc[dateKey].push(event);
-
-    return acc;
-
-  }, {} as Record<string, CalendarEvent[]>);
-
-
-
-  // Sort groups by date
-
-  const sortedDates = Object.keys(groupedEvents).sort();
+  filteredEvents.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
 
 
 
@@ -209,6 +197,28 @@ export default function UpcomingSessions({
       </div>
 
     );
+
+  }
+
+  
+
+  // Logic for Featured Layout
+
+  let displayEvents = filteredEvents;
+
+  let futureEvents: CalendarEvent[] = [];
+
+
+
+  if (featuredLayout && filteredEvents.length > 0) {
+
+      displayEvents = [filteredEvents[0]];
+
+      futureEvents = filteredEvents.slice(1);
+
+  } else if (!featuredLayout) {
+
+      displayEvents = filteredEvents.slice(0, 4);
 
   }
 
@@ -338,7 +348,9 @@ export default function UpcomingSessions({
 
 
 
-              filteredEvents.slice(0, 4).map((event) => {
+              <>
+
+              {displayEvents.map((event) => {
 
 
 
@@ -562,7 +574,47 @@ export default function UpcomingSessions({
 
 
 
-              })
+              })}
+
+              
+
+              {/* Additional Future Events Links */}
+
+              {featuredLayout && futureEvents.length > 0 && (
+
+                  <div className="mt-6 pt-4 border-t border-white/5">
+
+                      <p className="text-xs text-slate-400 mb-3 uppercase tracking-wider font-semibold">Also available on:</p>
+
+                      <div className="flex flex-col gap-2">
+
+                          {futureEvents.map((e) => (
+
+                              <button 
+
+                                  key={e.id}
+
+                                  onClick={() => handleReserveClick(e)}
+
+                                  className="text-left text-sm text-[#7fff41] hover:text-white hover:bg-white/5 px-3 py-2 rounded-lg transition border border-transparent hover:border-white/10 flex justify-between items-center group"
+
+                              >
+
+                                  <span>{formatFullDate(e.start)}</span>
+
+                                  <span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+
+                              </button>
+
+                          ))}
+
+                      </div>
+
+                  </div>
+
+              )}
+
+              </>
 
 
 

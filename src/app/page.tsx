@@ -178,7 +178,8 @@ export default function ManyChatStyleLanding() {
               />
               <UpcomingSessions 
                 title="AI Mastermind Workshops" 
-                filterKeyword="Mastermind" 
+                filterKeyword="Mastermind"
+                featuredLayout={true}
               />
             </div>
 
