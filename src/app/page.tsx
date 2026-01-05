@@ -260,11 +260,10 @@ export default function ManyChatStyleLanding() {
 
             <div className="max-w-2xl text-center md:mx-auto">
               <h2 className="text-2xl font-semibold text-slate-50 sm:text-3xl">
-                Automation that sells while you sleep
+                Practical Digital Tools for Real Businesses
               </h2>
               <p className="mt-3 text-base text-slate-300 sm:text-lg">
-                We combine Meta automation, AI, and smart routing so every
-                click, comment, and DM has a clear next step.
+                From same-day websites to check-in stations and content tools, everything here is designed to be live, useful, and straightforward.
               </p>
             </div>
 
