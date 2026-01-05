@@ -33,12 +33,12 @@ const featureCards = [
     desc: "Collect emails, phone numbers, and booking details without sending users to a clunky form.",
   },
   {
-    title: "Playbooks for real brands",
-    desc: "Proven flows for local service, e-commerce, creators, and franchises—no blank-page energy.",
+    title: "Same-Day Website — $100",
+    desc: "Launch a simple, professional website today for a flat $100—no long timelines, no complexity, just results.",
   },
   {
-    title: "Integrations that scale",
-    desc: "Sync data to Airtable, Make.com, Google Sheets, and your CRM so nothing falls through the cracks.",
+    title: "Other Digital Marketing",
+    desc: "Fast, practical execution of event flyers, landing pages, booking links, and promo pages tailored to your business.",
   },
 ];
 
