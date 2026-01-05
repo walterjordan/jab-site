@@ -1,14 +1,15 @@
 # Participant Communication Flow & State Machine
 
 ## Current Program Status (Synopsis)
-**Completed (Architectural Consolidation & Multi-Event Support):**
-- **Architecture Shift**: The frontend is now fully **Airtable-driven**. The site queries Airtable `Live Sessions` as the primary source, allowing for rich content management (flyers, descriptions) without code changes.
-- **Automated Sync**: Implemented a GitHub Action (`sync-sessions.yml`) that hourly synchronizes Google Calendar events (Source of Truth for Dates/Times/Links) into Airtable.
-- **Safety Logic**: The sync script includes "Safety Logic" to protect manual edits in Airtable (like custom descriptions) while keeping logistical data (times/links) updated.
-- **Multi-Event UI**: Refactored the Hero section to display side-by-side lists for "AI Mastermind" and "Paint & Sip" events.
-- **Flyer Mode**: Implemented a dynamic "Flyer Mode" that renders sessions with `Cover Image` attachments as vertical, un-cropped cards (`object-contain`).
-- **Dev Pipeline**: Set up a `development` branch with auto-deploy to a dedicated Cloud Run service (`jab-site-dev`) for safe testing of UI and logic changes.
-- **Registration Refactor**: API successfully upserts to `Registrations` and triggers Make.com webhooks.
+**Completed (Feature & Value Ladder Update):**
+- **New Value Ladder**: Updated "Services" section to reflect:
+    1.  **Same-Day Website ($100)**: Entry-level, high-speed execution.
+    2.  **Digital Marketing ($499)**: Flyers, landing pages, social setup.
+    3.  **Done-With-You Automation ($997+)**: Custom AI assistants and integration.
+- **Event Recap System**: Fully automated "Past Events" section with auto-expiry, grouping, and a dynamic Google Drive gallery (`/events/paint-sip-recap`).
+- **Interactive Demo**: "See How the System Thinks" component launched on the homepage to demonstrate automation logic visually.
+- **Featured Layout**: Optimized "Upcoming Sessions" to show a single featured card for AI Masterminds with compact links for future dates.
+- **Infrastructure**: Secured Google Drive API integration via Service Account for real-time asset fetching.
 
 **In Progress:**
 - Moving to **Stage 2 (Welcome)** and **Stage 3 (Reminders)** using Airtable View Queues.
@@ -58,5 +59,6 @@
 - [ ] **Make.com**: Build Scenario for Stage 2 (Welcome Email) triggered by the `Confirmed` view.
 - [ ] **Make.com**: Build Scenario for Stage 3 (Reminders) using scheduled polling of time-based views.
 - [ ] **Validation**: Verify that `Participants` records created during confirmation correctly sync with `aimastermind.jordanborden.com`.
-- [ ] **RSVP Sync**: (Optional) Implement the read-only Google Calendar RSVP status sync to Airtable.
-- [ ] **Operational Manual**: Ensure the user knows how to use the `/scripts` directory for local diagnostics.
+- [ ] **Analytics**: Monitor the performance of the new "$100 Same-Day Website" offer.
+- [ ] **Content**: Consider adding video support to the Recap Gallery in the future.
+- [ ] **Operational Manual**: Ensure the user knows how to use the `/scripts` directory for troubleshooting.

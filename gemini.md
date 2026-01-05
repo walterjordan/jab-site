@@ -7,6 +7,18 @@
 - **Project Validation**: Before running any `run_gcloud_command` or other MCP actions that interact with GCP, **ALWAYS** validate that the active gcloud project is set to `f2w-consulting` (Project ID: `199373649190`).
 - **Correction**: If the active project is incorrect, prompt the user to switch it using `gcloud config set project f2w-consulting`.
 
+## Event Recap System
+- **Automatic Expiry**: The API (`/api/calendar/sessions`) automatically filters events into "Upcoming" or "Past" based on their End Time vs. Current Time. No manual status update is required.
+- **Drive Integration**:
+    - Uses a dedicated API route (`/api/drive/files`) to fetch images securely.
+    - **Flyer Search**: Looks for a subfolder named `flyer` (or `flyers`) inside the event's folder.
+    - **Highlight Search**: Looks for a subfolder named `public` and images containing "highlight" in the filename.
+- **Service Account**: The Google Service Account (`199373649190-compute@developer.gserviceaccount.com`) **MUST** have Viewer access to the specific event folders in Drive for this system to work.
+
+## Interactive Demo
+- **Logic Location**: `src/lib/demo-logic.ts` contains the deterministic rules for the "See How the System Thinks" component.
+- **UI Component**: `src/components/landing/DemoInteractive.tsx`.
+
 ## Make.com Integration (Webhooks & Logic)
 - **Primary Method**: Use Webhooks for immediate actions (Stage 1: Ack) and Airtable View Queues for state-based or delayed actions (Stage 2: Welcome, Stage 3: Reminders).
 - **Architecture**: Follow the "Hybrid State Machine" pattern detailed in `followup.md`.
@@ -39,12 +51,11 @@
 
 ## Frontend & Event Logic
 - **Hero Section**: Displays a 2-column grid of session lists centered on the page (AI Masterminds and Paint & Sip).
-- **Session Display (`UpcomingSessions.tsx`)**:
-    - **Airtable Driven**: Fetches from `/api/calendar/sessions`, which queries the Airtable `Live Sessions` table.
-    - **Keyword Filtering**: Components accept a `filterKeyword` prop to isolate event types (e.g., "Mastermind" vs "Paint").
+- **Session Display**:
+    - `UpcomingSessions.tsx`: Handles both standard list and "Featured Layout" (Single Card + Links) modes.
+    - `PastSessions.tsx`: Auto-groups past events by normalized title (removing "Slot X") and links to the dynamic Recap page.
+    - **Airtable Driven**: Fetches from `/api/calendar/sessions`.
     - **Flyer Mode**: If a session has a `Cover Image` in Airtable, it renders as a vertical card with the image (`aspect-[2/3]`, `object-contain`).
-    - **Ungrouped Slots**: Every time slot/event is displayed as an individual card with its own "Reserve" button to maintain uniformity and ease of booking.
-    - **UI Protection**: Reservation buttons are positioned *below* images to ensure no part of the flyer is obscured.
 
 ## Integrations
 
@@ -74,3 +85,4 @@ The `scripts/` directory contains tools for operations and debugging:
 - `create-paint-events.js`: Automation to create "Paint & Sip" events in Google Calendar via impersonation.
 - `check-airtable-times.js`: Diagnostic script to verify Date/Time field formatting in Airtable.
 - `test-airtable-write.js`: Force-writes data to specific Airtable fields to test permissions.
+- `inspect-drive-folder.js`: (New) Diagnostic to list files in a Drive folder using the Service Account.

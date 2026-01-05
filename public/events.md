@@ -1,16 +1,21 @@
 ## Event Photo Repository
 **Root Google Drive Folder:** [Event Photos](https://drive.google.com/drive/folders/1Zmlqxwn2wLek1-0V36FHJTjzghEYv-Wr)
 
-This folder contains subfolders for each event, named by their Airtable Event ID.
+This folder contains subfolders for each event, named by their Airtable Event ID (or Google Event ID).
 
 ### Past Event Galleries
 *   **Paint & Sip (Jan 2026):** [Public Gallery](https://drive.google.com/drive/folders/13IWLZXq6ezK9ZkIdnKeCaa46EdPmipMz?usp=sharing)
 
-### Service Account Access
+### Service Account Access & Setup
 For the website to dynamically retrieve flyers and photos from Google Drive, the specific event folder **MUST** be shared with the project's Service Account.
 
 *   **Service Account Email:** `199373649190-compute@developer.gserviceaccount.com`
-*   **Permission Level:** "Viewer" is sufficient for display, but "Editor" may be needed for certain management scripts.
+*   **Permission Level:** "Viewer" is sufficient for display.
+
+**Required Folder Structure:**
+Inside each Event Folder (named by Event ID):
+1.  **`flyer/`** (Folder): Must contain the main event flyer image.
+2.  **`public/`** (Folder): Must contain the highlight photos. Filenames should include the word "highlight" (e.g., `highlight-1.jpg`).
 
 ### Global Event Rules & Logic
 
@@ -27,5 +32,6 @@ Events are moved from "Upcoming" to "Past" based on their `End Time` (falling ba
 ### Post-Event Checklist
 At the conclusion of an event, the following variables/locations should be updated:
 1.  **Google Drive:** Ensure a `public` folder exists within the event folder and is set to "Anyone with the link can view".
-2.  **events.md:** Add the public gallery link to the list above.
-3.  **Recap Page:** Update the `href` in the "View Full Gallery" button on the recap page (or `page.tsx` if using a dynamic component) to point to the new public folder.
+2.  **Service Account:** Share the event folder with the Service Account email listed above.
+3.  **events.md:** Add the public gallery link to the list above.
+4.  **Recap Page:** Update the `href` in the "View Full Gallery" button on the recap page (or `page.tsx` if using a dynamic component) to point to the new public folder.
