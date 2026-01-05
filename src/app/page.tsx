@@ -52,36 +52,37 @@ const videoBuilderCard = {
 
 const pricing = [
   {
-    name: "Launch",
-    price: "Free consult",
-    highlight: "Perfect for trying things out",
+    name: "Same-Day Website — $100",
+    price: "$100 flat fee",
+    highlight: "Launch your professional presence today",
     bullets: [
-      "30-minute strategy session",
-      "Audit of your current funnel",
-      "Messenger & Instagram ideas you can apply immediately",
+      "Your logo, your branding, AI-enhanced design",
+      "Mobile-responsive & fast-loading",
+      "Ready to go in 24 hours or less",
     ],
   },
   {
-    name: "Done-With-You",
+    name: "Digital Marketing — $499",
+    price: "$499",
+    highlight: "Complete digital execution",
+    bullets: [
+      "Event flyers",
+      "Landing page",
+      "Booking or simple lead page",
+      "One social media platform setup (Instagram, Facebook, or similar)",
+    ],
+  },
+  {
+    name: "Done-With-You Automation — From $997",
     price: "From $997",
     highlight: "We design & build your automations together",
     bullets: [
-      "Custom flows for 1–2 key offers",
+      "Setup custom AI assistants",
+      "Integrates with your current applications and tools",
       "Messenger + Instagram setup",
-      "Basic Make.com or Zapier integrations",
       "2 weeks of optimization support",
     ],
     featured: true,
-  },
-  {
-    name: "Done-For-You",
-    price: "Custom",
-    highlight: "For agencies & franchises that need scale",
-    bullets: [
-      "Multi-location & multi-brand support",
-      "Advanced routing & reporting",
-      "Team training & playbook handoff",
-    ],
   },
 ];
 
