@@ -144,13 +144,16 @@ export default function DemoInteractive() {
                     <span className="text-blue-400">"data_captured"</span>: [
                     {"\n      "}
                     {output.insights.data_to_capture.map((d, i) => (
-                      <span key={d} className="text-slate-400">"{d}"</span>{i < output.insights.data_to_capture.length - 1 ? ', ' : ''}
+                      <span key={d}>
+                        <span className="text-slate-400">"{d}"</span>
+                        {i < output.insights.data_to_capture.length - 1 ? ", " : ""}
+                      </span>
                     ))}
                     {"\n    "}]
                     {"\n  "}
-                    <span className="text-purple-400">{"}"</span>
+                    <span className="text-purple-400">{"}"}</span>
                     {"\n"}
-                    <span className="text-purple-400">{"}"</span>
+                    <span className="text-purple-400">{"}"}</span>
                   </pre>
                 )}
              </div>
