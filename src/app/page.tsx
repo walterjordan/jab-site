@@ -21,12 +21,12 @@ const audiencePills = ["Entrepreneurs", "Small Business", "Agencies", "Franchise
 
 const featureCards = [
   {
-    title: "Comment → DM funnels",
-    desc: "Turn every post, story, and reel into an automated conversation that closes the loop in the DMs.",
+    title: "Automated Instagram & Facebook DMs",
+    desc: "Turn comments into instant DMs that deliver info, qualify leads, and book calls automatically—zero manual replies required.",
   },
   {
-    title: "Smart routing & inbox",
-    desc: "Keep human and bot replies in sync with a unified Messenger & Instagram inbox.",
+    title: "Self-Service Client Arrival Kiosk",
+    desc: "Clients check themselves in on an iPad, updating your Airtable schedule in real-time so practitioners see who has arrived without checking the lobby.",
   },
   {
     title: "Lead capture that actually converts",
