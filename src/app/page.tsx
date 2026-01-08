@@ -34,7 +34,7 @@ const featureCards = [
     desc: "Collect emails, phone numbers, and booking details without sending users to a clunky form.",
   },
   {
-    title: "Same-Day Website — $100",
+    title: "Same-Day Website $100",
     desc: "Launch a simple, professional website today for a flat $100—no long timelines, no complexity, just results.",
   },
   {
@@ -52,8 +52,8 @@ const videoBuilderCard = {
 
 const pricing = [
   {
-    name: "Same-Day Website — $100",
-    price: "$100 flat fee",
+    name: "Same-Day Website",
+    price: "$100",
     highlight: "Launch your professional presence today",
     bullets: [
       "Your logo, your branding, AI-enhanced design",
@@ -62,7 +62,7 @@ const pricing = [
     ],
   },
   {
-    name: "Digital Marketing — $499",
+    name: "Digital Marketing",
     price: "$499",
     highlight: "Complete digital execution",
     bullets: [
@@ -73,12 +73,12 @@ const pricing = [
     ],
   },
   {
-    name: "Done-With-You Automation — From $997",
-    price: "From $997",
-    highlight: "We design & build your automations together",
+    name: "Custom Business Solution",
+    price: "$997",
+    highlight: "We design & build your custom automation",
     bullets: [
       "Setup custom AI assistants",
-      "Integrates with your current applications and tools",
+      "Integrate with your current applications and tools",
       "Messenger + Instagram setup",
       "2 weeks of optimization support",
     ],
