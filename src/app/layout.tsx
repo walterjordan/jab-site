@@ -43,14 +43,14 @@ export default function RootLayout({
       >
         <Script
           strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-BL7JLYK2M9"
+          src="https://www.googletagmanager.com/gtag/js?id=G-BL7JLXG2M9"
         />
         <Script id="ga4" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-BL7JLYK2M9', {
+            gtag('config', 'G-BL7JLXG2M9', {
               page_path: window.location.pathname,
             });
           `}

@@ -78,7 +78,7 @@ These are set in the Cloud Build config (`--set-env-vars`) or Secret Manager (`-
 
 ### Build-Time Variables
 *Defined in `cloudbuild.yaml` substitutions, but currently hardcoded in source.*
-- `NEXT_PUBLIC_GA4`: Google Analytics ID. (Currently hardcoded as `G-BL7JLYK2M9` in `src/components/GoogleAnalytics.tsx`).
+- `NEXT_PUBLIC_GA4`: Google Analytics ID. (Currently hardcoded as `G-BL7JLXG2M9` in `src/components/GoogleAnalytics.tsx`).
 
 ---
 
@@ -111,7 +111,7 @@ These are set in the Cloud Build config (`--set-env-vars`) or Secret Manager (`-
 - **Component:** `src/components/GoogleAnalytics.tsx`.
 - **Implementation:** Client Component using `usePathname` and `useSearchParams`.
 - **Events:** Automatically triggers `page_view` on route changes.
-- **Measurement ID:** `G-BL7JLYK2M9`.
+- **Measurement ID:** `G-BL7JLXG2M9`.
 
 ---
 
