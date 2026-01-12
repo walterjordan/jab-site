@@ -6,18 +6,26 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "v5.airtableusercontent.com",
+        port: "",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "dl.airtable.com",
+        port: "",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "*.googleusercontent.com",
+        port: "",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "drive.google.com",
+        port: "",
+        pathname: "/**",
       },
     ],
   },
