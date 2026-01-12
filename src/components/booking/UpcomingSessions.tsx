@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import Image from "next/image";
 import RegistrationModal from "./RegistrationModal";
 
 type CalendarEvent = {
@@ -414,43 +414,199 @@ export default function UpcomingSessions({
 
 
 
-                    {/* If image exists, show it (Flyer Mode) */}
+                                        {/* If image exists, show it (Flyer Mode) */}
 
 
 
-                    {hasImage && (
+    
 
 
 
-                      <div className="flex flex-col gap-3 mb-1">
+                    
 
 
 
-                        <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/10 bg-slate-950">
+    
 
 
 
-                          <img 
+                                        {hasImage && (
 
 
 
-                            src={event.coverImage!} 
+    
 
 
 
-                            alt={event.title} 
+                    
 
 
 
-                            className="absolute inset-0 h-full w-full object-contain"
+    
 
 
 
-                          />
+                                          <div className="flex flex-col gap-3 mb-1">
 
 
 
-                        </div>
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                            <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/10 bg-slate-950">
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                              <Image 
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                src={event.coverImage!} 
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                alt={event.title} 
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                fill
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                className="object-contain"
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                priority={displayEvents.indexOf(event) === 0}
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                              />
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                            </div>
 
 
 

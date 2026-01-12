@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 type CalendarEvent = {
   id: string;
@@ -82,18 +83,29 @@ export default function PastSessions() {
           >
             {/* Background Image (Blurred) - Optional visual flair */}
             {event.coverImage && (
-               <div 
-                 className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition duration-500 bg-cover bg-center grayscale group-hover:grayscale-0"
-                 style={{ backgroundImage: `url(${event.coverImage})` }}
-               />
+               <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition duration-500 grayscale group-hover:grayscale-0">
+                 <Image
+                   src={event.coverImage}
+                   alt=""
+                   fill
+                   className="object-cover"
+                   sizes="(max-width: 768px) 100vw, 50vw"
+                 />
+               </div>
             )}
             
             {/* Content Container (z-10 to sit above bg) */}
             <div className="relative z-10 flex flex-1 items-center gap-4 w-full">
                 {/* Thumbnail */}
                 {event.coverImage && (
-                    <div className="shrink-0 h-16 w-16 md:h-20 md:w-20 rounded-lg overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition duration-300">
-                        <img src={event.coverImage} alt={event.title} className="h-full w-full object-cover" />
+                    <div className="relative shrink-0 h-16 w-16 md:h-20 md:w-20 rounded-lg overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition duration-300">
+                        <Image 
+                          src={event.coverImage} 
+                          alt={event.title} 
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 64px, 80px"
+                        />
                     </div>
                 )}
 

@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export function DemoCarousel() {
   const slides = [
@@ -18,11 +19,14 @@ export function DemoCarousel() {
   return (
     <div className="relative w-full aspect-video rounded-xl overflow-hidden ring-1 ring-slate-200 bg-slate-100">
       {/* slide */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
+        key={slides[i]}
         src={slides[i]}
         alt="Messenger demo screenshot"
-        className="absolute inset-0 h-full w-full object-cover"
+        fill
+        className="object-cover"
+        priority
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
       />
       {/* privacy masks (blur common sensitive zones) */}
       <div className="absolute inset-y-0 left-0 w-28 bg-white/20 backdrop-blur-sm" />

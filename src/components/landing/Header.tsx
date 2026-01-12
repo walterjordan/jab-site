@@ -1,12 +1,20 @@
 // src/components/landing/Header.tsx
 import React from 'react';
+import Image from 'next/image';
 
 export function Header() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-slate-200/60">
       <nav className="mx-auto max-w-7xl flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
-          <img src="/jab-logo.png" alt="JAB logo" className="h-9 w-9 rounded-md shadow-sm" />
+          <Image 
+            src="/jab-logo.png" 
+            alt="JAB logo" 
+            width={36} 
+            height={36} 
+            className="rounded-md shadow-sm"
+            priority
+          />
           <span className="font-semibold tracking-tight">Facebook Automation</span>
         </div>
         <ul className="hidden md:flex items-center gap-6 text-sm">

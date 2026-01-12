@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -88,10 +89,13 @@ function RecapContent() {
                onClick={() => setSelectedImage(flyer)}
                className="relative w-full max-w-lg aspect-[2/3] md:aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 group cursor-pointer"
              >
-                <img 
+                <Image 
                   src={flyer.src} 
                   alt="Event Flyer" 
-                  className="object-contain w-full h-full bg-slate-900 transition duration-500 group-hover:scale-105" 
+                  fill
+                  className="object-contain bg-slate-900 transition duration-500 group-hover:scale-105" 
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                    <span className="bg-white/10 backdrop-blur px-4 py-2 rounded-full text-xs font-bold border border-white/20">View Full Size</span>
@@ -121,10 +125,12 @@ function RecapContent() {
                  onClick={() => setSelectedImage(img)}
                  className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 group cursor-pointer"
                >
-                 <img 
+                 <Image 
                    src={img.src} 
                    alt={img.name} 
-                   className="object-cover w-full h-full transition duration-500 group-hover:scale-105" 
+                   fill
+                   className="object-cover transition duration-500 group-hover:scale-105" 
+                   sizes="(max-width: 768px) 100vw, 50vw"
                  />
                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <span className="bg-white/10 backdrop-blur px-4 py-2 rounded-full text-xs font-bold border border-white/20">Expand Image</span>
@@ -198,7 +204,14 @@ export default function PaintSipRecapPage() {
       <header className="sticky top-0 z-40 border-b border-white/5 bg-slate-950/80 backdrop-blur px-6 py-4">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
-            <img src="/jab-logo.png" alt="JAB logo" className="h-9 w-9 rounded-md shadow-sm invert" />
+            <Image 
+              src="/jab-logo.png" 
+              alt="JAB logo" 
+              width={36} 
+              height={36} 
+              className="rounded-md shadow-sm invert" 
+              priority
+            />
             <span className="text-sm font-semibold tracking-tight text-white">Jordan & Borden</span>
           </Link>
           <Link href="/" className="text-sm font-medium text-slate-400 hover:text-[#7fff41] transition">
