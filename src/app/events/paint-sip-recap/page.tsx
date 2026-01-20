@@ -17,6 +17,7 @@ function RecapContent() {
   
   const [flyer, setFlyer] = useState<DriveImage | null>(null);
   const [highlights, setHighlights] = useState<DriveImage[]>([]);
+  const [folderLink, setFolderLink] = useState<string | null>(null);
   const [loadingFlyer, setLoadingFlyer] = useState(true);
   const [loadingHighlights, setLoadingHighlights] = useState(true);
   const [selectedImage, setSelectedImage] = useState<DriveImage | null>(null);
@@ -29,6 +30,19 @@ function RecapContent() {
     }
 
     async function fetchData() {
+      // Fetch Folder Link
+      try {
+        const resFolder = await fetch(`/api/drive/files?type=folder&eventId=${eventId}`);
+        if (resFolder.ok) {
+          const json = await resFolder.json();
+          if (json.data?.webViewLink) {
+            setFolderLink(json.data.webViewLink);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch folder link", e);
+      }
+
       // Fetch Flyer
       try {
         const resFlyer = await fetch(`/api/drive/files?type=flyer&eventId=${eventId}`);
@@ -175,17 +189,19 @@ function RecapContent() {
                We've uploaded the full high-resolution album to our Google Drive. 
                Find yourself and share with your network!
              </p>
-             <a 
-               href="https://drive.google.com/drive/folders/13IWLZXq6ezK9ZkIdnKeCaa46EdPmipMz?usp=sharing" 
-               target="_blank" 
-               rel="noreferrer"
-               className="inline-flex items-center gap-2 rounded-full bg-[#7fff41] px-8 py-3 text-base font-bold text-slate-900 shadow-lg shadow-[#7fff41]/20 transition hover:bg-[#a4ff82] hover:scale-105"
-             >
-               View Full Gallery on Drive
-               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke="currentColor" />
-               </svg>
-             </a>
+             {folderLink && (
+               <a 
+                 href={folderLink} 
+                 target="_blank" 
+                 rel="noreferrer"
+                 className="inline-flex items-center gap-2 rounded-full bg-[#7fff41] px-8 py-3 text-base font-bold text-slate-900 shadow-lg shadow-[#7fff41]/20 transition hover:bg-[#a4ff82] hover:scale-105"
+               >
+                 View Full Gallery on Drive
+                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke="currentColor" />
+                 </svg>
+               </a>
+             )}
            </div>
            
            {/* Background decoration */}

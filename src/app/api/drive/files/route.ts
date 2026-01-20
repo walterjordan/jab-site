@@ -26,11 +26,11 @@ async function findFolderByName(drive: any, name: string) {
   try {
     const res = await drive.files.list({
       q: `name = '${name}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false`,
-      fields: 'files(id, name)',
+      fields: 'files(id, name, webViewLink)',
       supportsAllDrives: true,
       includeItemsFromAllDrives: true,
     });
-    return res.data.files && res.data.files.length > 0 ? res.data.files[0].id : null;
+    return res.data.files && res.data.files.length > 0 ? res.data.files[0] : null;
   } catch (error) {
     console.error(`Error finding folder ${name}:`, error);
     return null;
@@ -77,7 +77,7 @@ async function listImages(drive: any, folderId: string, searchterm?: string, lim
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const type = searchParams.get('type'); // 'flyer' | 'highlights'
+    const type = searchParams.get('type'); // 'flyer' | 'highlights' | 'folder'
     const eventId = searchParams.get('eventId'); // The Google Event ID (folder name)
 
     if (!eventId) {
@@ -87,9 +87,20 @@ export async function GET(request: NextRequest) {
     const drive = await getDriveClient();
 
     // 1. Find the Event Folder by name (eventId)
-    const eventFolderId = await findFolderByName(drive, eventId);
-    if (!eventFolderId) {
+    const eventFolder = await findFolderByName(drive, eventId);
+    if (!eventFolder) {
       return NextResponse.json({ error: `Event folder '${eventId}' not found` }, { status: 404 });
+    }
+    const eventFolderId = eventFolder.id;
+
+    if (type === 'folder') {
+      return NextResponse.json({ 
+        data: {
+          id: eventFolder.id,
+          name: eventFolder.name,
+          webViewLink: eventFolder.webViewLink
+        }
+      });
     }
 
     if (type === 'flyer') {
