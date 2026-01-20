@@ -4,11 +4,33 @@ import { Suspense } from "react";
 import { getEventImages } from "@/lib/drive";
 import RecapView from "@/components/events/RecapView";
 import type { Metadata, ResolvingMetadata } from "next";
+import Airtable from 'airtable';
 
 export const dynamic = 'force-dynamic';
 
+const getAirtableBase = () => {
+  return new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID!);
+};
+
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+async function getAirtableFolderId(eventId: string) {
+  try {
+    const base = getAirtableBase();
+    const records = await base('Live Sessions').select({
+      filterByFormula: `{Google Event ID} = '${eventId}'`,
+      maxRecords: 1
+    }).firstPage();
+
+    if (records.length > 0) {
+      return records[0].fields['Drive Folder ID'] as string || null;
+    }
+  } catch (e) {
+    console.error("Error fetching Airtable Folder ID:", e);
+  }
+  return null;
 }
 
 export async function generateMetadata(
@@ -25,8 +47,11 @@ export async function generateMetadata(
      }
   }
 
+  // Get Folder ID from Airtable
+  const folderId = await getAirtableFolderId(eventId);
+
   // Fetch flyer for OG Image
-  const { flyer } = await getEventImages(eventId);
+  const { flyer } = await getEventImages(eventId, folderId || undefined);
 
   const previousImages = (await parent).openGraph?.images || []
 
@@ -43,8 +68,13 @@ export default async function PaintSipRecapPage({ searchParams }: Props) {
   const resolvedSearchParams = await searchParams;
   const eventId = typeof resolvedSearchParams.eventId === 'string' ? resolvedSearchParams.eventId : null;
 
+  let folderId: string | null = null;
+  if (eventId) {
+    folderId = await getAirtableFolderId(eventId);
+  }
+
   // Server-side fetch
-  const { flyer, highlights, folderLink } = await getEventImages(eventId || "");
+  const { flyer, highlights, folderLink } = await getEventImages(eventId || "", folderId || undefined);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-[#7fff41] selection:text-slate-900">

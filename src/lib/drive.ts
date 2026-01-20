@@ -30,6 +30,21 @@ async function getDriveClient() {
   return google.drive({ version: 'v3', auth: jwtClient });
 }
 
+// Helper to find a folder by ID
+async function findFolderById(drive: any, folderId: string) {
+  try {
+    const res = await drive.files.get({
+      fileId: folderId,
+      fields: 'id, name, webViewLink',
+      supportsAllDrives: true,
+    });
+    return res.data;
+  } catch (error) {
+    console.error(`Error finding folder by ID ${folderId}:`, error);
+    return null;
+  }
+}
+
 // Helper to find a folder by name globally
 async function findFolderByName(drive: any, name: string) {
   try {
@@ -46,57 +61,30 @@ async function findFolderByName(drive: any, name: string) {
   }
 }
 
-// Helper to find subfolder by name inside a parent
-async function findSubfolder(drive: any, parentId: string, name: string) {
-  try {
-    const res = await drive.files.list({
-      q: `'${parentId}' in parents and mimeType = 'application/vnd.google-apps.folder' and (name = '${name}' or name = '${name}s') and trashed = false`,
-      fields: 'files(id, name)',
-      supportsAllDrives: true,
-      includeItemsFromAllDrives: true,
-    });
-    return res.data.files && res.data.files.length > 0 ? res.data.files[0].id : null;
-  } catch (error) {
-    console.error(`Error finding subfolder ${name} in ${parentId}:`, error);
-    return null;
-  }
-}
+// ... existing findSubfolder and listImages ...
 
-async function listImages(drive: any, folderId: string, searchterm?: string, limit: number = 10) {
-  try {
-    let query = `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`;
-    if (searchterm) {
-      query += ` and name contains '${searchterm}'`;
-    }
-
-    const res = await drive.files.list({
-      q: query,
-      pageSize: limit,
-      fields: 'files(id, name, webViewLink, webContentLink, thumbnailLink)',
-      supportsAllDrives: true,
-      includeItemsFromAllDrives: true,
-    });
-    return res.data.files || [];
-  } catch (error) {
-    console.error(`Error listing images in ${folderId}:`, error);
-    return [];
-  }
-}
-
-export async function getEventImages(eventId: string): Promise<EventDriveData> {
+export async function getEventImages(eventId: string, folderId?: string): Promise<EventDriveData> {
   const result: EventDriveData = {
     flyer: null,
     highlights: [],
     folderLink: null
   };
 
-  if (!eventId) return result;
+  if (!eventId && !folderId) return result;
 
   try {
     const drive = await getDriveClient();
 
     // 1. Find the Event Folder
-    const eventFolder = await findFolderByName(drive, eventId);
+    let eventFolder = null;
+    if (folderId) {
+      eventFolder = await findFolderById(drive, folderId);
+    } 
+    
+    if (!eventFolder && eventId) {
+      eventFolder = await findFolderByName(drive, eventId);
+    }
+
     if (!eventFolder) return result;
 
     result.folderLink = eventFolder.webViewLink;

@@ -64,7 +64,10 @@ async function syncSessions() {
     const jwtClient = new google.auth.JWT({
       email: clientEmail,
       key: privateKey,
-      scopes: ['https://www.googleapis.com/auth/calendar.events.readonly']
+      scopes: [
+          'https://www.googleapis.com/auth/calendar.events.readonly',
+          'https://www.googleapis.com/auth/drive' // Added Drive scope for folder creation
+      ]
     });
 
     // Explicitly authorize to fail fast if creds are wrong
@@ -72,6 +75,7 @@ async function syncSessions() {
     console.log('Successfully authorized Google Client');
 
     const calendar = google.calendar({ version: 'v3', auth: jwtClient });
+    const drive = google.drive({ version: 'v3', auth: jwtClient }); // Initialize Drive Client
     
     // Fetch events from the last 30 days to 90 days in the future
     const timeMin = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
@@ -100,9 +104,7 @@ async function syncSessions() {
         const programTrack = summary.toLowerCase().includes('full-day') ? 'Full-day' : 'Free 90-min';
 
         console.log(`Processing: ${summary} (${start})`);
-        console.log(`   > Google Link Data: Hangout=${event.hangoutLink}, Location=${event.location}`);
-        console.log(`   > Resolved Link: ${meetingLink}`);
-
+        
         // Check if record exists in Airtable
         const existing = await base(SESSIONS_TABLE).select({
             filterByFormula: `{Google Event ID} = '${eventId}'`,
@@ -114,7 +116,7 @@ async function syncSessions() {
         const endTime = event.end.dateTime || event.end.date;
 
         // Fields to use when CREATING a new record
-        const createFields = {
+        let createFields = {
             'Session Title': summary,
             'Google Event ID': eventId,
             'Description': description,
@@ -126,23 +128,109 @@ async function syncSessions() {
             'Session Status': 'Upcoming'
         };
 
-        // Fields to use when UPDATING an existing record (Safety Logic)
-        // We EXCLUDE Session Title and Description to protect manual edits in Airtable
-        const updateFields = {
-            'Google Event ID': eventId,
-            'Session Date': start.split('T')[0],
-            'Start Time': startTime,
-            'End Time': endTime,
-            'Meeting Link': meetingLink,
-            'Program Track': programTrack,
-            'Session Status': 'Upcoming'
-        };
+        let driveFolderId = null;
 
         if (existing.length > 0) {
-            console.log(`  Updating existing record ${existing[0].id}...`);
-            await base(SESSIONS_TABLE).update(existing[0].id, updateFields);
+             const record = existing[0];
+             driveFolderId = record.fields['Drive Folder ID'];
+
+             // If Drive Folder ID is missing, create it now!
+             if (!driveFolderId) {
+                 console.log(`  [Drive] Folder missing for existing event. Creating...`);
+                 try {
+                     // 1. Create Main Folder
+                     const folderName = `${start.split('T')[0]} - ${summary}`.replace(/[\/\\?%*:|"<>]/g, '-'); // Sanitize
+                     const folderRes = await drive.files.create({
+                         resource: {
+                             name: folderName,
+                             mimeType: 'application/vnd.google-apps.folder',
+                         },
+                         fields: 'id, webViewLink'
+                     });
+                     driveFolderId = folderRes.data.id;
+                     console.log(`  [Drive] Created folder: ${folderName} (${driveFolderId})`);
+
+                     // 2. Grant Permissions (Anyone with link can view)
+                     await drive.permissions.create({
+                         fileId: driveFolderId,
+                         resource: { role: 'reader', type: 'anyone' }
+                     });
+
+                     // 3. Create 'public' subfolder
+                     await drive.files.create({
+                         resource: {
+                             name: 'public',
+                             mimeType: 'application/vnd.google-apps.folder',
+                             parents: [driveFolderId]
+                         },
+                         fields: 'id'
+                     });
+                     console.log(`  [Drive] 'public' subfolder created.`);
+
+                 } catch (err) {
+                     console.error(`  [Drive] Error creating folder: ${err.message}`);
+                 }
+             }
+
+             // Add Drive Folder ID to update fields if we just created it
+             const updateFields = {
+                'Google Event ID': eventId,
+                'Session Date': start.split('T')[0],
+                'Start Time': startTime,
+                'End Time': endTime,
+                'Meeting Link': meetingLink,
+                'Program Track': programTrack,
+                'Session Status': 'Upcoming'
+             };
+             
+             if (driveFolderId) {
+                 // @ts-ignore
+                 updateFields['Drive Folder ID'] = driveFolderId;
+             }
+
+            console.log(`  Updating existing record ${record.id}...`);
+            await base(SESSIONS_TABLE).update(record.id, updateFields);
+
         } else {
+            // New Record Logic
             console.log(`  Creating new record...`);
+            
+            // Create Drive Folder for new event immediately
+            try {
+                 const folderName = `${start.split('T')[0]} - ${summary}`.replace(/[\/\\?%*:|"<>]/g, '-');
+                 const folderRes = await drive.files.create({
+                     resource: {
+                         name: folderName,
+                         mimeType: 'application/vnd.google-apps.folder',
+                     },
+                     fields: 'id'
+                 });
+                 driveFolderId = folderRes.data.id;
+                 console.log(`  [Drive] Created folder for new event: ${driveFolderId}`);
+                 
+                 await drive.permissions.create({
+                     fileId: driveFolderId,
+                     resource: { role: 'reader', type: 'anyone' }
+                 });
+
+                 await drive.files.create({
+                     resource: {
+                         name: 'public',
+                         mimeType: 'application/vnd.google-apps.folder',
+                         parents: [driveFolderId]
+                     },
+                     fields: 'id'
+                 });
+
+                 if (driveFolderId) {
+                    // @ts-ignore
+                    createFields['Drive Folder ID'] = driveFolderId;
+                 }
+
+            } catch (err) {
+                 console.error(`  [Drive] Error creating folder for new event: ${err.message}`);
+            }
+
             await base(SESSIONS_TABLE).create([{ fields: createFields }]);
         }
     }
