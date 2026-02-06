@@ -44,6 +44,10 @@ interface Props {
 
 
 
+  detailsLink?: string;
+
+
+
 }
 
 
@@ -68,7 +72,11 @@ export default function UpcomingSessions({
 
 
 
-  waitlistTrack = "General"
+  waitlistTrack = "General",
+
+
+
+  detailsLink
 
 
 
@@ -77,6 +85,10 @@ export default function UpcomingSessions({
 
 
   const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+
+
+
 
 
 
@@ -618,7 +630,7 @@ export default function UpcomingSessions({
 
 
 
-                                            <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/10 bg-slate-950">
+                                                                                        <div className="relative aspect-[2/3] overflow-hidden rounded-xl border border-white/10 bg-slate-950">
 
 
 
@@ -634,7 +646,7 @@ export default function UpcomingSessions({
 
 
 
-                                              <Image 
+                                                                                          {detailsLink ? (
 
 
 
@@ -650,7 +662,7 @@ export default function UpcomingSessions({
 
 
 
-                                                src={event.coverImage!} 
+                                                                                              <a href={detailsLink} className="block w-full h-full cursor-pointer hover:opacity-90 transition-opacity">
 
 
 
@@ -666,7 +678,7 @@ export default function UpcomingSessions({
 
 
 
-                                                alt={event.title} 
+                                                                                                  <Image 
 
 
 
@@ -682,7 +694,7 @@ export default function UpcomingSessions({
 
 
 
-                                                fill
+                                                                                                    src={event.coverImage!} 
 
 
 
@@ -698,7 +710,7 @@ export default function UpcomingSessions({
 
 
 
-                                                className="object-contain"
+                                                                                                    alt={event.title} 
 
 
 
@@ -714,7 +726,7 @@ export default function UpcomingSessions({
 
 
 
-                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                                                                    fill
 
 
 
@@ -730,7 +742,7 @@ export default function UpcomingSessions({
 
 
 
-                                                priority={displayEvents.indexOf(event) === 0}
+                                                                                                    className="object-contain"
 
 
 
@@ -746,7 +758,7 @@ export default function UpcomingSessions({
 
 
 
-                                              />
+                                                                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 
 
 
@@ -762,7 +774,231 @@ export default function UpcomingSessions({
 
 
 
-                                            </div>
+                                                                                                    priority={displayEvents.indexOf(event) === 0}
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                                  />
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                              </a>
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                          ) : (
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                              <Image 
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                                src={event.coverImage!} 
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                                alt={event.title} 
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                                fill
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                                className="object-contain"
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                                priority={displayEvents.indexOf(event) === 0}
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                              />
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                          )}
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                                                                        </div>
+
+
+
+    
+
+
+
+                    
+
+
+
+    
+
+
+
+                                            
 
 
 

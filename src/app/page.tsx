@@ -187,6 +187,7 @@ export default function ManyChatStyleLanding() {
                 filterKeyword="Mastermind"
                 featuredLayout={true}
                 waitlistTrack="AI Mastermind"
+                detailsLink="/mastermind-landing"
               />
             </div>
 
