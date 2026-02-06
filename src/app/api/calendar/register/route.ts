@@ -21,11 +21,11 @@ const getPrivateKey = () => process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'
 
 export async function POST(req: Request) {
   try {
-    const { eventId, email, phone, name } = await req.json();
+    const { eventId, email, phone, name, isWaitlist, waitlistTrack } = await req.json();
 
-    if (!eventId || !email) {
+    if (!email || (!eventId && !isWaitlist)) {
       return NextResponse.json(
-        { error: 'Missing required fields: eventId or email' },
+        { error: 'Missing required fields: email, and either eventId or isWaitlist' },
         { status: 400 }
       );
     }
@@ -63,13 +63,12 @@ export async function POST(req: Request) {
         // We continue, but calendar invite might fail if googleEventId is missing
     }
 
-    // 1. UPSERT REGISTRATION RECORD (Registrations Table)
+      // 1. UPSERT REGISTRATION RECORD (Registrations Table)
     try {
       console.log('Starting Airtable Sync (Registrations)...');
       
       // Determine which ID to use for the 'Event ID' field and duplicate check
-      // User prefers Google Event ID in the Registrations table if available.
-      const idToRegister = googleEventId || eventId;
+      const idToRegister = googleEventId || eventId || (isWaitlist ? `WAITLIST_${waitlistTrack?.toUpperCase() || 'GENERAL'}` : 'UNKNOWN');
       const escapedIdToRegister = idToRegister.replace(/'/g, "\\'");
       const escapedEmail = email.replace(/'/g, "\\'");
 
@@ -93,8 +92,18 @@ export async function POST(req: Request) {
           'Registrant Phone': phone || '',
           'Confirm Token': confirmToken,
           'Confirm URL': confirmUrl,
-          'Event ID': idToRegister, // Save Google ID if available, else Record ID
+          'Event ID': idToRegister,
       };
+
+      // Add Waitlist specific fields if applicable
+      if (isWaitlist) {
+          commonFields['Waitlist Status'] = 'Active';
+          commonFields['Waitlist Joined At'] = new Date().toISOString();
+          commonFields['Waitlist Notes'] = `Joined via ${waitlistTrack || 'General'} waitlist link on site.`;
+          commonFields['Status'] = 'Waitlist'; // Standard status for waitlist entries
+      } else {
+          commonFields['Status'] = 'Pending';
+      }
 
       // Link to Session if found
       if (sessionIdArray.length > 0) {
@@ -109,7 +118,6 @@ export async function POST(req: Request) {
         
         await airtableBase(REGISTRATIONS_TABLE).update(airtableRegistrationId, {
             ...commonFields,
-            'Status': 'Pending', 
             'Email: Ack Sent': false, // Reset triggers
             'Email: Welcome Sent': false,
         });
@@ -120,7 +128,6 @@ export async function POST(req: Request) {
         
         const createFields: any = {
           ...commonFields,
-          'Status': 'Pending',
           'Email: Ack Sent': false,
           'Email: Welcome Sent': false,
         };
@@ -147,8 +154,10 @@ export async function POST(req: Request) {
             airtableRegistrationId,
             email,
             eventId,
-            googleEventId, // Added for convenience in Make
-            status: 'Pending',
+            googleEventId,
+            status: isWaitlist ? 'Waitlist' : 'Pending',
+            isWaitlist,
+            waitlistTrack,
             source: 'jab-site-registration',
             confirmToken,
             confirmUrl
@@ -160,8 +169,8 @@ export async function POST(req: Request) {
     }
 
     // 3. GOOGLE CALENDAR INVITE
-    // Only attempt if we found a valid Google Event ID
-    if (googleEventId) {
+    // Only attempt if we found a valid Google Event ID and it's NOT a waitlist entry
+    if (googleEventId && !isWaitlist) {
         try {
             console.log(`Attempting Google Calendar Invite for Event: ${googleEventId}`);
             const jwtClient = new google.auth.JWT({

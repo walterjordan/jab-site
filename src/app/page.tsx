@@ -30,8 +30,11 @@ const featureCards = [
     desc: "Clients check themselves in on an iPad, updating your schedule in real-time so practitioners see who has arrived without checking the lobby.",
   },
   {
-    title: "Lead capture that actually converts",
-    desc: "Collect emails, phone numbers, and booking details without sending users to a clunky form.",
+    title: "AI Mastermind",
+    desc: "The ultimate training ground for AI & Automation. Master the skills, earn badges, and join a network of top-tier builders.",
+    href: "https://www.aimastermind.jordanborden.com",
+    cta: "Start your mission",
+    highlight: true,
   },
   {
     title: "Same-Day Website $100",
@@ -177,11 +180,13 @@ export default function ManyChatStyleLanding() {
               <UpcomingSessions 
                 title="Paint & Sip Networking" 
                 filterKeyword="Paint" 
+                waitlistTrack="Paint & Sip"
               />
               <UpcomingSessions 
                 title="AI Mastermind Workshops" 
                 filterKeyword="Mastermind"
                 featuredLayout={true}
+                waitlistTrack="AI Mastermind"
               />
             </div>
 
@@ -273,7 +278,13 @@ export default function ManyChatStyleLanding() {
               {featureCards.map((f) => (
                 <article
                   key={f.title}
-                  className="group rounded-2xl border border-white/8 bg-slate-900/70 p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-[#7fff41]/40 hover:shadow-[#7fff41]/20"
+                  className={classNames(
+                    "group relative flex flex-col rounded-2xl border p-5 text-left shadow-sm transition hover:-translate-y-1",
+                    // @ts-ignore
+                    f.highlight
+                      ? "border-[#7fff41]/40 bg-slate-900/80 shadow-[#7fff41]/10 hover:border-[#7fff41] hover:shadow-[#7fff41]/20"
+                      : "border-white/8 bg-slate-900/70 hover:border-[#7fff41]/40 hover:shadow-[#7fff41]/20"
+                  )}
                 >
                   <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#630183]/40 text-xs text-[#7fff41]">
                     ✶
@@ -281,7 +292,23 @@ export default function ManyChatStyleLanding() {
                   <h3 className="text-base font-semibold text-slate-50">
                     {f.title}
                   </h3>
-                  <p className="mt-2 text-sm text-slate-300">{f.desc}</p>
+                  <p className="mt-2 flex-1 text-sm text-slate-300">{f.desc}</p>
+
+                  {/* @ts-ignore */}
+                  {f.href && (
+                    <div className="mt-4">
+                      <a
+                        // @ts-ignore
+                        href={f.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center text-xs font-semibold text-[#7fff41] hover:underline"
+                      >
+                        {/* @ts-ignore */}
+                        {f.cta || "Learn more"} <span className="ml-1">→</span>
+                      </a>
+                    </div>
+                  )}
                 </article>
               ))}
 

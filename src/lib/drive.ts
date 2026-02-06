@@ -61,7 +61,42 @@ async function findFolderByName(drive: any, name: string) {
   }
 }
 
-// ... existing findSubfolder and listImages ...
+// Helper to find subfolder by name inside a parent
+async function findSubfolder(drive: any, parentId: string, name: string) {
+  try {
+    const res = await drive.files.list({
+      q: `'${parentId}' in parents and mimeType = 'application/vnd.google-apps.folder' and (name = '${name}' or name = '${name}s') and trashed = false`,
+      fields: 'files(id, name)',
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
+    });
+    return res.data.files && res.data.files.length > 0 ? res.data.files[0].id : null;
+  } catch (error) {
+    console.error(`Error finding subfolder ${name} in ${parentId}:`, error);
+    return null;
+  }
+}
+
+async function listImages(drive: any, folderId: string, searchterm?: string, limit: number = 10) {
+  try {
+    let query = `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`;
+    if (searchterm) {
+      query += ` and name contains '${searchterm}'`;
+    }
+
+    const res = await drive.files.list({
+      q: query,
+      pageSize: limit,
+      fields: 'files(id, name, webViewLink, webContentLink, thumbnailLink)',
+      supportsAllDrives: true,
+      includeItemsFromAllDrives: true,
+    });
+    return res.data.files || [];
+  } catch (error) {
+    console.error(`Error listing images in ${folderId}:`, error);
+    return [];
+  }
+}
 
 export async function getEventImages(eventId: string, folderId?: string): Promise<EventDriveData> {
   const result: EventDriveData = {

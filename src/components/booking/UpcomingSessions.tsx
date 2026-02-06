@@ -26,105 +26,237 @@ type CalendarEvent = {
 
 interface Props {
 
+
+
   title?: string;
+
+
 
   filterKeyword?: string;
 
+
+
   featuredLayout?: boolean;
+
+
+
+  waitlistTrack?: string;
+
+
 
 }
 
 
 
+
+
+
+
 export default function UpcomingSessions({
+
+
 
   title = "Upcoming Masterminds",
 
+
+
   filterKeyword = "Mastermind",
 
-  featuredLayout = false
+
+
+  featuredLayout = false,
+
+
+
+  waitlistTrack = "General"
+
+
 
 }: Props) {
 
+
+
   const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+
 
   const [loading, setLoading] = useState(true);
 
+
+
   const [error, setError] = useState(false);
+
+
 
   
 
+
+
   // Modal state
 
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+
 
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
 
 
 
+
+
+
+
   useEffect(() => {
+
+
 
     async function fetchSessions() {
 
+
+
       try {
+
+
 
         const res = await fetch("/api/calendar/sessions?type=upcoming");
 
+
+
         if (!res.ok) throw new Error("Failed to fetch");
+
+
 
         const data = await res.json();
 
+
+
         setEvents(data.events || []);
+
+
 
       } catch (err) {
 
+
+
         console.error(err);
+
+
 
         setError(true);
 
+
+
       } finally {
+
+
 
         setLoading(false);
 
+
+
       }
+
+
 
     }
 
 
 
+
+
+
+
     fetchSessions();
+
+
 
   }, []);
 
 
 
+
+
+
+
   // Filter events based on keyword
+
+
 
   const filteredEvents = events.filter(e => 
 
+
+
     e.title.toLowerCase().includes(filterKeyword.toLowerCase())
+
+
 
   );
 
+
+
   
 
+
+
   // Sort by date just in case API didn't
+
+
 
   filteredEvents.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
 
 
 
+
+
+
+
   const handleReserveClick = (event: CalendarEvent) => {
+
+
 
     setSelectedEvent(event);
 
+
+
     setIsModalOpen(true);
+
+
 
   };
 
 
 
+
+
+
+
+  const handleWaitlistClick = () => {
+
+
+
+    setSelectedEvent(null);
+
+
+
+    setIsModalOpen(true);
+
+
+
+  };
+
+
+
+
+
+
+
   const formatDate = (isoString: string) => {
+
+
+
+
 
     const date = new Date(isoString);
 
@@ -324,27 +456,51 @@ export default function UpcomingSessions({
 
 
 
-            ) : filteredEvents.length === 0 ? (
+                        ) : filteredEvents.length === 0 ? (
 
 
 
-              <div className="flex flex-col items-center justify-center h-48 text-center px-4">
+                          <div className="flex flex-col items-center justify-center h-48 text-center px-4">
 
 
 
-                 <p className="text-slate-400 mb-4">No sessions scheduled.</p>
+                             <p className="text-slate-400 mb-4">No sessions scheduled.</p>
 
 
 
-                 <a href="#contact" className="text-[#7fff41] text-sm font-medium hover:underline">Join the waitlist</a>
+                             <button 
 
 
 
-              </div>
+                               onClick={handleWaitlistClick}
 
 
 
-            ) : (
+                               className="text-[#7fff41] text-sm font-medium hover:underline"
+
+
+
+                             >
+
+
+
+                               Join the waitlist
+
+
+
+                             </button>
+
+
+
+                          </div>
+
+
+
+                        ) : (
+
+
+
+            
 
 
 
@@ -782,14 +938,18 @@ export default function UpcomingSessions({
 
 
 
-      <div className="mt-4 pt-4 border-t border-white/5 px-2">
-
+      <div className="mt-4 pt-4 border-t border-white/5 px-2 flex flex-col items-center gap-2">
          <p className="text-xs text-center text-slate-500">
-
            Limited spots available.
-
          </p>
-
+         {!loading && filteredEvents.length > 0 && (
+           <button 
+             onClick={handleWaitlistClick}
+             className="text-[10px] text-[#7fff41]/60 hover:text-[#7fff41] transition uppercase tracking-widest font-bold"
+           >
+             Join waitlist for future dates
+           </button>
+         )}
       </div>
 
     </div>
@@ -797,23 +957,16 @@ export default function UpcomingSessions({
     
 
     <RegistrationModal 
-
       isOpen={isModalOpen}
-
       onClose={() => setIsModalOpen(false)}
-
-      sessionTitle={selectedEvent?.title || "Mastermind Session"}
-
-      sessionDate={selectedEvent ? formatFullDate(selectedEvent.start) : ""}
-
+      sessionTitle={selectedEvent?.title || `${waitlistTrack} Waitlist`}
+      sessionDate={selectedEvent ? formatFullDate(selectedEvent.start) : "Next available session"}
       eventId={selectedEvent?.id || ""}
-
+      isWaitlist={!selectedEvent}
+      waitlistTrack={waitlistTrack}
     />
-
     </>
-
   );
-
 }
 
 

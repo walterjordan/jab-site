@@ -8,6 +8,8 @@ interface RegistrationModalProps {
   sessionTitle: string;
   sessionDate: string;
   eventId: string;
+  isWaitlist?: boolean;
+  waitlistTrack?: string;
   onSuccess?: () => void;
 }
 
@@ -17,6 +19,8 @@ export default function RegistrationModal({
   sessionTitle,
   sessionDate,
   eventId,
+  isWaitlist = false,
+  waitlistTrack = "General",
   onSuccess,
 }: RegistrationModalProps) {
   const [email, setEmail] = useState("");
@@ -37,7 +41,14 @@ export default function RegistrationModal({
       const res = await fetch("/api/calendar/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ eventId, email, phone, name }),
+        body: JSON.stringify({ 
+          eventId, 
+          email, 
+          phone, 
+          name,
+          isWaitlist,
+          waitlistTrack
+        }),
       });
 
       const data = await res.json();
@@ -78,7 +89,9 @@ export default function RegistrationModal({
           {!success ? (
             <>
               <div className="mb-6">
-                <h2 className="text-xl font-semibold text-white">Secure Your Spot</h2>
+                <h2 className="text-xl font-semibold text-white">
+                  {isWaitlist ? "Join the Waitlist" : "Secure Your Spot"}
+                </h2>
                 <p className="mt-1 text-sm text-slate-300">
                   {sessionTitle} <br />
                   <span className="text-[#7fff41]">{sessionDate}</span>
@@ -152,7 +165,7 @@ export default function RegistrationModal({
                       Registering...
                     </span>
                   ) : (
-                    "Confirm Registration"
+                    isWaitlist ? "Join Waitlist" : "Confirm Registration"
                   )}
                 </button>
               </form>
@@ -164,12 +177,20 @@ export default function RegistrationModal({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-white">You're In!</h3>
+              <h3 className="text-xl font-semibold text-white">
+                {isWaitlist ? "You're on the list!" : "You're In!"}
+              </h3>
               <p className="mt-2 text-sm text-slate-300">
-                A calendar invite has been sent to <strong>{email}</strong>.
+                {isWaitlist 
+                  ? `We've added ${email} to the ${waitlistTrack} waitlist.`
+                  : `A calendar invite has been sent to ${email}.`
+                }
               </p>
               <p className="mt-1 text-xs text-slate-400">
-                Check your inbox to accept the invite.
+                {isWaitlist 
+                  ? "We'll notify you as soon as new sessions are available."
+                  : "Check your inbox to accept the invite."
+                }
               </p>
               <button
                 onClick={onClose}
