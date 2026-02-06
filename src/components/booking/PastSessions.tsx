@@ -27,7 +27,7 @@ export default function PastSessions() {
         const data = await res.json();
         const rawEvents: CalendarEvent[] = data.events || [];
 
-        // 2. Normalize and Deduplicate (keep latest)
+        // 2. Group events by normalized title (keeping ALL events in the group)
         const normalizeTitle = (title: string) => {
           return title
               .replace(/:\s*Slot\s*\d+.*$/i, "") 
@@ -36,42 +36,49 @@ export default function PastSessions() {
               .trim();
         };
 
-        const groupedEvents = rawEvents.reduce((acc, event) => {
-          const key = normalizeTitle(event.title);
-          // Since the API returns them sorted by date (desc or asc),
-          // we want to ensure we keep one representation.
-          // If the list is desc (newest first), the first one we see is the latest.
-          if (!acc[key]) {
-              acc[key] = event; 
-          }
-          return acc;
-        }, {} as Record<string, CalendarEvent>);
+        const groups: Record<string, CalendarEvent[]> = {};
+        
+        rawEvents.forEach(event => {
+            const key = normalizeTitle(event.title);
+            if (!groups[key]) {
+                groups[key] = [];
+            }
+            groups[key].push(event);
+        });
 
-        const uniqueEvents = Object.values(groupedEvents);
+        // 3. For each group, find the LATEST event that actually has photos
+        // We process groups in parallel, but events within a group sequentially to minimize API calls
+        const validEvents = (await Promise.all(
+            Object.values(groups).map(async (groupEvents) => {
+                // Ensure group is sorted by date desc (should be already, but safety first)
+                groupEvents.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
 
-        // 3. Filter: Only keep events that have highlight photos
-        // We check this by querying our own API for each event.
-        const eventsWithPhotos: CalendarEvent[] = [];
-
-        await Promise.all(uniqueEvents.map(async (event) => {
-           try {
-             const driveRes = await fetch(`/api/drive/files?type=highlights&eventId=${event.googleEventId}`);
-             if (driveRes.ok) {
-                const driveData = await driveRes.json();
-                if (driveData.data && Array.isArray(driveData.data) && driveData.data.length > 0) {
-                    eventsWithPhotos.push(event);
+                for (const event of groupEvents) {
+                    try {
+                        const driveRes = await fetch(`/api/drive/files?type=highlights&eventId=${event.googleEventId}`);
+                        if (driveRes.ok) {
+                            const driveData = await driveRes.json();
+                            if (driveData.data && Array.isArray(driveData.data) && driveData.data.length > 0) {
+                                // Found the latest event in this group with photos!
+                                // Attach the first photo as the cover image for display if not present
+                                if (!event.coverImage && driveData.data[0].src) {
+                                    event.coverImage = driveData.data[0].src;
+                                }
+                                return event; 
+                            }
+                        }
+                    } catch (err) {
+                        console.warn(`Failed to check drive for ${event.title}`, err);
+                    }
                 }
-             }
-           } catch (err) {
-             // Ignore errors, just don't include
-             console.warn(`Failed to check drive for ${event.title}`, err);
-           }
-        }));
+                return null; // No event in this group has photos
+            })
+        )).filter((e): e is CalendarEvent => e !== null);
 
-        // Sort again by date desc (just to be sure, as Promise.all order isn't guaranteed)
-        eventsWithPhotos.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
+        // Sort final list by date desc
+        validEvents.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
 
-        setEvents(eventsWithPhotos);
+        setEvents(validEvents);
 
       } catch (err) {
         console.error(err);
@@ -99,7 +106,8 @@ export default function PastSessions() {
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
-      year: "numeric"
+      year: "numeric",
+      timeZone: "America/New_York"
     }).format(date);
   };
 
