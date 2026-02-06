@@ -38,7 +38,7 @@ const featureCards = [
   },
   {
     title: "Same-Day Website $100",
-    desc: "Launch a simple, professional website today for a flat $100—no long timelines, no complexity, just results.",
+    desc: "Launch a simple, professional website today for a flat $100! No long timelines, no complexity, just results.",
   },
   {
     title: "Other Digital Marketing",

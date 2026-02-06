@@ -21,10 +21,58 @@ export default function PastSessions() {
   useEffect(() => {
     async function fetchPastSessions() {
       try {
+        // 1. Fetch all past sessions
         const res = await fetch("/api/calendar/sessions?type=past");
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
-        setEvents(data.events || []);
+        const rawEvents: CalendarEvent[] = data.events || [];
+
+        // 2. Normalize and Deduplicate (keep latest)
+        const normalizeTitle = (title: string) => {
+          return title
+              .replace(/:\s*Slot\s*\d+.*$/i, "") 
+              .replace(/\s*Slot\s*\d+.*$/i, "")  
+              .replace(/\(.*\)/g, "")           
+              .trim();
+        };
+
+        const groupedEvents = rawEvents.reduce((acc, event) => {
+          const key = normalizeTitle(event.title);
+          // Since the API returns them sorted by date (desc or asc),
+          // we want to ensure we keep one representation.
+          // If the list is desc (newest first), the first one we see is the latest.
+          if (!acc[key]) {
+              acc[key] = event; 
+          }
+          return acc;
+        }, {} as Record<string, CalendarEvent>);
+
+        const uniqueEvents = Object.values(groupedEvents);
+
+        // 3. Filter: Only keep events that have highlight photos
+        // We check this by querying our own API for each event.
+        const eventsWithPhotos: CalendarEvent[] = [];
+
+        await Promise.all(uniqueEvents.map(async (event) => {
+           try {
+             const driveRes = await fetch(`/api/drive/files?type=highlights&eventId=${event.googleEventId}`);
+             if (driveRes.ok) {
+                const driveData = await driveRes.json();
+                if (driveData.data && Array.isArray(driveData.data) && driveData.data.length > 0) {
+                    eventsWithPhotos.push(event);
+                }
+             }
+           } catch (err) {
+             // Ignore errors, just don't include
+             console.warn(`Failed to check drive for ${event.title}`, err);
+           }
+        }));
+
+        // Sort again by date desc (just to be sure, as Promise.all order isn't guaranteed)
+        eventsWithPhotos.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
+
+        setEvents(eventsWithPhotos);
+
       } catch (err) {
         console.error(err);
       } finally {
@@ -35,33 +83,16 @@ export default function PastSessions() {
     fetchPastSessions();
   }, []);
 
-  if (loading) return null; // Or a subtle skeleton
+  if (loading) return null; 
   if (events.length === 0) return null;
 
-  // Grouping Logic: Consolidate "Slot 1", "Slot 2" etc into a single card
-  // Helper to normalize title
   const normalizeTitle = (title: string) => {
-    // Remove "Slot X" or ": Slot X" or "(Slot X)"
-    // Also remove everything after a colon if it looks like a subtitle? 
-    // User case: "Paint & Sip: Slot 1 (Social Networking)" -> "Paint & Sip"
     return title
-        .replace(/:\s*Slot\s*\d+.*$/i, "") // Remove ": Slot 1..."
-        .replace(/\s*Slot\s*\d+.*$/i, "")  // Remove " Slot 1..."
-        .replace(/\(.*\)/g, "")           // Remove parens content? Maybe risky.
+        .replace(/:\s*Slot\s*\d+.*$/i, "") 
+        .replace(/\s*Slot\s*\d+.*$/i, "")  
+        .replace(/\(.*\)/g, "")           
         .trim();
   };
-
-  const groupedEvents = events.reduce((acc, event) => {
-    const key = normalizeTitle(event.title);
-    if (!acc[key]) {
-        acc[key] = event; // Keep the first one found (since sorted desc, this is the LATEST one)
-    }
-    return acc;
-  }, {} as Record<string, CalendarEvent>);
-
-  const uniqueEvents = Object.values(groupedEvents);
-
-  if (uniqueEvents.length === 0) return null;
 
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
@@ -76,7 +107,7 @@ export default function PastSessions() {
     <div className="mt-8 pt-8 border-t border-white/5 w-full">
       <h3 className="text-xl font-bold text-white mb-6">Past Events</h3>
       <div className="flex flex-col gap-4">
-        {uniqueEvents.map((event) => (
+        {events.map((event) => (
           <div 
             key={event.id}
             className="group relative flex flex-col md:flex-row items-center gap-4 rounded-2xl bg-white/5 p-4 border border-white/10 hover:border-[#7fff41]/30 transition overflow-hidden"
