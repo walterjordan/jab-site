@@ -98,6 +98,38 @@ async function listImages(drive: any, folderId: string, searchterm?: string, lim
   }
 }
 
+async function processEventFolder(drive: any, eventFolderId: string) {
+    const data: { flyer: DriveImage | null, highlights: DriveImage[] } = { flyer: null, highlights: [] };
+
+    // Flyer logic
+    const flyerFolderId = await findSubfolder(drive, eventFolderId, 'flyer');
+    if (flyerFolderId) {
+      let images = await listImages(drive, flyerFolderId, 'slot 2', 1);
+      if (images.length === 0) {
+        images = await listImages(drive, flyerFolderId, undefined, 1);
+      }
+      if (images[0]) {
+        data.flyer = {
+          id: images[0].id,
+          name: images[0].name,
+          src: images[0].thumbnailLink?.replace(/=s\d+$/, '=s1200') || images[0].webContentLink
+        };
+      }
+    }
+
+    // Highlights logic
+    const publicFolderId = await findSubfolder(drive, eventFolderId, 'public');
+    if (publicFolderId) {
+      const images = await listImages(drive, publicFolderId, 'highlight', 4);
+      data.highlights = images.map((img: any) => ({
+        id: img.id,
+        name: img.name,
+        src: img.thumbnailLink?.replace(/=s\d+$/, '=s800') || img.webContentLink
+      }));
+    }
+    return data;
+}
+
 export async function getEventImages(eventId: string, folderId?: string): Promise<EventDriveData> {
   const result: EventDriveData = {
     flyer: null,
@@ -112,45 +144,39 @@ export async function getEventImages(eventId: string, folderId?: string): Promis
 
     // 1. Find the Event Folder
     let eventFolder = null;
+    // Prefer ID if provided
     if (folderId) {
       eventFolder = await findFolderById(drive, folderId);
     } 
     
+    // If no ID or ID failed, try name
     if (!eventFolder && eventId) {
       eventFolder = await findFolderByName(drive, eventId);
     }
 
     if (!eventFolder) return result;
 
+    // 2. Process contents
+    let folderData = await processEventFolder(drive, eventFolder.id);
+
+    // 3. Fallback: If no highlights found, and we used a specific folderId, try finding by name as backup
+    // This handles cases where Airtable has a stale/wrong ID but the correct folder exists by name.
+    if (folderData.highlights.length === 0 && folderId && eventId) {
+        const fallbackFolder = await findFolderByName(drive, eventId);
+        if (fallbackFolder && fallbackFolder.id !== eventFolder.id) {
+            console.log(`Fallback: Found alternative folder for ${eventId} by name: ${fallbackFolder.id}`);
+            const fallbackData = await processEventFolder(drive, fallbackFolder.id);
+            if (fallbackData.highlights.length > 0) {
+                folderData = fallbackData;
+                eventFolder = fallbackFolder; // Update reference so link is correct
+            }
+        }
+    }
+
+    result.flyer = folderData.flyer;
+    result.highlights = folderData.highlights;
     result.folderLink = eventFolder.webViewLink;
-    const eventFolderId = eventFolder.id;
 
-    // 2. Fetch Flyer
-    const flyerFolderId = await findSubfolder(drive, eventFolderId, 'flyer');
-    if (flyerFolderId) {
-      let images = await listImages(drive, flyerFolderId, 'slot 2', 1);
-      if (images.length === 0) {
-        images = await listImages(drive, flyerFolderId, undefined, 1);
-      }
-      if (images[0]) {
-        result.flyer = {
-          id: images[0].id,
-          name: images[0].name,
-          src: images[0].thumbnailLink?.replace(/=s\d+$/, '=s1200') || images[0].webContentLink
-        };
-      }
-    }
-
-    // 3. Fetch Highlights
-    const publicFolderId = await findSubfolder(drive, eventFolderId, 'public');
-    if (publicFolderId) {
-      const images = await listImages(drive, publicFolderId, 'highlight', 4);
-      result.highlights = images.map((img: any) => ({
-        id: img.id,
-        name: img.name,
-        src: img.thumbnailLink?.replace(/=s\d+$/, '=s800') || img.webContentLink
-      }));
-    }
   } catch (error) {
     console.error("Error in getEventImages:", error);
   }

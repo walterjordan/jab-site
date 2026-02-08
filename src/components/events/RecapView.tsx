@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { DriveImage } from "@/lib/drive";
 import ShareButtons from "../ui/ShareButtons";
 
@@ -14,12 +14,17 @@ type RecapViewProps = {
 
 export default function RecapView({ flyer, highlights, folderLink, eventId }: RecapViewProps) {
   const [selectedImage, setSelectedImage] = useState<DriveImage | null>(null);
+  
+  // Start with a stable default (server-side URL) to ensure hydration matches
+  const [shareUrl, setShareUrl] = useState(`https://jordanborden.com/events/paint-sip-recap?eventId=${eventId}`);
 
-  // We need the full URL for sharing. 
-  // In Next.js Server Components, we don't have 'window.location', but here in Client we do.
-  // However, for SSR purposes, we might want to pass it or construct it.
-  // For now, let's use a safe window check or construct from eventId.
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : `https://jordanborden.com/events/paint-sip-recap?eventId=${eventId}`;
+  useEffect(() => {
+    // Update to current window location on client mount
+    if (typeof window !== 'undefined') {
+        setShareUrl(window.location.href);
+    }
+  }, []);
+
   const shareTitle = "Paint & Sip: Event Recap";
 
   return (

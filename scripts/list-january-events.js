@@ -27,7 +27,7 @@ async function listAllEvents() {
     const events = res.data.items || [];
     console.log(`Found ${events.length} events in January:`);
     events.forEach(e => {
-        console.log(`${e.summary} | ${e.start.dateTime || e.start.date}`);
+        console.log(`[${e.id}] ${e.summary} | ${e.start.dateTime || e.start.date}`);
     });
 }
 
