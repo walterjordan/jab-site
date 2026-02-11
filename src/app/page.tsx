@@ -3,6 +3,7 @@
 import UpcomingSessions from "@/components/booking/UpcomingSessions";
 import PastSessions from "@/components/booking/PastSessions";
 import DemoInteractive from "@/components/landing/DemoInteractive";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 const MESSENGER_URL = "https://m.me/611741395360453";
 
@@ -456,8 +457,12 @@ export default function ManyChatStyleLanding() {
               Engagement models
             </a>
           </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
+                </div>
+              </footer>
+              
+              {/* AI Chat Widget */}
+              <ChatWidget />
+            </div>
+          );
+        }
+        

@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@openai/chatkit-react": "^1.5.0",
     "@radix-ui/react-slot": "^1.2.4",
     "airtable": "^0.12.2",
     "class-variance-authority": "^0.7.1",
@@ -18,6 +19,7 @@
     "googleapis": "^169.0.0",
     "lucide-react": "^0.563.0",
     "next": "15.1.11",
+    "openai": "^6.21.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sharp": "^0.34.5",

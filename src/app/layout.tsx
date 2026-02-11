@@ -55,6 +55,10 @@ export default function RootLayout({
             });
           `}
         </Script>
+        <Script 
+          src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" 
+          strategy="lazyOnload" 
+        />
         {children}
       </body>
     </html>
