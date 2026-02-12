@@ -61,6 +61,18 @@ The project uses **Google Cloud Build** for continuous deployment:
 -   `src/components/booking`: UI components for the booking calendar and registration modal.
 -   `cloudbuild.yaml`: CI/CD configuration.
 
+## Chatkit Integration (AI Agent)
+
+The project integrates OpenAI's **Chatkit** to provide an AI assistant powered by the OpenAI Agent Builder.
+
+-   **Agent Workflow**: `wf_68e743989d5c8190a8c280ad0d8294020570452e93a556d1`
+-   **Implementation**:
+    -   Frontend: Uses the `openai-chatkit` custom element (injected via `layout.tsx`).
+    -   Backend: `/api/chatkit/session` creates secure sessions using the `OPENAI_API_KEY`.
+    -   Configuration: `NEXT_PUBLIC_CHATKIT_PUBLIC_KEY` is used for domain verification and widget styling.
+
+**Replication Guide**: See [`chatkit_replication_guide.md`](./chatkit_replication_guide.md) for step-by-step instructions on how to implement this in other projects.
+
 ## Agentic Development & Prompting
 
 When interacting with AI agents or generating prompts for this project, adhere to the following rules:
