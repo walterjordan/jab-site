@@ -28,6 +28,11 @@ export default function ChatKitWrapper() {
         if (!isMounted.current || !container) return;
 
         const chatkit = document.createElement('openai-chatkit') as any;
+        
+        // Add public key if available
+        if (process.env.NEXT_PUBLIC_CHATKIT_PUBLIC_KEY) {
+          chatkit.setAttribute('public-key', process.env.NEXT_PUBLIC_CHATKIT_PUBLIC_KEY);
+        }
 
         const getClientSecret = async () => {
           const res = await fetch('/api/chatkit/session', {
