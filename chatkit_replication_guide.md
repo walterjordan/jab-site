@@ -24,7 +24,7 @@ Create or update your `.env.local` file in the root of your project:
 OPENAI_API_KEY=sk-...
 
 # The Workflow ID for your specific Agent
-CHATKIT_WORKFLOW_ID=wf_...
+CHATKIT_WORKFLOW_ID=wf_69a50ac49b508190b3ce3b18cc53bf3a005730f2ca310da5
 
 # Optional: Public Key if required by your specific setup (often not needed for server-side auth)
 NEXT_PUBLIC_CHATKIT_PUBLIC_KEY=

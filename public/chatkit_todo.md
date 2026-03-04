@@ -8,7 +8,7 @@
 # OBJECTIVE (Completed)
 
 Connect the JAB Site (Next.js app) to OpenAI Workflow:
-`wf_68e743989d5c8190a8c280ad0d8294020570452e93a556d1`
+`wf_69a50ac49b508190b3ce3b18cc53bf3a005730f2ca310da5`
 
 ## Implementation Summary
 

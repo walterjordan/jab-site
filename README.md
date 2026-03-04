@@ -65,7 +65,7 @@ The project uses **Google Cloud Build** for continuous deployment:
 
 The project integrates OpenAI's **Chatkit** to provide an AI assistant powered by the OpenAI Agent Builder.
 
--   **Agent Workflow**: `wf_68e743989d5c8190a8c280ad0d8294020570452e93a556d1`
+-   **Agent Workflow**: `wf_69a50ac49b508190b3ce3b18cc53bf3a005730f2ca310da5`
 -   **Implementation**:
     -   Frontend: Uses the `openai-chatkit` custom element (injected via `layout.tsx`).
     -   Backend: `/api/chatkit/session` creates secure sessions using the `OPENAI_API_KEY`.

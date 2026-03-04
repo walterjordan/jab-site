@@ -90,7 +90,7 @@ const response = await fetch("https://api.openai.com/v1/chatkit/sessions", {
     Authorization: "Bearer " + process.env.VITE_OPENAI_API_SECRET_KEY,
     },
     body: JSON.stringify({
-    workflow: { id: "wf_68df4b13b3588190a09d19288d4610ec0df388c3983f58d1" },
+    workflow: { id: "wf_69a50ac49b508190b3ce3b18cc53bf3a005730f2ca310da5" },
     user: deviceId,
     }),
 });

@@ -7,6 +7,18 @@
         "@canva/cli@latest",
         "mcp"
       ]
+    },
+    "github": {
+      "transport": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "jab-facebook-messenger": {
+      "transport": "sse",
+      "url": "https://jab-ai-mcp-199373649190.us-central1.run.app/sse"
     }
   }
 }

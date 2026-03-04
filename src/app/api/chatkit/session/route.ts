@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         'OpenAI-Beta': 'chatkit_beta=v1' // Crucial for beta features
       },
       body: JSON.stringify({
-        workflow: { id: "wf_68e743989d5c8190a8c280ad0d8294020570452e93a556d1" },
+        workflow: { id: "wf_69a50ac49b508190b3ce3b18cc53bf3a005730f2ca310da5" },
         user: userId
       })
     });
