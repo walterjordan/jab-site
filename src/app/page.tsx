@@ -7,11 +7,6 @@ import ChatWidget from "@/components/chat/ChatWidget";
 
 const MESSENGER_URL = "https://m.me/611741395360453";
 
-// Put your real Video Builder URL in NEXT_PUBLIC_JAB_VIDEO_BUILDER_URL
-const JAB_VIDEO_BUILDER_URL =
-  process.env.NEXT_PUBLIC_JAB_VIDEO_BUILDER_URL ||
-  "https://jab-ad-creatorv1.jordanborden.com/";
-
 const navItems = [
   { href: "#features", label: "Features" },
   { href: "#channels", label: "Channels" },
@@ -23,16 +18,16 @@ const audiencePills = ["Entrepreneurs", "Small Business", "Agencies", "Franchise
 
 const featureCards = [
   {
-    title: "Automated Instagram & Facebook DMs",
-    desc: "Turn comments into instant DMs that deliver info, qualify leads, and book calls automatically—zero manual replies required.",
+    title: "CORE",
+    desc: "The complete operating system for revenue: pipelines, conversations, follow-up, and automations configured for your business.",
   },
   {
-    title: "Self-Service Client Arrival Kiosk",
-    desc: "Clients check themselves in on an iPad, updating your schedule in real-time so practitioners see who has arrived without checking the lobby.",
+    title: "CORE+",
+    desc: "Everything in CORE, plus prebuilt, high-end integrated website templates to drive conversions and track leads.",
   },
   {
     title: "AI Mastermind",
-    desc: "The ultimate training ground for AI & Automation. Master the skills, earn badges, and join a network of top-tier builders.",
+    desc: "Self Paced AI For Business upskilling. Master the skills, earn badges, and join a network of top-tier builders.",
     href: "https://www.aimastermind.jordanborden.com",
     cta: "Start your mission",
     highlight: true,
@@ -42,49 +37,47 @@ const featureCards = [
     desc: "Launch a simple, professional website today for a flat $100! No long timelines, no complexity, just results.",
   },
   {
-    title: "Other Digital Marketing",
-    desc: "Fast, practical execution of event flyers, landing pages, booking links, and promo pages tailored to your business.",
+    title: "Self-Service Client Arrival Kiosk",
+    desc: "Clients check themselves in on an iPad, updating your schedule in real-time so practitioners see who has arrived without checking the lobby.",
+  },
+  {
+    title: "Free Live 90 min AI Mastermind Workshop",
+    desc: "Join our hands-on live workshop to discover practical AI and automation strategies you can implement immediately.",
   },
 ];
 
-const videoBuilderCard = {
-  title: "JAB Video Builder",
-  badge: "New • In beta",
-  desc: "Turn a simple prompt into social-ready ad and explainer videos tailored to your campaigns.",
-  ctaLabel: "Try it now",
-};
-
 const pricing = [
   {
-    name: "Same-Day Website",
-    price: "$100",
-    highlight: "Launch your professional presence today",
+    name: "CORE",
+    price: "$199",
+    highlight: "CORE Engine: The operating system for revenue: pipeline, conversations, follow-up, campaigns, and automations — configured for your business.",
     bullets: [
-      "Your logo, your branding, AI-enhanced design",
-      "Mobile-responsive & fast-loading",
-      "Ready to go in 24 hours or less",
+      "Pipeline + stages configured",
+      "Text + email conversations setup",
+      "Core follow-up automations",
+      "EdgeAssist suggestions enabled",
     ],
   },
   {
-    name: "Digital Marketing",
-    price: "$499",
-    highlight: "Complete digital execution",
+    name: "CORE +",
+    price: "$299",
+    highlight: "Integrated Website Templates: Prebuilt, high-end templates that connect cleanly to CORE: forms, tracking, pipelines, follow-up, and conversion flows — ready to deploy.",
     bullets: [
-      "Event flyers",
-      "Landing page",
-      "Booking or simple lead page",
-      "One social media platform setup (Instagram, Facebook, or similar)",
+      "Fast launches (no reinventing the wheel)",
+      "GHL embedded forms + CRM tracking",
+      "Conversion-first layout + CTA structure",
+      "Add-ons like blog, private hosting, and more",
     ],
   },
   {
     name: "Custom Business Solution",
-    price: "$997",
-    highlight: "We design & build your custom automation",
+    price: "",
+    highlight: "Complete Business Platform: If your business needs more than templates: custom web apps, internal tools, portals, advanced automation, or a privacy-first infrastructure.",
     bullets: [
-      "Setup custom AI assistants",
-      "Integrate with your current applications and tools",
-      "Messenger + Instagram setup",
-      "2 weeks of optimization support",
+      "Web apps + dashboards",
+      "Custom onboarding flows",
+      "Data integrations & automations",
+      "Secure hosting architecture (Secure Edge)",
     ],
     featured: true,
   },
@@ -313,27 +306,6 @@ export default function ManyChatStyleLanding() {
                   )}
                 </article>
               ))}
-
-              {/* JAB Video Builder card */}
-              <article className="group rounded-2xl border border-[#7fff41]/40 bg-gradient-to-br from-[#010e63] via-[#630183] to-slate-900 p-5 text-left shadow-lg shadow-[#7fff41]/25 md:col-span-3 lg:col-span-1">
-                <p className="inline-flex items-center rounded-full bg-black/40 px-2 py-1 text-xs font-medium uppercase tracking-wide text-[#7fff41]">
-                  {videoBuilderCard.badge}
-                </p>
-                <h3 className="mt-3 text-lg font-semibold text-white">
-                  {videoBuilderCard.title}
-                </h3>
-                <p className="mt-2 text-sm text-slate-100/90">
-                  {videoBuilderCard.desc}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => window.open(JAB_VIDEO_BUILDER_URL, "_blank")}
-                  className="mt-4 inline-flex items-center justify-center rounded-full bg-black/80 px-4 py-2 text-xs font-semibold text-[#7fff41] ring-1 ring-[#7fff41]/60 transition hover:bg-black hover:ring-[#7fff41]"
-                >
-                  {videoBuilderCard.ctaLabel}
-                  <span className="ml-2 text-xs">↗</span>
-                </button>
-              </article>
             </div>
           </div>
         </section>
@@ -378,9 +350,11 @@ export default function ManyChatStyleLanding() {
                   <p className="mt-2 text-sm text-slate-300">
                     {tier.highlight}
                   </p>
-                  <p className="mt-4 text-xl font-semibold text-white">
-                    {tier.price}
-                  </p>
+                  {tier.price && (
+                    <p className="mt-4 text-xl font-semibold text-white">
+                      {tier.price}
+                    </p>
+                  )}
                   <ul className="mt-4 space-y-2 text-sm text-slate-300">
                     {tier.bullets.map((bullet) => (
                       <li key={bullet} className="flex gap-2">
@@ -390,10 +364,9 @@ export default function ManyChatStyleLanding() {
                     ))}
                   </ul>
                   <div className="mt-6">
-                    <a
-                      href={MESSENGER_URL}
-                      target="_blank"
-                      rel="noreferrer"
+                    <button
+                      type="button"
+                      onClick={() => window.dispatchEvent(new CustomEvent('open-chatkit'))}
                       className={classNames(
                         "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition",
                         tier.featured
@@ -402,7 +375,7 @@ export default function ManyChatStyleLanding() {
                       )}
                     >
                       Talk to JAB about this
-                    </a>
+                    </button>
                   </div>
                 </article>
               ))}
