@@ -23,7 +23,7 @@ export default function PricingPage() {
           <div className="bg-white rounded-3xl shadow-lg border border-gray-200 overflow-hidden flex flex-col">
             <div className="p-8 sm:p-10 flex-1">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">EdgeMax AI Core</h2>
-              <p className="text-gray-500 mb-6 min-h-[48px]">The "Command Center" for your business. Perfect for teams that already have a website but need better lead management.</p>
+              <p className="text-gray-500 mb-6 min-h-[48px]">The &quot;Command Center&quot; for your business. Perfect for teams that already have a website but need better lead management.</p>
               <div className="flex items-baseline text-5xl font-extrabold text-gray-900 mb-8">
                 $199
                 <span className="text-xl font-medium text-gray-500 ml-2">/month</span>
@@ -124,7 +124,7 @@ export default function PricingPage() {
               The Bottom Line
            </div>
            <p className="text-xl text-gray-700 italic leading-relaxed">
-             "CORE is a premium business operating system that organizes your leads, automates your follow-ups, and uses AI to help your team close deals faster. It’s not just software; it’s a fully configured revenue engine that we set up for you, so you can stop worrying about the tech and start focusing on growth."
+             &quot;CORE is a premium business operating system that organizes your leads, automates your follow-ups, and uses AI to help your team close deals faster. It’s not just software; it’s a fully configured revenue engine that we set up for you, so you can stop worrying about the tech and start focusing on growth.&quot;
            </p>
         </div>
 
