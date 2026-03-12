@@ -53,7 +53,7 @@ export default function PricingPage() {
               </ul>
             </div>
             <div className="p-8 bg-gray-50 border-t border-gray-100">
-              <a href="#contact" className="block w-full py-4 px-6 text-center text-white bg-gray-900 hover:bg-gray-800 font-bold rounded-xl transition-all">
+              <a href="https://edgemax.ai/forms/core.html" className="block w-full py-4 px-6 text-center text-white bg-gray-900 hover:bg-gray-800 font-bold rounded-xl transition-all">
                 Get Started with Core
               </a>
             </div>
@@ -110,7 +110,7 @@ export default function PricingPage() {
               </div>
             </div>
             <div className="p-8 bg-gray-50 border-t border-gray-100">
-              <a href="#contact" className="block w-full py-4 px-6 text-center text-white bg-blue-600 hover:bg-blue-700 font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-1">
+              <a href="https://edgemax.ai/forms/core.html" className="block w-full py-4 px-6 text-center text-white bg-blue-600 hover:bg-blue-700 font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all transform hover:-translate-y-1">
                 Get Started with Core +
               </a>
             </div>
