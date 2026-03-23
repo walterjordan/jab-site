@@ -41,20 +41,29 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col bg-slate-950 text-slate-50`}
       >
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-BL7JLXG2M9"
-        />
-        <Script id="ga4" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-BL7JLXG2M9', {
-              page_path: window.location.pathname,
-            });
-          `}
-        </Script>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+            />
+            <Script id="ga4" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                  page_path: window.location.pathname,
+                });
+                ${
+                  process.env.NODE_ENV === "development"
+                    ? `console.log("GA_ID loaded: ${process.env.NEXT_PUBLIC_GA_ID}");`
+                    : ""
+                }
+              `}
+            </Script>
+          </>
+        )}
         <Script 
           src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" 
           strategy="lazyOnload" 
