@@ -1,29 +1,40 @@
 "use client";
 
-import UpcomingSessions from "@/components/booking/UpcomingSessions";
-import PastSessions from "@/components/booking/PastSessions";
 import DemoInteractive from "@/components/landing/DemoInteractive";
 import ChatWidget from "@/components/chat/ChatWidget";
+import { Header } from "@/components/landing/Header";
+import { Footer } from "@/components/landing/Footer";
+import { Layers, Sparkles, GraduationCap, Globe, TabletSmartphone, Mic } from 'lucide-react';
 
 const MESSENGER_URL = "https://m.me/611741395360453";
 
 const navItems = [
-  { href: "#features", label: "Features" },
-  { href: "#channels", label: "Channels" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/", label: "Home" },
+  { href: "/features", label: "Features" },
+  { href: "/events", label: "Events" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/workshops", label: "Free LIVE Workshops" },
+  { href: "/demo", label: "Demo" },
 ];
 
 const audiencePills = ["Entrepreneurs", "Small Business", "Agencies", "Franchise"];
 
 const featureCards = [
   {
-    title: "CORE",
-    desc: "The complete operating system for revenue: pipelines, conversations, follow-up, and automations configured for your business.",
+    title: "JAB CORE",
+    desc: "The complete technology platform that allows you to manage all your customer communications including email, SMS, Direct Messages, Calls, Appointments, Reviews & more.",
+    href: "/features",
+    cta: "View all Features",
+    icon: Layers,
+    mainOffering: true,
   },
   {
-    title: "CORE+",
-    desc: "Everything in CORE, plus prebuilt, high-end integrated website templates to drive conversions and track leads.",
+    title: "JAB CORE+",
+    desc: "All the Features of CORE with advanced features such as APPOINTMENTS & CALENDARS, CONTACTS & CRM, PIPELINES & OPPORTUNITIES & EMAIL MARKETING.",
+    href: "/features",
+    cta: "View all Features",
+    icon: Sparkles,
+    mainOffering: true,
   },
   {
     title: "AI Mastermind",
@@ -31,53 +42,60 @@ const featureCards = [
     href: "https://www.aimastermind.jordanborden.com",
     cta: "Start your mission",
     highlight: true,
+    icon: GraduationCap,
   },
   {
     title: "Same-Day Website $100",
     desc: "Launch a simple, professional website today for a flat $100! No long timelines, no complexity, just results.",
+    icon: Globe,
   },
   {
     title: "Self-Service Client Arrival Kiosk",
     desc: "Clients check themselves in on an iPad, updating your schedule in real-time so practitioners see who has arrived without checking the lobby.",
+    icon: TabletSmartphone,
   },
   {
     title: "Free Live 90 min AI Mastermind Workshop",
     desc: "Join our hands-on live workshop to discover practical AI and automation strategies you can implement immediately.",
+    icon: Mic,
   },
 ];
 
 const pricing = [
   {
-    name: "CORE",
-    price: "$199",
-    highlight: "CORE Engine: The operating system for revenue: pipeline, conversations, follow-up, campaigns, and automations — configured for your business.",
+    name: "JAB CORE",
+    price: "$199 / Month",
+    highlight: "The complete technology platform that allows you to manage all your customer communications including email, SMS, Direct Messages, Calls, Appointments, Reviews & more.",
     bullets: [
       "Pipeline + stages configured",
       "Text + email conversations setup",
       "Core follow-up automations",
       "EdgeAssist suggestions enabled",
+      "Book A Demo",
     ],
   },
   {
-    name: "CORE +",
-    price: "$299",
-    highlight: "Integrated Website Templates: Prebuilt, high-end templates that connect cleanly to CORE: forms, tracking, pipelines, follow-up, and conversion flows — ready to deploy.",
+    name: "JAB CORE +",
+    price: "$299 / Month",
+    highlight: "All the Features of CORE with advanced features such as APPOINTMENTS & CALENDARS, CONTACTS & CRM, PIPELINES & OPPORTUNITIES & EMAIL MARKETING.",
     bullets: [
       "Fast launches (no reinventing the wheel)",
       "GHL embedded forms + CRM tracking",
       "Conversion-first layout + CTA structure",
       "Add-ons like blog, private hosting, and more",
+      "Book A Demo",
     ],
   },
   {
-    name: "Custom Business Solution",
-    price: "",
-    highlight: "Complete Business Platform: If your business needs more than templates: custom web apps, internal tools, portals, advanced automation, or a privacy-first infrastructure.",
+    name: "CORE Elite",
+    price: "$399 / Month",
+    highlight: "All the features of CORE + with AI Assistance, Advanced Automation and Integrated Website. If you don't see your situation here, send a message using the green chat bubble.",
     bullets: [
       "Web apps + dashboards",
       "Custom onboarding flows",
       "Data integrations & automations",
       "Secure hosting architecture (Secure Edge)",
+      "Book A Demo",
     ],
     featured: true,
   },
@@ -121,185 +139,103 @@ export default function ManyChatStyleLanding() {
         className="pointer-events-none fixed inset-0 -z-10 opacity-70 [background:radial-gradient(circle_at_top,_rgba(127,255,65,0.18),_transparent_60%)]"
       />
 
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-40 border-b border-white/5 bg-slate-950/80 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 md:py-4">
-          <div className="flex items-center gap-3">
-            <img src="/jab-logo.png" alt="JAB logo" className="h-9 w-9 rounded-md shadow-sm invert" />
-            <div>
-              <p className="text-sm font-semibold tracking-tight">
-                Jordan &amp; Borden
-              </p>
-              <p className="text-sm text-slate-400">Automation Consulting</p>
-            </div>
-          </div>
-
-          <nav className="hidden items-center gap-8 text-base text-slate-200 md:flex">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="transition hover:text-[#7fff41]"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <a
-              href={MESSENGER_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden rounded-full border border-[#7fff41]/60 px-4 py-2 text-sm font-medium text-[#7fff41] hover:bg-[#7fff41]/10 md:inline-block"
-            >
-              Chat live on Messenger
-            </a>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main>
-        {/* HERO - Upcoming Events */}
-        <section id="cta" className="relative border-b border-white/5">
-          <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-12 md:py-20">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-white mb-3">Upcoming Live Events</h2>
-              <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-                Join our hands-on workshops and social networking sessions to master AI and automation.
-              </p>
+        {/* NEW HERO */}
+        <section className="relative border-b border-white/5 py-16 md:py-24">
+          <div className="mx-auto max-w-7xl px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h1 className="text-4xl md:text-6xl font-bold leading-tight text-white mb-6">
+                  We Help Businesses Grow By{" "}
+                  <span className="bg-gradient-to-r from-[#7fff41] to-white bg-clip-text text-transparent">
+                    Centralizing Operations for Revenue Generation
+                  </span>
+                </h1>
+                <p className="text-xl text-slate-300 mb-8">
+                  JAB provides customer communications technology and marketing services to businesses that need to Centralize Operations for Revenue Generation.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <a
+                    href="/pricing"
+                    className="inline-flex items-center justify-center rounded-full bg-[#7fff41] px-8 py-4 text-lg font-bold text-slate-900 shadow-lg shadow-[#7fff41]/40 transition hover:bg-[#a4ff82]"
+                  >
+                    Get Started
+                  </a>
+                  <a
+                    href="https://calendar.app.google/nrsnwLLEDFsyX5HP7"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-full border border-white/20 px-8 py-4 text-lg font-medium text-slate-100 hover:border-[#7fff41]/60 hover:text-[#7fff41]"
+                  >
+                    Book A Demo
+                  </a>
+                </div>
+              </div>
+              <div className="aspect-video w-full rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/IvGp2fczb5k"
+                  title="JAB Technology Overview"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-              <UpcomingSessions 
-                title="Paint & Sip Networking" 
-                filterKeyword="Paint" 
-                waitlistTrack="Paint & Sip"
-              />
-              <UpcomingSessions 
-                title="AI Mastermind Workshops" 
-                filterKeyword="Mastermind"
-                featuredLayout={true}
-                waitlistTrack="AI Mastermind"
-                detailsLink="/mastermind-landing"
-              />
-            </div>
-
-            {/* Past Events Recap (Dynamic) */}
-            <PastSessions />
           </div>
         </section>
 
-        {/* FEATURES + JAB VIDEO BUILDER CTA */}
+        {/* FEATURES SECTION */}
         <section id="features" className="border-b border-white/5 py-12 md:py-16">
           <div className="mx-auto max-w-6xl px-6">
-            <div className="mb-16 flex flex-col items-start gap-6 md:flex-row md:items-center">
-              <div className="flex-1">
-                <div className="inline-flex items-center gap-2 rounded-full bg-slate-900/70 px-3 py-1 text-xs ring-1 ring-white/10">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#7fff41]" />
-                  <span className="font-medium text-slate-200">
-                    Verified Meta Media Agency · WhatsApp · Instagram · Messenger
-                  </span>
-                </div>
-
-                <h1 className="mt-5 text-3xl font-semibold leading-tight tracking-tight text-slate-50 sm:text-4xl md:text-5xl">
-                  Make the most out of{" "}
-                  <span className="bg-gradient-to-r from-[#7fff41] via-white to-[#ff00ff] bg-clip-text text-transparent">
-                    every conversation
-                  </span>
-                </h1>
-
-                <p className="mt-4 text-lg text-slate-200/80 sm:text-xl">
-                  Jordan &amp; Borden designs high-performing Messenger and Instagram
-                  automations that feel human, respond instantly, and plug directly
-                  into your sales process.
-                </p>
-
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <a
-                    href={MESSENGER_URL}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center rounded-full bg-[#7fff41] px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-[#7fff41]/40 transition hover:translate-y-[1px] hover:bg-[#a4ff82]"
-                  >
-                    Chat live on Messenger
-                  </a>
-                  <a
-                    href="#pricing"
-                    className="inline-flex items-center justify-center rounded-full border border-white/20 px-5 py-3 text-base font-medium text-slate-100 hover:border-[#7fff41]/60 hover:text-[#7fff41]"
-                  >
-                    Book a strategy session
-                  </a>
-                </div>
-
-                <div className="mt-6 flex flex-wrap gap-6 text-sm text-slate-300/80">
-                  <div>
-                    <p className="font-semibold text-slate-100">
-                      40+ campaigns automated
-                    </p>
-                    <p>From local service brands to multi-location franchises.</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-100">
-                      &lt; 30s average response
-                    </p>
-                    <p>Keep leads warm while your team focuses on closers.</p>
-                  </div>
-                </div>
-
-                <div className="mt-8 flex flex-wrap gap-3 text-xs text-slate-300/70">
-                  {audiencePills.map((pill) => (
-                    <span
-                      key={pill}
-                      className="rounded-full border border-white/15 bg-white/5 px-3 py-1"
-                    >
-                      {pill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="max-w-2xl text-center md:mx-auto">
-              <h2 className="text-2xl font-semibold text-slate-50 sm:text-3xl">
-                Practical Digital Tools for Real Businesses
+            <div className="max-w-3xl text-center md:mx-auto mb-12">
+              <h2 className="text-2xl font-semibold text-[#7fff41] uppercase tracking-wider mb-2">
+                C.O.R.E is a Complete Platform Solution
               </h2>
-              <p className="mt-3 text-base text-slate-300 sm:text-lg">
-                From same-day websites to check-in stations and content tools, everything here is designed to be live, useful, and straightforward.
+              <h3 className="text-3xl font-bold text-white mb-6">
+                The Centralized Operations You Need for Revenue Generation
+              </h3>
+              <p className="text-lg text-slate-300">
+                We provide a single Centralized Operations Platform for business owners of all types of industries that enable you to sell more, handle more, and grow revenue.
+                Every industry has special needs when it comes to sales & marketing technology. JAB&apos;s C.O.R.E technology platform allows you to manage all your customer communication channels, including email, SMS, direct messages, calls, appointments, and reviews, in one place.
               </p>
             </div>
 
             <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {featureCards.map((f) => (
+              {featureCards.map((f: any) => (
                 <article
                   key={f.title}
                   className={classNames(
                     "group relative flex flex-col rounded-2xl border p-5 text-left shadow-sm transition hover:-translate-y-1",
-                    // @ts-ignore
                     f.highlight
                       ? "border-[#7fff41]/40 bg-slate-900/80 shadow-[#7fff41]/10 hover:border-[#7fff41] hover:shadow-[#7fff41]/20"
                       : "border-white/8 bg-slate-900/70 hover:border-[#7fff41]/40 hover:shadow-[#7fff41]/20"
                   )}
                 >
-                  <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#630183]/40 text-xs text-[#7fff41]">
-                    ✶
+                  <div className={classNames(
+                    "mb-4 inline-flex items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110",
+                    f.mainOffering 
+                      ? "h-12 w-12 bg-gradient-to-br from-[#7fff41] to-[#32a852] text-slate-950 shadow-[0_0_20px_rgba(127,255,65,0.4)]" 
+                      : "h-10 w-10 bg-[#630183]/40 text-[#7fff41]"
+                  )}>
+                    {f.icon ? <f.icon className={f.mainOffering ? "w-6 h-6" : "w-5 h-5"} /> : "✶"}
                   </div>
                   <h3 className="text-base font-semibold text-slate-50">
                     {f.title}
                   </h3>
                   <p className="mt-2 flex-1 text-sm text-slate-300">{f.desc}</p>
 
-                  {/* @ts-ignore */}
                   {f.href && (
                     <div className="mt-4">
                       <a
-                        // @ts-ignore
                         href={f.href}
-                        target="_blank"
-                        rel="noreferrer"
+                        target={f.href.startsWith('http') ? "_blank" : undefined}
+                        rel={f.href.startsWith('http') ? "noreferrer" : undefined}
                         className="inline-flex items-center text-xs font-semibold text-[#7fff41] hover:underline"
                       >
-                        {/* @ts-ignore */}
                         {f.cta || "Learn more"} <span className="ml-1">→</span>
                       </a>
                     </div>
@@ -309,9 +245,6 @@ export default function ManyChatStyleLanding() {
             </div>
           </div>
         </section>
-
-        {/* INTERACTIVE DEMO */}
-        <DemoInteractive />
 
         {/* PRICING */}
         <section id="pricing" className="border-b border-white/5 py-12 md:py-16">
@@ -383,57 +316,40 @@ export default function ManyChatStyleLanding() {
           </div>
         </section>
 
-        {/* FAQ */}
-        <section id="faq" className="py-12 md:py-16">
+        {/* WORKSHOPS (formerly FAQ) */}
+        <section id="workshops" className="py-12 md:py-16 border-b border-white/5">
           <div className="mx-auto max-w-6xl px-6">
-            <div className="max-w-xl">
-              <h2 className="text-2xl font-semibold text-slate-50 sm:text-3xl">
-                Answers before you even DM us
-              </h2>
-              <p className="mt-3 text-base text-slate-300 sm:text-lg">
-                If you don&apos;t see your situation here, send a quick message
-                in Messenger and we&apos;ll point you in the right direction.
-              </p>
-            </div>
-
-            <dl className="mt-8 space-y-5">
-              {faqs.map((item) => (
-                <div
-                  key={item.q}
-                  className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 text-base"
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl font-bold text-slate-50 mb-6">
+                  Free LIVE Workshops
+                </h2>
+                <p className="text-lg text-slate-300 mb-8">
+                  We provide LIVE free Business Workshops for business owners that want to learn more about how AI and advanced Automation can boost productivity. Visit the Events link from the menu to register for an upcoming session!
+                </p>
+                <a
+                  href="/events"
+                  className="inline-flex items-center justify-center rounded-full bg-[#7fff41] px-6 py-3 text-base font-semibold text-slate-900 shadow-lg shadow-[#7fff41]/40 transition hover:bg-[#a4ff82]"
                 >
-                  <dt className="font-semibold text-slate-50">{item.q}</dt>
-                  <dd className="mt-2 text-sm text-slate-300">{item.a}</dd>
-                </div>
-              ))}
-            </dl>
+                  View Upcoming Sessions
+                </a>
+              </div>
+              <div className="rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+                <img 
+                  src="/AI-Mastermind-Event.png" 
+                  alt="AI Mastermind Workshop" 
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-white/10 py-6 text-sm text-slate-400">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 sm:flex-row">
-          <p>
-            © {new Date().getFullYear()} Jordan &amp; Borden Automation
-            Consulting. All rights reserved.
-          </p>
-          <div className="flex flex-wrap items-center gap-4">
-            <a
-              href={MESSENGER_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#7fff41]"
-            >
-              Chat on Messenger
-            </a>
-            <a href="#pricing" className="hover:text-[#7fff41]">
-              Engagement models
-            </a>
-          </div>
-                </div>
-              </footer>
-              
-              {/* AI Chat Widget */}
+      <Footer />
+
+      {/* AI Chat Widget */}
+
               <ChatWidget />
             </div>
           );

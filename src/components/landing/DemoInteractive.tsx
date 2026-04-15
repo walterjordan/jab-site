@@ -33,8 +33,7 @@ export default function DemoInteractive() {
               See How the System Thinks
             </h2>
             <p className="mt-4 text-lg text-slate-300">
-              Your automations shouldn't just "reply"—they should think, decide, and route data. 
-              Select a scenario below to see the logic in real-time.
+              Your automations shouldn't just "reply". They should think, decide, and route data. Select a scenario below to see the logic in real-time.
             </p>
           </div>
         </div>

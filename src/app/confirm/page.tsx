@@ -93,11 +93,11 @@ export default async function ConfirmPage({
 
   if (!token || typeof token !== 'string') {
      return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
             <div className="max-w-md w-full text-center">
-                <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
-                    <h1 className="text-xl font-bold text-red-600 mb-2">Invalid Request</h1>
-                    <p className="text-gray-600">No confirmation token provided.</p>
+                <div className="bg-slate-900 p-8 rounded-2xl border border-white/10 shadow-xl">
+                    <h1 className="text-xl font-bold text-red-500 mb-2">Invalid Request</h1>
+                    <p className="text-slate-300">No confirmation token provided.</p>
                 </div>
             </div>
         </div>
@@ -110,15 +110,15 @@ export default async function ConfirmPage({
 
         return (
 
-          <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+          <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
 
               <div className="max-w-md w-full text-center">
 
-                  <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+                  <div className="bg-slate-900 p-8 rounded-2xl border border-[#7fff41]/20 shadow-xl shadow-[#7fff41]/5">
 
-                       <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                       <div className="w-16 h-16 bg-[#7fff41]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#7fff41]/20">
 
-                          <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-8 h-8 text-[#7fff41]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
 
@@ -126,13 +126,13 @@ export default async function ConfirmPage({
 
                        </div>
 
-                      <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                      <h1 className="text-2xl font-bold text-white mb-2">
 
                           {result.isWaitlist ? "Waitlist Confirmed!" : "You're Confirmed!"}
 
                       </h1>
 
-                      <p className="text-gray-600 mb-6">
+                      <p className="text-slate-300 mb-6">
 
                           {result.isWaitlist 
 
@@ -144,7 +144,7 @@ export default async function ConfirmPage({
 
                       </p>
 
-                      <a href="/" className="inline-flex items-center justify-center px-5 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                      <a href="/" className="inline-flex items-center justify-center px-8 py-3 bg-[#7fff41] text-slate-900 font-bold rounded-full hover:bg-[#a4ff82] transition shadow-lg shadow-[#7fff41]/20">
 
                           Back to Home
 
@@ -162,17 +162,17 @@ export default async function ConfirmPage({
 
    else {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
             <div className="max-w-md w-full text-center">
-                <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
-                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-slate-900 p-8 rounded-2xl border border-white/10 shadow-xl">
+                    <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+                        <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </div>
-                    <h1 className="text-xl font-bold text-gray-900 mb-2">Confirmation Failed</h1>
-                    <p className="text-gray-600 mb-4">{result.error}</p>
-                    <p className="text-sm text-gray-400">If this persists, please contact support.</p>
+                    <h1 className="text-xl font-bold text-white mb-2">Confirmation Failed</h1>
+                    <p className="text-slate-300 mb-4">{result.error}</p>
+                    <p className="text-sm text-slate-500">If this persists, please contact support.</p>
                 </div>
             </div>
         </div>

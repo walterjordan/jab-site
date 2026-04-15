@@ -1,33 +1,57 @@
-// src/components/landing/Header.tsx
+"use client";
+
 import React from 'react';
-import Image from 'next/image';
+
+const MESSENGER_URL = "https://m.me/611741395360453";
+
+const navItems = [
+  { href: "/", label: "Home" },
+  { href: "/features", label: "Features" },
+  { href: "/events", label: "Events" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/workshops", label: "Free LIVE Workshops" },
+  { href: "/demo", label: "Demo" },
+];
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 backdrop-blur bg-white/70 border-b border-slate-200/60">
-      <nav className="mx-auto max-w-7xl flex items-center justify-between px-4 py-3">
+    <header className="sticky top-0 z-40 border-b border-white/5 bg-slate-950/80 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 md:py-4">
         <div className="flex items-center gap-3">
-          <Image 
-            src="/jab-logo.png" 
-            alt="JAB logo" 
-            width={36} 
-            height={36} 
-            className="rounded-md shadow-sm"
-            priority
-          />
-          <span className="font-semibold tracking-tight">Facebook Automation</span>
+          <a href="/" className="flex items-center gap-3">
+            <img src="/jab-logo.png" alt="JAB logo" className="h-9 w-9 rounded-md shadow-sm invert" />
+            <div>
+              <p className="text-sm font-semibold tracking-tight text-white">
+                Jordan &amp; Borden
+              </p>
+              <p className="text-sm text-slate-400">Automation Consulting</p>
+            </div>
+          </a>
         </div>
-        <ul className="hidden md:flex items-center gap-6 text-sm">
-          <li><a href="#features" className="hover:text-[#010E63]">Features</a></li>
-          <li><a href="#channels" className="hover:text-[#010E63]">Channels</a></li>
-          <li><a href="#pricing" className="hover:text-[#010E63]">Pricing</a></li>
-          <li><a href="#faq" className="hover:text-[#010E63]">FAQ</a></li>
-        </ul>
+
+        <nav className="hidden items-center gap-8 text-base text-slate-200 md:flex">
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="transition hover:text-[#7fff41]"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
         <div className="flex items-center gap-3">
-          <a href="/api/meta/oauth/start" className="hidden md:inline-block px-4 py-2 rounded-xl border border-slate-300 text-sm">Sign In</a>
-          <a href="/clients/connect-messenger" className="inline-block px-4 py-2 rounded-xl bg-[#7FFF41] text-black text-sm shadow">Get started</a>
+          <a
+            href={MESSENGER_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="hidden rounded-full border border-[#7fff41]/60 px-4 py-2 text-sm font-medium text-[#7fff41] hover:bg-[#7fff41]/10 md:inline-block"
+          >
+            Chat live on Messenger
+          </a>
         </div>
-      </nav>
+      </div>
     </header>
   );
 }

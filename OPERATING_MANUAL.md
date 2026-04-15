@@ -195,3 +195,29 @@ Image delivery is the primary bottleneck. The following actions are recommended 
 5.  **Thumbnails for Galleries:**
     -   For the Recap Gallery (`/events/paint-sip-recap`), ensure the API fetches or generates thumbnails rather than full-res backup photos, or use a proxy (like Cloudinary or Next.js Image Optimization) to resize them on the fly.
 ```
+
+here is the exact
+  workflow of how a user's question travels from the ChatKit UI to NotebookLM and back:
+
+   1. User Interaction & Session Initialization: 
+     When a visitor opens the chat widget (<ChatWidget /> in jab-site), the frontend openai-chatkit component requests a session from your Next.js backend
+  (/api/chatkit/session).
+
+   2. Session Token Exchange: 
+     The Next.js backend securely calls OpenAI (https://api.openai.com/v1/chatkit/sessions) using your OPENAI_API_KEY and the CHATKIT_WORKFLOW_ID (e.g.,
+  wf_69a50ac...). It returns a client_secret to the frontend, establishing a direct, authenticated socket between the browser and OpenAI.
+
+   3. User Asks a Question: 
+     The user types a question. The ChatKit widget sends this directly to the OpenAI Agent Builder workflow associated with your CHATKIT_WORKFLOW_ID.
+
+   4. Agent Action (The MCP Connection): 
+     The OpenAI Agent processes the intent and realizes it needs external knowledge. It triggers its configured "MCP server" action, sending a request over
+  Server-Sent Events (SSE) to your Cloud Run service at https://jab-sales-tools-mcp-695867930963.us-central1.run.app/sse.
+
+   5. NotebookLM Query: 
+     The Cloud Run service (running the Python notebooklm-mcp-cli container defined in Dockerfile.mcp) authenticates with Google and queries the specific
+  NotebookLM document/notebook for the requested context.
+
+   6. Response Synthesis: 
+     The MCP server returns the extracted NotebookLM data to the OpenAI Agent. The Agent synthesizes this data into a conversational response and streams it back
+  to the user's ChatKit widget on the website.
