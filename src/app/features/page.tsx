@@ -211,11 +211,50 @@ export default function FeaturesPage() {
               </p>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* MOBILE-ONLY FEATURE LIST */}
+            <div className="md:hidden space-y-12">
+              {comparisonData.map((section) => (
+                <div key={section.category} className="space-y-4">
+                  <h3 className="text-[#7fff41] font-bold uppercase tracking-wider px-2 text-sm">
+                    {section.category}
+                  </h3>
+                  <div className="space-y-3">
+                    {section.items.map((item) => (
+                      <div key={item.name} className="bg-slate-900/50 rounded-2xl p-5 border border-white/5 shadow-sm">
+                        <div className="text-white font-semibold mb-4 text-base">{item.name}</div>
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-colors ${item.core ? 'bg-[#7fff41]/10 border-[#7fff41]/30' : 'bg-slate-800/20 border-white/5 opacity-40'}`}>
+                            <span className={`text-[10px] uppercase font-black mb-1.5 ${item.core ? 'text-[#7fff41]' : 'text-slate-500'}`}>CORE</span>
+                            {item.core ? <Check className="w-5 h-5 text-[#7fff41]" /> : <Minus className="w-4 h-4 text-slate-600" />}
+                          </div>
+                          <div className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-colors ${item.plus ? 'bg-[#7fff41]/10 border-[#7fff41]/30' : 'bg-slate-800/20 border-white/5 opacity-40'}`}>
+                            <span className={`text-[10px] uppercase font-black mb-1.5 ${item.plus ? 'text-[#7fff41]' : 'text-slate-500'}`}>CORE +</span>
+                            {item.plus ? <Check className="w-5 h-5 text-[#7fff41]" /> : <Minus className="w-4 h-4 text-slate-600" />}
+                          </div>
+                          <div className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-colors ${item.elite ? 'bg-[#7fff41]/10 border-[#7fff41]/30' : 'bg-slate-800/20 border-white/5 opacity-40'}`}>
+                            <span className={`text-[10px] uppercase font-black mb-1.5 ${item.elite ? 'text-[#7fff41]' : 'text-slate-500'}`}>Elite</span>
+                            {item.elite ? <Check className="w-5 h-5 text-[#7fff41]" /> : <Minus className="w-4 h-4 text-slate-600" />}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              
+              <div className="pt-8 flex flex-col gap-4">
+                <a href="/pricing" className="w-full py-4 bg-[#7fff41] text-slate-900 rounded-2xl font-bold text-center shadow-lg shadow-[#7fff41]/20">
+                  View Full Pricing & Plans
+                </a>
+              </div>
+            </div>
+
+            {/* DESKTOP-ONLY TABLE */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead>
                   <tr>
-                    <th className="p-6 border-b border-white/10 text-lg font-semibold text-slate-300 w-1/3 sticky left-0 bg-slate-950/80 backdrop-blur z-10">
+                    <th className="p-6 border-b border-white/10 text-lg font-semibold text-slate-300 w-1/3 sticky left-0 bg-slate-950 z-20 border-r border-white/10">
                       Features Overview
                     </th>
                     <th className="p-6 border-b border-white/10 text-center w-1/5">
@@ -238,16 +277,17 @@ export default function FeaturesPage() {
                     <React.Fragment key={section.category}>
                       {/* Section Header */}
                       <tr>
-                        <td colSpan={4} className="py-6 px-4 border-b border-white/5 bg-slate-900/50">
+                        <td className="py-6 px-4 border-b border-white/5 bg-slate-900 sticky left-0 z-20 border-r border-white/10">
                           <span className="text-sm font-bold uppercase tracking-wider text-[#7fff41]">
                             {section.category}
                           </span>
                         </td>
+                        <td colSpan={3} className="py-6 px-4 border-b border-white/5 bg-slate-900" />
                       </tr>
                       {/* Feature Rows */}
                       {section.items.map((item, itemIdx) => (
                         <tr key={item.name} className="hover:bg-white/[0.02] transition-colors">
-                          <td className="p-4 border-b border-white/5 text-slate-300 text-sm font-medium sticky left-0 bg-slate-950/40 backdrop-blur z-10">
+                          <td className="p-4 border-b border-white/5 text-slate-300 text-sm font-medium sticky left-0 bg-slate-950 z-10 border-r border-white/10">
                             {item.name}
                           </td>
                           <td className="p-4 border-b border-white/5 text-center">
