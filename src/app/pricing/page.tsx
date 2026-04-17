@@ -144,6 +144,45 @@ export default function PricingPage() {
               &quot;JAB CORE is a premium business operating system that organizes your leads, automates your follow-ups, and uses AI to help your team close deals faster. It’s not just software; it’s a fully configured revenue engine that we set up for you, so you can stop worrying about the tech and start focusing on growth.&quot;
             </p>
           </div>
+
+          {/* NEW: Terminal Call to Action / Next Steps */}
+          <div className="mt-20 border-t border-white/10 pt-16 text-center">
+            <h3 className="text-3xl font-bold text-white mb-6">Ready to see it in action?</h3>
+            <p className="text-slate-300 mb-10 max-w-2xl mx-auto">
+              Book a demo to see how JAB CORE can be customized for your business, or explore our resources to learn more about our automation platform.
+            </p>
+
+            {/* Main Action Buttons (Stack on mobile, side-by-side on tablet/desktop) */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+              <a
+                href="https://calendar.app.google/nrsnwLLEDFsyX5HP7"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-[#7fff41] px-8 py-4 text-lg font-bold text-slate-900 shadow-lg shadow-[#7fff41]/40 transition hover:bg-[#a4ff82]"
+              >
+                Book A Demo <ArrowRight className="ml-2 w-5 h-5" />
+              </a>
+              <a
+                href="/events"
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/5 px-8 py-4 text-lg font-medium text-white transition hover:border-[#7fff41]/60 hover:bg-white/10"
+              >
+                Join a Free Workshop
+              </a>
+            </div>
+
+            {/* Secondary Links (Smaller, text-based options) */}
+            <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm font-medium text-slate-400">
+              <a href="/features" className="hover:text-[#7fff41] transition">
+                → View All Features
+              </a>
+              <button 
+                onClick={() => window.dispatchEvent(new CustomEvent('open-chatkit'))} 
+                className="hover:text-[#7fff41] transition"
+              >
+                → Ask us a question
+              </button>
+            </div>
+          </div>
         </div>
       </main>
 
