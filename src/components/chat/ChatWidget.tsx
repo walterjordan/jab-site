@@ -14,10 +14,10 @@ export default function ChatWidget() {
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-4">
       {/* Chat Window */}
       {isOpen && (
-        <div className="w-[380px] h-[600px] max-h-[80vh] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col transition-all duration-300 ease-in-out">
+        <div className="w-[calc(100vw-2rem)] sm:w-[380px] h-[calc(100dvh-8rem)] sm:h-[600px] max-h-[85dvh] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col transition-all duration-300 ease-in-out">
           <div className="bg-[#010e63] p-4 flex justify-between items-center text-white shrink-0">
             <div>
               <h3 className="font-bold">JAB Assistant</h3>
